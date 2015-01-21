@@ -3,7 +3,7 @@ package com.bopthenazi.game.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.bopthenazi.game.BopTheNaziGame;
+import com.bopthenazi.game.BTNGame;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -14,6 +14,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener getApplicationListener () {
-                return new BopTheNaziGame();
+                return new BTNGame();
         }
 }

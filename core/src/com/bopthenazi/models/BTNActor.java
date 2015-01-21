@@ -12,11 +12,11 @@ public class BTNActor extends Actor {
 		
 		this.texture = texture;
 		
-		this.setX(x);
-		this.setY(y);
-		
 		this.setWidth(width);
 		this.setHeight(height);
+		
+		this.setX(x - this.getWidth() / 2.0f);
+		this.setY(y - this.getHeight() / 2.0f);
 	}
 	
 	@Override
@@ -24,6 +24,6 @@ public class BTNActor extends Actor {
 		
 		super.draw(batch, parentAlpha);
 		
-		batch.draw(texture, getX() - (getWidth() / 2.0f), getY() - (getHeight() / 2.0f), getWidth(), getHeight());
+		batch.draw(texture, getX(), getY(), getWidth(), getHeight());
 	}
 }

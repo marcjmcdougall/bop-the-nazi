@@ -15,7 +15,7 @@ public class BTNGameScreen implements Screen{
 	private BTNGame game;
 	private Stage gameStage;
 	
-	private Actor 
+	private Actor slider;
 	
 	public BTNGameScreen(BTNGame game){
 		

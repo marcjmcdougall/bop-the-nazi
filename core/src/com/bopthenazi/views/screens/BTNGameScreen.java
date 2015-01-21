@@ -3,6 +3,7 @@ package com.bopthenazi.views.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
@@ -16,6 +17,12 @@ public class BTNGameScreen implements Screen{
 	private Stage gameStage;
 	
 	private Actor slider;
+	private Actor sliderButton;
+	
+	private Actor[] nazis;
+	private Actor[] holes;
+	
+	private Actor glove;
 	
 	public BTNGameScreen(BTNGame game){
 		
@@ -24,7 +31,7 @@ public class BTNGameScreen implements Screen{
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
 		gameStage = new Stage(viewport);
 		
-		
+		initializeActors();
 	}
 	
 	@Override
@@ -66,5 +73,9 @@ public class BTNGameScreen implements Screen{
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	private void initializeActors() {
+	
+		slider = new Actor();
+	}
 }

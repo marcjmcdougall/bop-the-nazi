@@ -34,7 +34,7 @@ public class SliderButton extends BTNActor {
 				if(event.getStageX() > SLIDER_BUTTON_WIDTH / 2.0f && event.getStageX() < BTNGameScreen.GAME_WIDTH - SLIDER_BUTTON_WIDTH / 2.0f && !lock){
 					
 					setX(event.getStageX() - SLIDER_BUTTON_WIDTH / 2.0f);
-					SliderButton.this.gameScreen.notifyNewX(getX());
+					SliderButton.this.gameScreen.notifyNewX(event.getStageX());
 				}
 				
 				super.touchDragged(event, x, y, pointer);

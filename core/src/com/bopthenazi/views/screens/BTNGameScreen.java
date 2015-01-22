@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
+import com.bopthenazi.models.BTNStage;
 import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.NaziContainer;
 import com.bopthenazi.models.Slider;
@@ -23,12 +24,12 @@ public class BTNGameScreen implements Screen{
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
 	
-	private static final float NAZI_OFFSET_HORIZONTAL_MARGIN = 50.0f;
+	public static final float NAZI_OFFSET_HORIZONTAL_MARGIN = 25.0f;
 	public static final float BAR_OFFSET_LOWER = 136.3f;
 	public static final float BAR_OFFSET_TOP = 256.0f;
 	
 	private BTNGame game;
-	private Stage gameStage;
+	private BTNStage gameStage;
 	
 	private static final float[] NAZI_CONTAINER_COORDINATES = {157.5f, 412.5f, 667.5f, 922.5f};
 	
@@ -44,12 +45,12 @@ public class BTNGameScreen implements Screen{
 		this.naziContainers = new NaziContainer[4];
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
-		gameStage = new Stage(viewport);
+		gameStage = new BTNStage(viewport);
 		
 		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT);
 		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
 		bg = new BTNActor(new Texture("background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT - (BAR_OFFSET_TOP + Glove.GLOVE_HEIGHT / 2.0f), Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT);
+		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 3.4f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this);
 		
 		gameStage.addActor(bg);
 		
@@ -63,7 +64,7 @@ public class BTNGameScreen implements Screen{
 	
 	public void notifyNewX(float x) {
 		
-		glove.setX(x);
+		glove.setX( x - Glove.GLOVE_WIDTH / 2.0f);
 	}
 	
 	public void notifyTouchUp() {
@@ -73,7 +74,7 @@ public class BTNGameScreen implements Screen{
 		MoveToAction moveTo = new MoveToAction();
 		
 		moveTo.setPosition(glove.getX(), BAR_OFFSET_LOWER);
-		moveTo.setDuration(1.0f);
+		moveTo.setDuration(0.25f);
 		moveTo.setInterpolation(Interpolation.pow2);
 		
 		MoveToAction moveFrom = new MoveToAction();
@@ -164,5 +165,10 @@ public class BTNGameScreen implements Screen{
 		
 		// TODO Auto-generated method stub
 		gameStage.dispose();
+	}
+
+	public SliderButton getSliderButton() {
+		
+		return sliderButton;
 	}
 }

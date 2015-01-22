@@ -45,7 +45,7 @@ public class BTNGameScreen implements Screen{
 		this.naziContainers = new NaziContainer[4];
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
-		gameStage = new BTNStage(viewport);
+		gameStage = new BTNStage(viewport, game);
 		
 		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT);
 		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);

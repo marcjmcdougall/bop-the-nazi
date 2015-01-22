@@ -1,22 +1,27 @@
 package com.bopthenazi.models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
-import com.bopthenazi.utils.BTNCollideableActor;
+import com.bopthenazi.views.screens.BTNMenuScreen;
 
 public class BTNStage extends Stage {
 
-	public BTNStage(){
+	private BTNGame game;
 	
-		// Do nothing.
+	public BTNStage(BTNGame game){
+
+		this.game = game;
 	}
 	
-	public BTNStage(FitViewport viewport) {
+	public BTNStage(FitViewport viewport, BTNGame game) {
 	
 		super(viewport);
+		
+		this.game = game;
 	}
 
 	@Override
@@ -53,5 +58,16 @@ public class BTNStage extends Stage {
 				break;
 			}
 		}
+	}
+	
+	@Override
+	public boolean keyDown(int keyCode) {
+		
+		if(keyCode == Keys.BACK){
+			
+			game.setScreen(new BTNMenuScreen(game));
+		}
+		
+		return super.keyDown(keyCode);
 	}
 }

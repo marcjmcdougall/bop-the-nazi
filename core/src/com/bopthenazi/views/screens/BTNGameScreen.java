@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.Glove;
-import com.bopthenazi.models.Nazi;
 import com.bopthenazi.models.NaziContainer;
 import com.bopthenazi.models.Slider;
 import com.bopthenazi.models.SliderButton;
@@ -24,15 +23,16 @@ public class BTNGameScreen implements Screen{
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
 	
+	private static final float NAZI_OFFSET_HORIZONTAL_MARGIN = 50.0f;
 	public static final float BAR_OFFSET_LOWER = 136.3f;
 	public static final float BAR_OFFSET_TOP = 256.0f;
 	
 	private BTNGame game;
 	private Stage gameStage;
 	
-	private NaziContainer naziContainer;
+	private static final float[] NAZI_CONTAINER_COORDINATES = {157.5f, 412.5f, 667.5f, 922.5f};
 	
-//	private NaziContainer[] naziContainers;
+	private NaziContainer[] naziContainers;
 	private Slider slider;
 	private SliderButton sliderButton;
 	private Glove glove;
@@ -41,8 +41,7 @@ public class BTNGameScreen implements Screen{
 	public BTNGameScreen(BTNGame game){
 		
 		this.game = game;
-//		this.naziContainers = new NaziContainer[7];
-		this.naziContainer = new NaziContainer(540, 960);
+		this.naziContainers = new NaziContainer[4];
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
 		gameStage = new Stage(viewport);
@@ -54,12 +53,7 @@ public class BTNGameScreen implements Screen{
 		
 		gameStage.addActor(bg);
 		
-		for(Actor actor : naziContainer.getActors()){
-			
-			gameStage.addActor(actor);
-		}
-		
-//		initializeNazis();
+		initializeNaziContainers();
 		gameStage.addActor(slider);
 		gameStage.addActor(sliderButton);
 		gameStage.addActor(glove);
@@ -102,19 +96,29 @@ public class BTNGameScreen implements Screen{
 		glove.addAction(sequence);
 	}
 	
-//	private void initializeNazis() {
-//		
-//		// TODO: Incomplete.
-//		int count = 0;
-//		
-//		for(NaziContainer naziContainer : naziContainers){
-//			
-//			naziContainer = new NaziContainer(, y);
-//			gameStage.addActor(nazi);
-//			
-//			count++;
-//		}
-//	}
+	private void initializeNaziContainers() {
+		
+		int count = 0;
+		
+		for(NaziContainer naziContainer : naziContainers){
+			
+			if(count < 4){
+				
+				naziContainer = new NaziContainer(NAZI_CONTAINER_COORDINATES[count], BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN);
+			}
+			else if( count > 4){
+				
+				naziContainer = new NaziContainer(NAZI_CONTAINER_COORDINATES[count], BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN * 2);
+			}
+			
+			for (Actor actor : naziContainer.getActors()){
+				
+				gameStage.addActor(actor);
+			}
+			
+			count++;
+		}
+	}
 
 	@Override
 	public void show() {

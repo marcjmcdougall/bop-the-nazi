@@ -140,7 +140,6 @@ public class BTNGameScreen implements Screen{
 	public void resize(int width, int height) {
 		
 		// TODO Auto-generated method stub
-	}
 
 	@Override
 	public void pause() {

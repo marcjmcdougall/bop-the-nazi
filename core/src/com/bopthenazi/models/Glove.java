@@ -34,7 +34,7 @@ public class Glove extends BTNCollideableActor {
 		this.clearActions();
 		
 		MoveToAction moveToAction = new MoveToAction();
-		moveToAction.setPosition(getX(), 1300.0f);
+		moveToAction.setPosition(getX(), 1163.1667f);
 		moveToAction.setDuration(1.0f);
 		moveToAction.setInterpolation(Interpolation.linear);
 		

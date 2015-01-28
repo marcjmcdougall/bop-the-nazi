@@ -7,8 +7,8 @@ import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class SliderButton extends BTNActor {
 
-	public static final float SLIDER_BUTTON_WIDTH = 270.0f;
-	public static final float SLIDER_BUTTON_HEIGHT = 270.0f;
+	public static final float SLIDER_BUTTON_WIDTH = 169.0f;
+	public static final float SLIDER_BUTTON_HEIGHT = 169.0f;
 	
 	private boolean lock = false;
 	

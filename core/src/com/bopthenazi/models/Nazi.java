@@ -15,7 +15,7 @@ public class Nazi extends BTNCollideableActor {
 	
 	public Nazi(float x, float y){
 		
-		super(new Texture("nazi.png"), x, y, NAZI_WIDTH, NAZI_HEIGHT);
+		super(new Texture("zombie.png"), x, y, NAZI_WIDTH, NAZI_HEIGHT);
 		
 		setHiding(true);
 	}

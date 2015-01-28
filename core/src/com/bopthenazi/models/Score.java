@@ -1,21 +1,19 @@
 package com.bopthenazi.models;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader.FreeTypeFontGeneratorParameters;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class Score extends Actor {
 
-	private static final float SCORE_WIDTH = 200.0f;
-	private static final float SCORE_HEIGHT = 100.0f;
+	public static final float SCORE_WIDTH = 200.0f;
+	public static final float SCORE_HEIGHT = 100.0f;
 	
 	private BitmapFont font;
 	
@@ -27,14 +25,14 @@ public class Score extends Actor {
 		this.setX(x);
 		this.setY(y);
 		
-		this.setWidth(SCORE_WIDTH);
-		this.setHeight(SCORE_HEIGHT);
+//		this.setWidth(SCORE_WIDTH);
+//		this.setHeight(SCORE_HEIGHT);
 		
 		this.score = 0;
 		
 		initializeFont();
 		
-		LabelStyle style = new LabelStyle(new BitmapFont(), new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		LabelStyle style = new LabelStyle(font, new Color(1.0f, 1.0f, 1.0f, 1.0f));
 		
 		label = new Label("Score: " + score, style);
 		label.setX(getX());
@@ -46,10 +44,10 @@ public class Score extends Actor {
 	
 	private void initializeFont() {
 		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/myfont.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/chalkdust.ttf"));
 		
 		FreeTypeFontParameter params = new FreeTypeFontParameter();
-		params.size = 24;
+		params.size = 20;
 		font = generator.generateFont(params);
 		
 		generator.dispose();
@@ -59,5 +57,22 @@ public class Score extends Actor {
 	public void draw(Batch batch, float parentAlpha) {
 		
 		label.draw(batch, parentAlpha);
+	}
+	
+	public void updateScore(int newScore){
+		
+		this.score = newScore;
+		
+		updateScoreText();
+	}
+
+	private void updateScoreText() {
+		
+		label.setText("Score: " + score);
+	}
+
+	public int getScore() {
+		
+		return score;
 	}
 }

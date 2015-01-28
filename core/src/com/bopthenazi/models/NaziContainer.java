@@ -1,6 +1,5 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
-import com.bopthenazi.game.BTNGame;
 
 public class NaziContainer {
 
@@ -24,8 +22,8 @@ public class NaziContainer {
 	public NaziContainer(float x, float y){
 
 		this.nazi = new Nazi(x, y);
-		this.holeFront = new BTNActor(new Texture("hole-front.png"), x, y, Nazi.NAZI_WIDTH + 70.0f, Nazi.NAZI_HEIGHT);
-		this.holeBack = new BTNActor(new Texture("hole-back.png"), x, y + 275.0f, Nazi.NAZI_WIDTH + 70.0f, Nazi.NAZI_HEIGHT);
+		this.holeFront = new BTNActor(new Texture("hole-front.png"), x, y, 229.5f, 575.0f);
+		this.holeBack = new BTNActor(new Texture("hole-back.png"), x, y + 256.5f, 229.5f, 135.2f);
 
 		float originalY = nazi.getY();
 

@@ -14,8 +14,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNStage;
+import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
+import com.bopthenazi.models.Nazi;
 import com.bopthenazi.models.NaziContainer;
+import com.bopthenazi.models.Score;
 import com.bopthenazi.models.Slider;
 import com.bopthenazi.models.SliderButton;
 
@@ -38,14 +41,16 @@ public class BTNGameScreen implements Screen{
 	private SliderButton sliderButton;
 	private Glove glove;
 	private BTNActor bg;
+	private Score score;
 	
 	public BTNGameScreen(BTNGame game){
 		
 		this.game = game;
 		this.naziContainers = new NaziContainer[4];
+		this.score = new Score(100.0f, 100.0f);
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
-		gameStage = new BTNStage(viewport, game);
+		gameStage = new BTNStage(viewport, game, this);
 		
 		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT);
 		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
@@ -58,15 +63,32 @@ public class BTNGameScreen implements Screen{
 		gameStage.addActor(slider);
 		gameStage.addActor(sliderButton);
 		gameStage.addActor(glove);
+		gameStage.addActor(score);
 		
 		Gdx.input.setInputProcessor(gameStage);
 	}
 	
 	public void notifyNewX(float x) {
 		
-		glove.setX( x - Glove.GLOVE_WIDTH / 2.0f);
+		glove.setX(x - Glove.GLOVE_WIDTH / 2.0f);
 	}
 	
+	public void onGloveCollision(Nazi naziCollided){
+		
+		glove.notifyCollide();
+		
+		generateExplosion(naziCollided.getX() + naziCollided.getWidth() / 2.0f, naziCollided.getY() + naziCollided.getHeight());
+		
+		naziCollided.onCollide();
+	}
+	
+	private void generateExplosion(float x, float y) {
+		
+		Explosion explosion = new Explosion(x, y, 0.10f);
+		
+		gameStage.addActor(explosion);
+	}
+
 	public void notifyTouchUp() {
 		
 		float originalY = glove.getY();

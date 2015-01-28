@@ -29,6 +29,18 @@ public class NaziContainer {
 
 		float originalY = nazi.getY();
 
+		DelayAction initialDelay = new DelayAction((float) (Math.random() * 2.0f));
+		
+		RunnableAction notifyUp = new RunnableAction();
+		notifyUp.setRunnable(new Runnable() {
+
+			@Override
+			public void run() {
+				
+				nazi.setHiding(false);
+			}
+		});
+		
 		MoveToAction moveUp = new MoveToAction();
 		moveUp.setPosition(nazi.getX(), originalY + OSCILLATION_DELTA);
 		moveUp.setDuration(1.0f);
@@ -40,24 +52,26 @@ public class NaziContainer {
 		moveDown.setPosition(nazi.getX(), originalY);
 		moveDown.setDuration(1.0f);
 		moveDown.setInterpolation(Interpolation.linear);
-
-		DelayAction delay2 = new DelayAction(2.0f);
 		
-		RunnableAction notify = new RunnableAction();
-		notify.setRunnable(new Runnable() {
+		RunnableAction notifyDown = new RunnableAction();
+		notifyDown.setRunnable(new Runnable() {
 
 			@Override
 			public void run() {
-
-				Gdx.app.log(BTNGame.TAG, "Animation complete.");
+				
+				nazi.setHiding(true);
 			}
 		});
 
+		DelayAction delay2 = new DelayAction(2.0f);
+		
 		SequenceAction oscillateSequence = new SequenceAction();
+		oscillateSequence.addAction(initialDelay);
+		oscillateSequence.addAction(notifyUp);
 		oscillateSequence.addAction(moveUp);
 		oscillateSequence.addAction(delay);
 		oscillateSequence.addAction(moveDown);
-		oscillateSequence.addAction(notify);
+		oscillateSequence.addAction(notifyDown);
 		oscillateSequence.addAction(delay2);
 
 		RepeatAction repeatOscillate = new RepeatAction();
@@ -66,7 +80,7 @@ public class NaziContainer {
 		
 		this.nazi.addAction(repeatOscillate);
 	}
-
+	
 	public Array<Actor> getActors(){
 
 		Array<Actor> output = new Array<Actor>();

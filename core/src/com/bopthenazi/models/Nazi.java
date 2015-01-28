@@ -11,14 +11,19 @@ public class Nazi extends BTNCollideableActor {
 	public static final float NAZI_WIDTH = 200.0f;
 	public static final float NAZI_HEIGHT = 388.8f;
 	
+	private boolean isHiding;
+	
 	public Nazi(float x, float y){
 		
 		super(new Texture("nazi.png"), x, y, NAZI_WIDTH, NAZI_HEIGHT);
+		
+		setHiding(true);
 	}
 
-	public void notifyCollide() {
+	public void onCollide() {
 		
-		// TODO: Unfinished.
+		setHiding(true);
+		
 		this.clearActions();
 		
 		MoveToAction moveDown = new MoveToAction();
@@ -27,15 +32,16 @@ public class Nazi extends BTNCollideableActor {
 		moveDown.setDuration(0.25f);
 		moveDown.setInterpolation(Interpolation.linear);
 		
-		
-		// TODO: This should be in the GAMESCREEN method.
-//		BTNActor explosion = new BTNActor(new Texture("explosion.png"), getX(), getY() + NAZI_WIDTH / 2.0, 367.0f, 194.0f);
-		
 		this.addAction(moveDown);
 	}
 
+	public void setHiding(boolean newHidingState){
+		
+		this.isHiding = newHidingState;
+	}
+	
 	public boolean isHiding() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return isHiding;
 	}
 }

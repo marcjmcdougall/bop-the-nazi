@@ -15,9 +15,13 @@ public class Score extends Actor {
 	public static final float SCORE_WIDTH = 200.0f;
 	public static final float SCORE_HEIGHT = 100.0f;
 	
+	private static final int DEFAULT_NUMBER_LIVES = 4;
+	
 	private BitmapFont font;
 	
 	private int score;
+	private int lives;
+	
 	private Label label;
 	
 	public Score(float x, float y){
@@ -29,6 +33,7 @@ public class Score extends Actor {
 //		this.setHeight(SCORE_HEIGHT);
 		
 		this.score = 0;
+		this.lives = DEFAULT_NUMBER_LIVES;
 		
 		initializeFont();
 		
@@ -74,5 +79,21 @@ public class Score extends Actor {
 	public int getScore() {
 		
 		return score;
+	}
+
+	/**
+	 * @return the lives
+	 */
+	public int getLives() {
+		
+		return lives;
+	}
+
+	/**
+	 * @param lives the lives to set
+	 */
+	public void setLives(int lives) {
+		
+		this.lives = lives;
 	}
 }

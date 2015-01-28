@@ -1,10 +1,11 @@
 package com.bopthenazi.models;
 
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.bopthenazi.utils.BTNCollideableActor;
@@ -18,15 +19,22 @@ public class Nazi extends BTNCollideableActor {
 	public static final float NAZI_HEIGHT = 388.8f;
 	
 	private boolean isHiding;
+	private boolean isActivated;
+	
 	private float startingY;
 	
-	public Nazi(float x, float y){
+	private BTNGameScreen gameScreen;
+	private SequenceAction oscillateSequence;
+	
+	public Nazi(float x, float y, BTNGameScreen screen){
 		
-		super(new Texture("zombie.png"), x, y, NAZI_WIDTH, NAZI_HEIGHT);
+		super(new Random().nextInt(2) == 1 ? new Texture("zombie.png") : new Texture("zombie-2.png"), x, y, NAZI_WIDTH, NAZI_HEIGHT);
 		
 		this.startingY = getY();
+		this.gameScreen = screen;
 		
 		setHiding(true);
+		setActivated(false);
 	}
 
 	public void onCollide() {
@@ -43,10 +51,36 @@ public class Nazi extends BTNCollideableActor {
 		
 		this.addAction(moveDown);
 		
-		initializeAnimation();
+		performNaziDeactivate(true);
 	}
 
-	public void initializeAnimation() {
+	public void setHiding(boolean newHidingState){
+		
+		this.isHiding = newHidingState;
+	}
+	
+	public boolean isHiding() {
+		
+		return isHiding;
+	}
+	
+	/**
+	 * @return the isActivated
+	 */
+	public boolean isActivated() {
+		
+		return isActivated;
+	}
+
+	/**
+	 * @param isActivated the isActivated to set
+	 */
+	public void setActivated(boolean isActivated) {
+		
+		this.isActivated = isActivated;
+	}
+
+	public void prepareAnimation() {
 		
 		DelayAction initialDelay = new DelayAction((float) (Math.random() * 2.0f));
 		
@@ -65,7 +99,7 @@ public class Nazi extends BTNCollideableActor {
 		moveUp.setDuration(1.0f);
 		moveUp.setInterpolation(Interpolation.linear);
 
-		DelayAction delay = new DelayAction(2.0f);
+		DelayAction delay = new DelayAction(0.5f);
 
 		MoveToAction moveDown = new MoveToAction();
 		moveDown.setPosition(this.getX(), startingY);
@@ -79,12 +113,13 @@ public class Nazi extends BTNCollideableActor {
 			public void run() {
 				
 				Nazi.this.setHiding(true);
+				performNaziDeactivate(false);
 			}
 		});
 
 		DelayAction delay2 = new DelayAction(2.0f);
 		
-		SequenceAction oscillateSequence = new SequenceAction();
+		oscillateSequence = new SequenceAction();
 		oscillateSequence.addAction(initialDelay);
 		oscillateSequence.addAction(notifyUp);
 		oscillateSequence.addAction(moveUp);
@@ -92,21 +127,19 @@ public class Nazi extends BTNCollideableActor {
 		oscillateSequence.addAction(moveDown);
 		oscillateSequence.addAction(notifyDown);
 		oscillateSequence.addAction(delay2);
-
-		RepeatAction repeatOscillate = new RepeatAction();
-		repeatOscillate.setAction(oscillateSequence);
-		repeatOscillate.setCount(RepeatAction.FOREVER);
-		
-		this.addAction(repeatOscillate);
-	}
-
-	public void setHiding(boolean newHidingState){
-		
-		this.isHiding = newHidingState;
 	}
 	
-	public boolean isHiding() {
+	private void performNaziDeactivate(boolean hit) {
 		
-		return isHiding;
+		this.setActivated(false);
+		
+		gameScreen.notifyNaziDeactivate(hit);
+	}
+	
+	public void performNaziActivate(){
+		
+		this.prepareAnimation();
+		this.addAction(oscillateSequence);
+		this.setActivated(true);
 	}
 }

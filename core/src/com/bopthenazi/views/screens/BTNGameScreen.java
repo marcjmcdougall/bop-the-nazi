@@ -1,5 +1,7 @@
 package com.bopthenazi.views.screens;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,6 +27,11 @@ import com.bopthenazi.models.SliderButton;
 
 public class BTNGameScreen implements Screen{
 
+	private static final int MAX_NAZI_COUNT = 7;
+	private static final int MAX_CONCURRENT_NAZIS = 1;
+	
+	private static final float BASE_FREQUENCY_NAZI_REVEAL = 3f;
+	
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
 	
@@ -37,8 +44,9 @@ public class BTNGameScreen implements Screen{
 	private BTNStage gameStage;
 	
 	private static final float[] NAZI_CONTAINER_COORDINATES = {157.5f, 412.5f, 667.5f, 922.5f, 285.0f, 540.0f, 795.0f};
-	
-	private NaziContainer[] naziContainers;
+
+	private Array<NaziContainer> naziContainers;
+
 	private Slider slider;
 	private SliderButton sliderButton;
 	private Glove glove;
@@ -48,11 +56,15 @@ public class BTNGameScreen implements Screen{
 	private BTNActor sideBars;
 	private BTNMoveableActor gloveCase;
 	
+	private float timeElapsedSinceLastNazi;
+	
 	public BTNGameScreen(BTNGame game){
 		
 		this.game = game;
-		this.naziContainers = new NaziContainer[7];
+		this.naziContainers = new Array<NaziContainer>(MAX_NAZI_COUNT);
 		this.score = new Score(GAME_WIDTH / 2.0f + 50.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
+		
+		timeElapsedSinceLastNazi = 0f;
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
 		gameStage = new BTNStage(viewport, game, this);
@@ -86,7 +98,6 @@ public class BTNGameScreen implements Screen{
 	
 	public void onGloveCollision(Nazi naziCollided){
 		
-		score.updateScore(score.getScore() + 1);
 		glove.notifyCollide();
 		generateExplosion(naziCollided.getX() + naziCollided.getWidth() / 2.0f, naziCollided.getY() + naziCollided.getHeight());
 		naziCollided.onCollide();
@@ -131,27 +142,31 @@ public class BTNGameScreen implements Screen{
 		glove.addAction(sequence);
 	}
 	
+	private void activateNewNazi(int index){
+		
+		naziContainers.get(index).getNazi().performNaziActivate();
+	}
+	
 	private void initializeNaziContainers() {
 		
 		int count = 0;
 		
 		Array<Array<Actor>> actors = new Array<Array<Actor>>();
 		
-		
-		for(NaziContainer naziContainer : naziContainers){
+		for(int i = 0; i < MAX_NAZI_COUNT; i++){
 			
-			if(count < 4){
+			if(i < 4){
 				
-				naziContainer = new NaziContainer(NAZI_CONTAINER_COORDINATES[count], BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN);
+				naziContainers.add(new NaziContainer(NAZI_CONTAINER_COORDINATES[count], BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN, this));
 			}
-			else if( count >= 4){
+			else if(i >= 4){
 				
-				naziContainer = new NaziContainer(NAZI_CONTAINER_COORDINATES[count], (BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN) * 2);
+				naziContainers.add(new NaziContainer(NAZI_CONTAINER_COORDINATES[count], (BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN) * 2, this));
 			}
 			
 			Array<Actor> containerActors = new Array<Actor>();
 			
-			for (Actor actor : naziContainer.getActors()){
+			for (Actor actor : naziContainers.get(i).getActors()){
 				
 				containerActors.add(actor);
 			}
@@ -175,6 +190,11 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void show() {
 		
+		Random r = new Random();
+		
+		int randomIndex = r.nextInt(MAX_NAZI_COUNT);
+		
+		activateNewNazi(randomIndex);
 	}
 
 	@Override
@@ -183,8 +203,40 @@ public class BTNGameScreen implements Screen{
 		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
+        timeElapsedSinceLastNazi += delta;
+        
+        if(timeElapsedSinceLastNazi >= BASE_FREQUENCY_NAZI_REVEAL){
+        	
+        	// Activate a random Nazi that has *not yet been activated*
+        	doActivateUniqueNazi();
+        }
+        
         gameStage.act(delta);
         gameStage.draw();
+	}
+
+	private void doActivateUniqueNazi(){
+		
+		// If no Nazis are already activated, then choose one at random.
+		int numNazisActivated = 0;
+		
+		for(NaziContainer naziContainer : naziContainers){
+		
+			if(naziContainer.getNazi().isActivated()){
+			
+				numNazisActivated++;
+			}
+		}
+		
+		if(numNazisActivated < MAX_CONCURRENT_NAZIS){
+			
+			// Select a random number.
+			int index = new Random().nextInt(MAX_NAZI_COUNT);
+				
+			activateNewNazi(index);
+		}
+		
+	    timeElapsedSinceLastNazi = 0f;
 	}
 
 	@Override
@@ -221,5 +273,31 @@ public class BTNGameScreen implements Screen{
 	public SliderButton getSliderButton() {
 		
 		return sliderButton;
+	}
+
+	public void notifyNaziDeactivate(boolean hit) {
+		
+		doActivateUniqueNazi();
+		
+		if(hit){
+			
+			score.updateScore(score.getScore() + 1);
+		}
+		else{
+			
+			score.setLives(score.getLives() - 1);
+			
+			if(score.getLives() <= 0){
+				
+				doEndGame();
+			}
+		}
+	}
+
+	private void doEndGame() {
+		
+		Gdx.app.log(BTNGame.TAG, "Game Over!");
+		
+		game.setScreen(new BTNGameOverScreen(game));
 	}
 }

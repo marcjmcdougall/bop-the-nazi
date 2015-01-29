@@ -6,11 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
@@ -53,7 +49,6 @@ public class BTNGameScreen implements Screen{
 	private BTNActor bg;
 	private Score score;
 	private BTNActor topBar;
-	private BTNActor sideBars;
 	private BTNMoveableActor gloveCase;
 	
 	private float timeElapsedSinceLastNazi;
@@ -62,7 +57,7 @@ public class BTNGameScreen implements Screen{
 		
 		this.game = game;
 		this.naziContainers = new Array<NaziContainer>(MAX_NAZI_COUNT);
-		this.score = new Score(GAME_WIDTH / 2.0f + 50.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
+		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
 		
 		timeElapsedSinceLastNazi = 0f;
 		
@@ -71,7 +66,6 @@ public class BTNGameScreen implements Screen{
 		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT);
 		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
 		bg = new BTNActor(new Texture("background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		sideBars = new BTNActor(new Texture("bars.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
 		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this);
 		gloveCase = new BTNMoveableActor(new Texture("mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
 		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
@@ -81,7 +75,6 @@ public class BTNGameScreen implements Screen{
 		initializeNaziContainers();
 		gameStage.addActor(glove);
 		gameStage.addActor(gloveCase);
-		gameStage.addActor(sideBars);
 		gameStage.addActor(slider);
 		gameStage.addActor(sliderButton);
 		gameStage.addActor(topBar);
@@ -112,34 +105,12 @@ public class BTNGameScreen implements Screen{
 
 	public void notifyTouchUp() {
 		
-		float originalY = glove.getY();
-		
-		System.out.println(originalY);
-		
-		MoveToAction moveTo = new MoveToAction();
-		
-		moveTo.setPosition(glove.getX(), BAR_OFFSET_LOWER);
-		moveTo.setDuration(0.25f);
-		moveTo.setInterpolation(Interpolation.pow2);
-		
-		MoveToAction moveFrom = new MoveToAction();
-		
-		moveFrom.setPosition(glove.getX(), originalY);
-		moveFrom.setDuration(1.0f);
-		moveFrom.setInterpolation(Interpolation.linear);
-		
-		RunnableAction unlock = new RunnableAction();
-		unlock.setRunnable(new Runnable() {
+		if(glove.isReadyToDrop()){
 			
-			@Override
-			public void run() {
-				
-				sliderButton.unlock();
-			}
-		});
-		
-		SequenceAction sequence = new SequenceAction(moveTo, moveFrom, unlock);
-		glove.addAction(sequence);
+			glove.setMoving(true);
+			glove.setMovingDown(true);
+			glove.setReadyToDrop(false);
+		}
 	}
 	
 	private void activateNewNazi(int index){
@@ -298,6 +269,6 @@ public class BTNGameScreen implements Screen{
 		
 		Gdx.app.log(BTNGame.TAG, "Game Over!");
 		
-		game.setScreen(new BTNGameOverScreen(game));
+		game.setScreen(new BTNMenuScreen(game));
 	}
 }

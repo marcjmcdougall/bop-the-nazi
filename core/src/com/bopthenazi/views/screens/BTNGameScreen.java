@@ -92,14 +92,13 @@ public class BTNGameScreen implements Screen{
 	public void onGloveCollision(Nazi naziCollided){
 		
 		glove.notifyCollide();
-		generateExplosion(naziCollided.getX() + naziCollided.getWidth() / 2.0f, naziCollided.getY() + naziCollided.getHeight());
+		generateExplosion(naziCollided.getX() + naziCollided.getWidth() / 2.0f - 25.0f, naziCollided.getY() + naziCollided.getHeight());
 		naziCollided.onCollide();
 	}
 	
 	private void generateExplosion(float x, float y) {
 		
 		Explosion explosion = new Explosion(x, y, 0.10f);
-		
 		gameStage.addActor(explosion);
 	}
 

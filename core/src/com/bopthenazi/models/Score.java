@@ -29,9 +29,6 @@ public class Score extends Actor {
 		this.setX(x);
 		this.setY(y);
 		
-//		this.setWidth(SCORE_WIDTH);
-//		this.setHeight(SCORE_HEIGHT);
-		
 		this.score = 0;
 		this.lives = DEFAULT_NUMBER_LIVES;
 		

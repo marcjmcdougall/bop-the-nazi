@@ -14,11 +14,26 @@ public class Glove extends BTNCollideableActor {
 	public static final float GLOVE_WIDTH = 192.0f;
 	public static final float GLOVE_HEIGHT = 2367.0f;
 	
+	private float downwardVelocity;
+	private float upwardVelocity;
+	
+	private boolean moving;
+	private boolean movingDown;
+	private boolean readyToDrop;
+	
 	private BTNGameScreen gameScreen;
 	
 	public Glove(float x, float y, float width, float height, BTNGameScreen game) {
 		
 		super(new Texture("glove.png"), x, y, width, height);
+		
+		// Velocity is measured in game-pixels / second.
+		this.downwardVelocity = 2500.0f;
+		this.upwardVelocity = 500.0f;
+		
+		this.moving = false;
+		this.movingDown = true;
+		this.readyToDrop = true;
 		
 		this.gameScreen = game;
 	}
@@ -28,28 +43,89 @@ public class Glove extends BTNCollideableActor {
 		
 		super.draw(batch, parentAlpha);
 	}
+	
+	@Override
+	public void act(float delta) {
+		
+		super.act(delta);
+		
+		if(moving){
+			
+			if(movingDown){
+				
+				if(!(getY() <= 0.0f)){
+				
+					setY(getY() - downwardVelocity * delta);
+				}
+				else{
+					
+					setMovingDown(false);
+				}
+			}
+			else{
+				
+				if(!(getY() >= 1163.1667f)){
+					
+					setY(getY() + upwardVelocity * delta);
+				}
+				else{
+					
+					readyToDrop = true;
+				}
+			}
+		}
+	}
+
+	/**
+	 * @return the readyToDrop
+	 */
+	public boolean isReadyToDrop() {
+		
+		return readyToDrop;
+	}
+
+	/**
+	 * @param readyToDrop the readyToDrop to set
+	 */
+	public void setReadyToDrop(boolean readyToDrop) {
+		
+		this.readyToDrop = readyToDrop;
+	}
 
 	public void notifyCollide() {
 		
-		this.clearActions();
+		this.movingDown = false;
+	}
+
+	/**
+	 * @return the moving
+	 */
+	public boolean isMoving() {
 		
-		MoveToAction moveToAction = new MoveToAction();
-		moveToAction.setPosition(getX(), 1300.0f);
-		moveToAction.setDuration(1.0f);
-		moveToAction.setInterpolation(Interpolation.linear);
+		return moving;
+	}
+
+	/**
+	 * @param moving the moving to set
+	 */
+	public void setMoving(boolean moving) {
 		
-		RunnableAction unlock = new RunnableAction();
-		unlock.setRunnable(new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				gameScreen.getSliderButton().unlock();
-			}
-		});
+		this.moving = moving;
+	}
+	
+	/**
+	 * @return the movingDown
+	 */
+	public boolean isMovingDown() {
 		
-		SequenceAction sequence = new SequenceAction(moveToAction, unlock);
+		return movingDown;
+	}
+
+	/**
+	 * @param movingDown the movingDown to set
+	 */
+	public void setMovingDown(boolean movingDown) {
 		
-		this.addAction(sequence);
+		this.movingDown = movingDown;
 	}
 }

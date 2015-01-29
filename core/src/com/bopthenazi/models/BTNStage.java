@@ -6,22 +6,25 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
+import com.bopthenazi.views.screens.BTNGameScreen;
 import com.bopthenazi.views.screens.BTNMenuScreen;
 
 public class BTNStage extends Stage {
 
 	private BTNGame game;
+	private BTNGameScreen screen;
 	
 	public BTNStage(BTNGame game){
 
 		this.game = game;
 	}
 	
-	public BTNStage(FitViewport viewport, BTNGame game) {
+	public BTNStage(FitViewport viewport, BTNGame game, BTNGameScreen screen) {
 	
 		super(viewport);
 		
 		this.game = game;
+		this.screen = screen;
 	}
 
 	@Override
@@ -42,14 +45,13 @@ public class BTNStage extends Stage {
 					
 					if(nazi instanceof Nazi){
 						
-						if(((Nazi) nazi).getRect().overlaps(((Glove) a).getRect())){
+						if(((Nazi) nazi).getRect().overlaps(((Glove) a).getRect()) && !((Nazi) nazi).isHiding() && ((Glove) a).isMovingDown()){
 							
 							Gdx.app.log(BTNGame.TAG, "Collision detected!");
 							
 							if(!((Nazi) nazi).isHiding()){
 								
-								((Glove) a).notifyCollide();
-								((Nazi) nazi).notifyCollide();
+								screen.onGloveCollision((Nazi) nazi);
 							}
 						}
 					}
@@ -63,7 +65,7 @@ public class BTNStage extends Stage {
 	@Override
 	public boolean keyDown(int keyCode) {
 		
-		if(keyCode == Keys.BACK){
+		if(keyCode == Keys.BACK || keyCode == Keys.BACKSPACE){
 			
 			game.setScreen(new BTNMenuScreen(game));
 		}

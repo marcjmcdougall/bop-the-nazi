@@ -7,10 +7,8 @@ import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class SliderButton extends BTNActor {
 
-	public static final float SLIDER_BUTTON_WIDTH = 270.0f;
-	public static final float SLIDER_BUTTON_HEIGHT = 270.0f;
-	
-	private boolean lock = false;
+	public static final float SLIDER_BUTTON_WIDTH = 169.0f;
+	public static final float SLIDER_BUTTON_HEIGHT = 169.0f;
 	
 	private final BTNGameScreen gameScreen;
 	
@@ -31,7 +29,7 @@ public class SliderButton extends BTNActor {
 			@Override
 			public void touchDragged(InputEvent event, float x, float y, int pointer) {
 				
-				if(event.getStageX() > SLIDER_BUTTON_WIDTH / 2.0f && event.getStageX() < BTNGameScreen.GAME_WIDTH - SLIDER_BUTTON_WIDTH / 2.0f && !lock){
+				if(event.getStageX() > SLIDER_BUTTON_WIDTH / 2.0f && event.getStageX() < BTNGameScreen.GAME_WIDTH - SLIDER_BUTTON_WIDTH / 2.0f){
 					
 					setX(event.getStageX() - SLIDER_BUTTON_WIDTH / 2.0f);
 					SliderButton.this.gameScreen.notifyNewX(event.getStageX());
@@ -45,17 +43,8 @@ public class SliderButton extends BTNActor {
 				
 				super.touchUp(event, x, y, pointer, button);
 				
-				if(!lock){
-					lock = true;
-				
-					SliderButton.this.gameScreen.notifyTouchUp();
-				}
+				SliderButton.this.gameScreen.notifyTouchUp();
 			}
 		});
-	}
-	
-	public void unlock(){
-		
-		this.lock = false;
 	}
 }

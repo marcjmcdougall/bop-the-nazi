@@ -1,72 +1,26 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
-import com.bopthenazi.game.BTNGame;
+import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class NaziContainer {
-
-	private static final float OSCILLATION_DELTA = 300.0f;
 
 	private Nazi nazi;
 
 	private BTNActor holeFront;
 	private BTNActor holeBack;
+	
+	public NaziContainer(float x, float y, BTNGameScreen gameScreen){
 
-	public NaziContainer(float x, float y){
+		this.nazi = new Nazi(x, y, gameScreen);
+		this.holeFront = new BTNActor(new Texture("hole-front.png"), x, y, 229.5f, 575.0f);
+		this.holeBack = new BTNActor(new Texture("hole-back.png"), x, y + 256.5f, 229.5f, 135.2f);
 
-		this.nazi = new Nazi(x, y);
-		this.holeFront = new BTNActor(new Texture("hole-front.png"), x, y, Nazi.NAZI_WIDTH + 70.0f, Nazi.NAZI_HEIGHT);
-		this.holeBack = new BTNActor(new Texture("hole-back.png"), x, y + 275.0f, Nazi.NAZI_WIDTH + 70.0f, Nazi.NAZI_HEIGHT);
-
-		float originalY = nazi.getY();
-
-		MoveToAction moveUp = new MoveToAction();
-		moveUp.setPosition(nazi.getX(), originalY + OSCILLATION_DELTA);
-		moveUp.setDuration(1.0f);
-		moveUp.setInterpolation(Interpolation.linear);
-
-		DelayAction delay = new DelayAction(2.0f);
-
-		MoveToAction moveDown = new MoveToAction();
-		moveDown.setPosition(nazi.getX(), originalY);
-		moveDown.setDuration(1.0f);
-		moveDown.setInterpolation(Interpolation.linear);
-
-		DelayAction delay2 = new DelayAction(2.0f);
-		
-		RunnableAction notify = new RunnableAction();
-		notify.setRunnable(new Runnable() {
-
-			@Override
-			public void run() {
-
-				Gdx.app.log(BTNGame.TAG, "Animation complete.");
-			}
-		});
-
-		SequenceAction oscillateSequence = new SequenceAction();
-		oscillateSequence.addAction(moveUp);
-		oscillateSequence.addAction(delay);
-		oscillateSequence.addAction(moveDown);
-		oscillateSequence.addAction(notify);
-		oscillateSequence.addAction(delay2);
-
-		RepeatAction repeatOscillate = new RepeatAction();
-		repeatOscillate.setAction(oscillateSequence);
-		repeatOscillate.setCount(RepeatAction.FOREVER);
-		
-		this.nazi.addAction(repeatOscillate);
+		nazi.prepareAnimation();
 	}
-
+	
 	public Array<Actor> getActors(){
 
 		Array<Actor> output = new Array<Actor>();

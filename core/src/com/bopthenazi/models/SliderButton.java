@@ -46,6 +46,7 @@ public class SliderButton extends BTNActor {
 				super.touchUp(event, x, y, pointer, button);
 				
 				if(!lock){
+					
 					lock = true;
 				
 					SliderButton.this.gameScreen.notifyTouchUp();

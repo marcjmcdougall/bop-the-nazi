@@ -14,6 +14,7 @@ public class Glove extends BTNCollideableActor {
 	public static final float GLOVE_WIDTH = 192.0f;
 	public static final float GLOVE_HEIGHT = 2367.0f;
 	
+	
 	private BTNGameScreen gameScreen;
 	
 	public Glove(float x, float y, float width, float height, BTNGameScreen game) {

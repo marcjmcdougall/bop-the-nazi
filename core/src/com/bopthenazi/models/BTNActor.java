@@ -10,7 +10,7 @@ public class BTNActor extends Actor {
 	
 	public BTNActor(Texture texture, float x, float y, float width, float height){
 		
-		// TODO: No super constructor called?
+		super();
 		this.texture = texture;
 		
 		this.setWidth(width);

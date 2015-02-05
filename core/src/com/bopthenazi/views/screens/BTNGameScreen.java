@@ -15,6 +15,7 @@ import com.bopthenazi.models.BTNMoveableActor;
 import com.bopthenazi.models.BTNStage;
 import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
+import com.bopthenazi.models.LineBreak;
 import com.bopthenazi.models.Nazi;
 import com.bopthenazi.models.NaziContainer;
 import com.bopthenazi.models.Score;
@@ -23,7 +24,7 @@ import com.bopthenazi.models.SliderButton;
 
 public class BTNGameScreen implements Screen{
 
-	private static final int MAX_NAZI_COUNT = 7;
+	private static final int MAX_NAZI_COUNT = 5;
 	private static final int MAX_CONCURRENT_NAZIS = 1;
 	
 	private static final float BASE_FREQUENCY_NAZI_REVEAL = 3f;
@@ -39,7 +40,7 @@ public class BTNGameScreen implements Screen{
 	private BTNGame game;
 	private BTNStage gameStage;
 	
-	private static final float[] NAZI_CONTAINER_COORDINATES = {157.5f, 412.5f, 667.5f, 922.5f, 285.0f, 540.0f, 795.0f};
+	private static final float[] NAZI_CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
 
 	private Array<NaziContainer> naziContainers;
 
@@ -50,6 +51,7 @@ public class BTNGameScreen implements Screen{
 	private Score score;
 	private BTNActor topBar;
 	private BTNMoveableActor gloveCase;
+	private LineBreak lineBreak;
 	
 	private float timeElapsedSinceLastNazi;
 	
@@ -69,8 +71,11 @@ public class BTNGameScreen implements Screen{
 		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this);
 		gloveCase = new BTNMoveableActor(new Texture("mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
 		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
+		lineBreak = new LineBreak(1500.0f);
 		
 		gameStage.addActor(bg);
+		
+		gameStage.addActor(lineBreak);
 		
 		initializeNaziContainers();
 		gameStage.addActor(glove);
@@ -127,11 +132,11 @@ public class BTNGameScreen implements Screen{
 		
 		for(int i = 0; i < MAX_NAZI_COUNT; i++){
 			
-			if(i < 4){
+			if(i < 3){
 				
 				naziContainers.add(new NaziContainer(NAZI_CONTAINER_COORDINATES[count], BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN, this));
 			}
-			else if(i >= 4){
+			else if(i >= 3){
 				
 				naziContainers.add(new NaziContainer(NAZI_CONTAINER_COORDINATES[count], (BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN) * 2, this));
 			}
@@ -263,7 +268,7 @@ public class BTNGameScreen implements Screen{
 			
 			if(score.getLives() <= 0){
 				
-				doEndGame();
+//				doEndGame();
 			}
 		}
 	}

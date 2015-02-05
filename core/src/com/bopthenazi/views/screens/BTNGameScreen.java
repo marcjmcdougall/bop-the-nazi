@@ -114,6 +114,8 @@ public class BTNGameScreen implements Screen{
 	
 	private void activateNewNazi(int index){
 		
+//		Gdx.audio.newSound(Gdx.files.internal("sfx/zombie-appear.wav")).play();
+		
 		naziContainers.get(index).getNazi().performNaziActivate();
 	}
 	
@@ -250,6 +252,8 @@ public class BTNGameScreen implements Screen{
 		doActivateUniqueNazi();
 		
 		if(hit){
+			
+			Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav")).play();
 			
 			score.updateScore(score.getScore() + 1);
 		}

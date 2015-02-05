@@ -2,10 +2,6 @@ package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.bopthenazi.utils.BTNCollideableActor;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
@@ -14,25 +10,31 @@ public class Glove extends BTNCollideableActor {
 	public static final float GLOVE_WIDTH = 192.0f;
 	public static final float GLOVE_HEIGHT = 2367.0f;
 	
-	private float downwardVelocity;
-	private float upwardVelocity;
+	private static final float GLOVE_HEIGHT_OFFSET = 775.0f;
 	
-	private boolean moving;
-	private boolean movingDown;
+	private float velocityX;
+	private float velocityY;
+	
 	private boolean readyToDrop;
 	
 	private BTNGameScreen gameScreen;
+	
+	private static final float GLOVE_UNLOCK_BARRIER = 800.0f;
+	
+	private static final float GLOVE_STATIC_VELOCITY_X = 0.0f;
+	private static final float GLOVE_STATIC_VELOCITY_Y = 0.0f;
+	
+	private static final float GLOVE_VELOCITY_Y_DOWN = -2500.0f;
+	private static final float GLOVE_VELOCITY_Y_UP = 500.0f;
 	
 	public Glove(float x, float y, float width, float height, BTNGameScreen game) {
 		
 		super(new Texture("glove.png"), x, y, width, height);
 		
 		// Velocity is measured in game-pixels / second.
-		this.downwardVelocity = 2500.0f;
-		this.upwardVelocity = 500.0f;
+		this.velocityX = GLOVE_STATIC_VELOCITY_X;
+		this.velocityY = GLOVE_STATIC_VELOCITY_Y;
 		
-		this.moving = false;
-		this.movingDown = true;
 		this.readyToDrop = true;
 		
 		this.gameScreen = game;
@@ -49,30 +51,30 @@ public class Glove extends BTNCollideableActor {
 		
 		super.act(delta);
 		
-		if(moving){
+		this.setX(getX() + delta * velocityX);
+		this.setY(getY() + delta * velocityY);
+		
+		if(this.getY() >= GLOVE_UNLOCK_BARRIER){
 			
-			if(movingDown){
+			// If the glove is moving upwards...
+			if(this.getVelocityY() > 0){
 				
-				if(!(getY() <= 0.0f)){
-				
-					setY(getY() - downwardVelocity * delta);
-				}
-				else{
-					
-					setMovingDown(false);
-				}
+				// Allow another drop.
+				this.setReadyToDrop(true);
 			}
-			else{
-				
-				if(!(getY() >= 1163.1667f)){
-					
-					setY(getY() + upwardVelocity * delta);
-				}
-				else{
-					
-					readyToDrop = true;
-				}
-			}
+		}
+		
+		// If the glove hits the bottom of the screen...
+		if(this.getY() <= 0){
+			
+			this.setVelocityY(GLOVE_VELOCITY_Y_UP);
+			this.setReadyToDrop(false);
+		}
+		
+		// If the glove hits the top part of the screen...
+		if(this.getY() >= BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET){
+			
+			this.setVelocityY(GLOVE_STATIC_VELOCITY_Y);
 		}
 	}
 
@@ -94,38 +96,44 @@ public class Glove extends BTNCollideableActor {
 
 	public void notifyCollide() {
 		
-		this.movingDown = false;
-	}
-
-	/**
-	 * @return the moving
-	 */
-	public boolean isMoving() {
-		
-		return moving;
-	}
-
-	/**
-	 * @param moving the moving to set
-	 */
-	public void setMoving(boolean moving) {
-		
-		this.moving = moving;
+		this.setVelocityY(GLOVE_VELOCITY_Y_UP);
 	}
 	
-	/**
-	 * @return the movingDown
-	 */
-	public boolean isMovingDown() {
+	public void release(){
 		
-		return movingDown;
+		this.setVelocityY(GLOVE_VELOCITY_Y_DOWN);
+		this.setReadyToDrop(false);
 	}
 
 	/**
-	 * @param movingDown the movingDown to set
+	 * @return the velocityX
 	 */
-	public void setMovingDown(boolean movingDown) {
+	public float getVelocityX() {
 		
-		this.movingDown = movingDown;
+		return velocityX;
+	}
+
+	/**
+	 * @param velocityX the velocityX to set
+	 */
+	public void setVelocityX(float velocityX) {
+		
+		this.velocityX = velocityX;
+	}
+
+	/**
+	 * @return the velocityY
+	 */
+	public float getVelocityY() {
+		
+		return velocityY;
+	}
+
+	/**
+	 * @param velocityY the velocityY to set
+	 */
+	public void setVelocityY(float velocityY) {
+		
+		this.velocityY = velocityY;
 	}
 }

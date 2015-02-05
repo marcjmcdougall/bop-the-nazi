@@ -25,9 +25,9 @@ import com.bopthenazi.models.SliderButton;
 public class BTNGameScreen implements Screen{
 
 	private static final int MAX_NAZI_COUNT = 5;
-	private static final int MAX_CONCURRENT_NAZIS = 1;
+	private static final int MAX_CONCURRENT_NAZIS = 5;
 	
-	private static final float BASE_FREQUENCY_NAZI_REVEAL = 3f;
+	private static final float BASE_FREQUENCY_NAZI_REVEAL = 1.0f;
 	
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
@@ -111,8 +111,7 @@ public class BTNGameScreen implements Screen{
 		
 		if(glove.isReadyToDrop()){
 			
-			glove.setMoving(true);
-			glove.setMovingDown(true);
+			glove.release();
 			glove.setReadyToDrop(false);
 		}
 	}
@@ -183,6 +182,8 @@ public class BTNGameScreen implements Screen{
         timeElapsedSinceLastNazi += delta;
         
         if(timeElapsedSinceLastNazi >= BASE_FREQUENCY_NAZI_REVEAL){
+        	
+        	System.out.println("Activating new nazi now!");
         	
         	// Activate a random Nazi that has *not yet been activated*
         	doActivateUniqueNazi();

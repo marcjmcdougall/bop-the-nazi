@@ -45,7 +45,7 @@ public class BTNStage extends Stage {
 					
 					if(nazi instanceof Nazi){
 						
-						if(((Nazi) nazi).getRect().overlaps(((Glove) a).getRect()) && !((Nazi) nazi).isHiding() && ((Glove) a).isMovingDown()){
+						if(((Nazi) nazi).getRect().overlaps(((Glove) a).getRect()) && !((Nazi) nazi).isHiding() && ((Glove) a).getVelocityY() < 0){
 							
 							Gdx.app.log(BTNGame.TAG, "Collision detected!");
 							

@@ -96,14 +96,14 @@ public class Nazi extends BTNCollideableActor {
 		
 		MoveToAction moveUp = new MoveToAction();
 		moveUp.setPosition(this.getX(), startingY + OSCILLATION_DELTA);
-		moveUp.setDuration(1.0f);
+		moveUp.setDuration(0.5f);
 		moveUp.setInterpolation(Interpolation.linear);
 
-		DelayAction delay = new DelayAction(0.5f);
+		DelayAction delay = new DelayAction(1.0f);
 
 		MoveToAction moveDown = new MoveToAction();
 		moveDown.setPosition(this.getX(), startingY);
-		moveDown.setDuration(1.0f);
+		moveDown.setDuration(0.5f);
 		moveDown.setInterpolation(Interpolation.linear);
 		
 		RunnableAction notifyDown = new RunnableAction();
@@ -132,7 +132,6 @@ public class Nazi extends BTNCollideableActor {
 	private void performNaziDeactivate(boolean hit) {
 		
 		this.setActivated(false);
-		
 		gameScreen.notifyNaziDeactivate(hit);
 	}
 	

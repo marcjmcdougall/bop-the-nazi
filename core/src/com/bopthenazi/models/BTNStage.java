@@ -2,7 +2,9 @@ package com.bopthenazi.models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
@@ -63,9 +65,29 @@ public class BTNStage extends Stage {
 	}
 	
 	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		
+		screen.notifyTouchUp();
+		
+		return super.touchUp(screenX, screenY, pointer, button);
+	}
+	
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		
+		System.out.println("It worked!");
+		
+		Vector2 coords = new Vector2(screenX, screenY);
+		
+		screen.notifyNewX(this.screenToStageCoordinates(coords).x);
+		
+		return super.touchDown(screenX, screenY, pointer, button);
+	}
+	
+	@Override
 	public boolean keyDown(int keyCode) {
 		
-		if(keyCode == Keys.BACK || keyCode == Keys.BACKSPACE){
+		if(keyCode == Keys.BACKSPACE){
 			
 			game.setScreen(new BTNMenuScreen(game));
 		}

@@ -15,17 +15,14 @@ import com.bopthenazi.models.BTNMoveableActor;
 import com.bopthenazi.models.BTNStage;
 import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
-import com.bopthenazi.models.LineBreak;
 import com.bopthenazi.models.Nazi;
 import com.bopthenazi.models.NaziContainer;
 import com.bopthenazi.models.Score;
-import com.bopthenazi.models.Slider;
-import com.bopthenazi.models.SliderButton;
 
 public class BTNGameScreen implements Screen{
 
 	private static final int MAX_NAZI_COUNT = 5;
-	private static final int MAX_CONCURRENT_NAZIS = 5;
+	private static final int MAX_CONCURRENT_NAZIS = 3;
 	
 	private static final float BASE_FREQUENCY_NAZI_REVEAL = 1.0f;
 	
@@ -44,14 +41,13 @@ public class BTNGameScreen implements Screen{
 
 	private Array<NaziContainer> naziContainers;
 
-	private Slider slider;
-	private SliderButton sliderButton;
+//	private Slider slider;
+//	private SliderButton sliderButton;
 	private Glove glove;
 	private BTNActor bg;
 	private Score score;
 	private BTNActor topBar;
 	private BTNMoveableActor gloveCase;
-	private LineBreak lineBreak;
 	
 	private float timeElapsedSinceLastNazi;
 	
@@ -65,23 +61,20 @@ public class BTNGameScreen implements Screen{
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
 		gameStage = new BTNStage(viewport, game, this);
-		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT);
-		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
+//		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT, this);
+//		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
 		bg = new BTNActor(new Texture("background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this);
 		gloveCase = new BTNMoveableActor(new Texture("mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
+		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
 		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
-		lineBreak = new LineBreak(1500.0f);
 		
 		gameStage.addActor(bg);
-		
-		gameStage.addActor(lineBreak);
 		
 		initializeNaziContainers();
 		gameStage.addActor(glove);
 		gameStage.addActor(gloveCase);
-		gameStage.addActor(slider);
-		gameStage.addActor(sliderButton);
+//		gameStage.addActor(slider);
+//		gameStage.addActor(sliderButton);
 		gameStage.addActor(topBar);
 		gameStage.addActor(score);
 		
@@ -90,8 +83,11 @@ public class BTNGameScreen implements Screen{
 	
 	public void notifyNewX(float x) {
 		
-		glove.setX(x - Glove.GLOVE_WIDTH / 2.0f);
-		gloveCase.setX(x - 162.0f / 2.0f);
+		System.out.println("x: " + x);
+		
+		glove.setToX(x - glove.getWidth() / 2.0f);
+//		sliderButton.setX(x - sliderButton.getWidth() / 2.0f);
+//		gloveCase.setX(x - gloveCase.getWidth());
 	}
 	
 	public void onGloveCollision(Nazi naziCollided){
@@ -111,15 +107,13 @@ public class BTNGameScreen implements Screen{
 		
 		if(glove.isReadyToDrop()){
 			
-			glove.release();
-			glove.setReadyToDrop(false);
+			glove.requestDrop();
 		}
 	}
 	
 	private void activateNewNazi(int index){
 		
 //		Gdx.audio.newSound(Gdx.files.internal("sfx/zombie-appear.wav")).play();
-		
 		naziContainers.get(index).getNazi().performNaziActivate();
 	}
 	
@@ -208,10 +202,17 @@ public class BTNGameScreen implements Screen{
 		
 		if(numNazisActivated < MAX_CONCURRENT_NAZIS){
 			
-			// Select a random number.
-			int index = new Random().nextInt(MAX_NAZI_COUNT);
+			for(int i = 0; i < MAX_CONCURRENT_NAZIS; i++){
 				
-			activateNewNazi(index);
+				// Select a random number.
+				int index = new Random().nextInt(MAX_NAZI_COUNT);
+				
+				if(!naziContainers.get(index).getNazi().isActivated()){
+					
+					activateNewNazi(index);
+					break;
+				}
+			}
 		}
 		
 	    timeElapsedSinceLastNazi = 0f;
@@ -246,11 +247,6 @@ public class BTNGameScreen implements Screen{
 		
 		// TODO Auto-generated method stub
 		gameStage.dispose();
-	}
-
-	public SliderButton getSliderButton() {
-		
-		return sliderButton;
 	}
 
 	public void notifyNaziDeactivate(boolean hit) {

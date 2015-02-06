@@ -15,29 +15,41 @@ public class Glove extends BTNCollideableActor {
 	private float velocityX;
 	private float velocityY;
 	
+	private float toX;
+	private float toXOffset;
+	
 	private boolean readyToDrop;
-	
+	private boolean dropRequested;
+
 	private BTNGameScreen gameScreen;
+	private BTNMoveableActor gloveCase;
 	
-	private static final float GLOVE_UNLOCK_BARRIER = 800.0f;
+	private static final float GLOVE_UNLOCK_BARRIER = BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET;
 	
 	private static final float GLOVE_STATIC_VELOCITY_X = 0.0f;
 	private static final float GLOVE_STATIC_VELOCITY_Y = 0.0f;
 	
-	private static final float GLOVE_VELOCITY_Y_DOWN = -2500.0f;
-	private static final float GLOVE_VELOCITY_Y_UP = 500.0f;
+	private static final float GLOVE_VELOCTY_X = 3000.0f;
 	
-	public Glove(float x, float y, float width, float height, BTNGameScreen game) {
+	private static final float GLOVE_VELOCITY_Y_DOWN = -4000.0f;
+	private static final float GLOVE_VELOCITY_Y_UP = 4000.0f;
+	
+	public Glove(float x, float y, float width, float height, BTNGameScreen game, BTNMoveableActor gloveCase) {
 		
 		super(new Texture("glove.png"), x, y, width, height);
 		
 		// Velocity is measured in game-pixels / second.
-		this.velocityX = GLOVE_STATIC_VELOCITY_X;
+		this.velocityX = GLOVE_VELOCTY_X;
 		this.velocityY = GLOVE_STATIC_VELOCITY_Y;
 		
+		this.toX = getX();
+		this.toXOffset = 2500.0f / 100.0f + 20.0f;
+		
 		this.readyToDrop = true;
+		this.dropRequested = false;
 		
 		this.gameScreen = game;
+		this.gloveCase = gloveCase;
 	}
 	
 	@Override
@@ -51,7 +63,19 @@ public class Glove extends BTNCollideableActor {
 		
 		super.act(delta);
 		
-		this.setX(getX() + delta * velocityX);
+		if(this.getX() < (getToX() - toXOffset)){
+			
+			this.setX(getX() + delta * velocityX);
+		}
+		else if (this.getX() > (getToX() + toXOffset)){
+			
+			this.setX(getX() - delta * velocityX);
+		}
+		else{
+			
+			release();
+		}
+		
 		this.setY(getY() + delta * velocityY);
 		
 		if(this.getY() >= GLOVE_UNLOCK_BARRIER){
@@ -74,7 +98,10 @@ public class Glove extends BTNCollideableActor {
 		// If the glove hits the top part of the screen...
 		if(this.getY() >= BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET){
 			
+			System.out.println("Stopping Glove.");
+			
 			this.setVelocityY(GLOVE_STATIC_VELOCITY_Y);
+			this.setY((BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET) - 1);
 		}
 	}
 
@@ -99,12 +126,32 @@ public class Glove extends BTNCollideableActor {
 		this.setVelocityY(GLOVE_VELOCITY_Y_UP);
 	}
 	
-	public void release(){
+	private void release(){
 		
-		this.setVelocityY(GLOVE_VELOCITY_Y_DOWN);
-		this.setReadyToDrop(false);
+		if(readyToDrop && dropRequested){
+			
+			this.setVelocityY(GLOVE_VELOCITY_Y_DOWN);
+			this.setReadyToDrop(false);
+			this.dropRequested = false;
+		}
+	}
+	
+	public void requestDrop(){
+		
+		this.dropRequested = true;
 	}
 
+	@Override
+	public void setX(float x) {
+		
+		super.setX(x);
+		
+		if(gloveCase != null){
+			
+			gloveCase.setX(x + 15.0f);
+		}
+	}
+	
 	/**
 	 * @return the velocityX
 	 */
@@ -135,5 +182,21 @@ public class Glove extends BTNCollideableActor {
 	public void setVelocityY(float velocityY) {
 		
 		this.velocityY = velocityY;
+	}
+	
+	/**
+	 * @return the toX
+	 */
+	public float getToX() {
+		
+		return toX;
+	}
+
+	/**
+	 * @param toX the toX to set
+	 */
+	public void setToX(float toX) {
+		
+		this.toX = toX;
 	}
 }

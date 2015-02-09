@@ -98,8 +98,6 @@ public class Glove extends BTNCollideableActor {
 		// If the glove hits the top part of the screen...
 		if(this.getY() >= BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET){
 			
-			System.out.println("Stopping Glove.");
-			
 			this.setVelocityY(GLOVE_STATIC_VELOCITY_Y);
 			this.setY((BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET) - 1);
 		}

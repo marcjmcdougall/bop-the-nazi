@@ -177,8 +177,6 @@ public class BTNGameScreen implements Screen{
         
         if(timeElapsedSinceLastNazi >= BASE_FREQUENCY_NAZI_REVEAL){
         	
-        	System.out.println("Activating new nazi now!");
-        	
         	// Activate a random Nazi that has *not yet been activated*
         	doActivateUniqueNazi();
         }

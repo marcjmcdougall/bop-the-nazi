@@ -37,7 +37,7 @@ public class Glove extends BTNCollideableActor {
 	
 	private static final float GLOVE_VELOCTY_X = 4000.0f;
 	
-	private static final float GLOVE_VELOCITY_Y_DOWN = -4000.0f;
+	private static final float GLOVE_VELOCITY_Y_DOWN = 4000.0f;
 	private static final float GLOVE_VELOCITY_Y_UP = 4000.0f;
 	
 	public Glove(float x, float y, float width, float height, BTNGameScreen game, BTNMoveableActor gloveCase) {
@@ -68,6 +68,8 @@ public class Glove extends BTNCollideableActor {
 	public void act(float delta) {
 		
 		super.act(delta);
+		
+//		System.out.println(getX() + ", " + getY());
 		
 //		if(this.getX() < (getToX() - toXOffset)){
 //			
@@ -173,7 +175,29 @@ public class Glove extends BTNCollideableActor {
 
 	public void notifyCollide() {
 		
-		this.setVelocityY(GLOVE_VELOCITY_Y_UP);
+		this.clearActions();
+		
+		MoveToAction moveUp = new MoveToAction();
+		moveUp.setX(getX());
+		moveUp.setY(BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET);
+		moveUp.setDuration(Math.abs(getY() - (BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET)) / GLOVE_VELOCITY_Y_UP);
+
+		RunnableAction notifyConsume = new RunnableAction();
+		notifyConsume.setRunnable(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Glove.this.currentAction = null;
+			}
+		});
+		
+		SequenceAction sequence = new SequenceAction();
+		
+		sequence.addAction(moveUp);
+		sequence.addAction(notifyConsume);
+		
+		this.addAction(sequence);
 	}
 	
 	private void release(){

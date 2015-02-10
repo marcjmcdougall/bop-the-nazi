@@ -40,9 +40,12 @@ public class ActionHandler extends Thread {
 	
 	public void addAction(Action a){
 		
-		actionQueue.addSync(a);
-		
-		System.out.println("Adding action now: " + actionQueue);
+		if(actionQueue.size < 1){
+			
+			actionQueue.addSync(a);
+			
+			System.out.println("Adding action now: " + actionQueue);
+		}
 	}
 
 	/**

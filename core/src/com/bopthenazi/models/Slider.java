@@ -24,8 +24,6 @@ public class Slider extends BTNActor {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				
 				super.touchUp(event, x, y, pointer, button);
-				
-				Slider.this.gameScreen.notifyTouchUp();
 			}
 			
 			@Override

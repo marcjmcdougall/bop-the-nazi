@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -15,6 +16,7 @@ import com.bopthenazi.models.BTNMoveableActor;
 import com.bopthenazi.models.BTNStage;
 import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
+import com.bopthenazi.models.LivesModule;
 import com.bopthenazi.models.Nazi;
 import com.bopthenazi.models.NaziContainer;
 import com.bopthenazi.models.Score;
@@ -39,6 +41,9 @@ public class BTNGameScreen implements Screen{
 	private BTNGame game;
 	private BTNStage gameStage;
 	
+	private Sound punchSound;
+	private Sound splatSound;
+	
 	private ActionHandler handler;
 	
 	private static final float[] NAZI_CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
@@ -52,6 +57,7 @@ public class BTNGameScreen implements Screen{
 	private Score score;
 	private BTNActor topBar;
 	private BTNMoveableActor gloveCase;
+	private LivesModule livesModule;
 	
 	private float timeElapsedSinceLastNazi;
 	
@@ -78,7 +84,12 @@ public class BTNGameScreen implements Screen{
 		handler.setRunning(true);
 		handler.start();
 		
+		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
+		this.splatSound = Gdx.audio.newSound(Gdx.files.internal("sfx/splat.wav"));
+		
 		initializeNaziContainers();
+		initializeLivesModule();
+		
 		gameStage.addActor(glove);
 		gameStage.addActor(gloveCase);
 //		gameStage.addActor(slider);
@@ -111,14 +122,6 @@ public class BTNGameScreen implements Screen{
 		gameStage.addActor(explosion);
 	}
 
-	public void notifyTouchUp() {
-		
-		if(glove.isReadyToDrop()){
-			
-			glove.requestDrop();
-		}
-	}
-	
 	private void activateNewNazi(int index){
 		
 //		Gdx.audio.newSound(Gdx.files.internal("sfx/zombie-appear.wav")).play();
@@ -162,6 +165,21 @@ public class BTNGameScreen implements Screen{
 				
 				gameStage.addActor(actor);
 			}
+		}
+	}
+	
+	private void initializeLivesModule() {
+		
+		this.livesModule = new LivesModule();
+		
+		for(BTNActor heartOutline : livesModule.getHeartOutlines()){
+			
+			gameStage.addActor(heartOutline);
+		}
+		
+		for(BTNActor heart : livesModule.getHearts()){
+			
+			gameStage.addActor(heart);
 		}
 	}
 
@@ -253,6 +271,8 @@ public class BTNGameScreen implements Screen{
 		
 		// TODO Auto-generated method stub
 		gameStage.dispose();
+		punchSound.dispose();
+		splatSound.dispose();
 	}
 
 	public void notifyNaziDeactivate(boolean hit) {
@@ -261,17 +281,19 @@ public class BTNGameScreen implements Screen{
 		
 		if(hit){
 			
-			Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav")).play();
+			punchSound.play();
 			
 			score.updateScore(score.getScore() + 1);
 		}
 		else{
 			
 			score.setLives(score.getLives() - 1);
+			livesModule.popHeart();
+			splatSound.play();
 			
 			if(score.getLives() <= 0){
 				
-//				doEndGame();
+				doEndGame();
 			}
 		}
 	}
@@ -292,6 +314,7 @@ public class BTNGameScreen implements Screen{
 	 * @return the glove
 	 */
 	public Glove getGlove() {
+		
 		return glove;
 	}
 }

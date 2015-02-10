@@ -71,4 +71,16 @@ public abstract class BTNCollideableActor extends BTNActor {
 			rect.setY(y);
 		}
 	}
+	
+	@Override
+	public void setPosition(float x, float y, int alignment) {
+		
+		super.setPosition(x, y, alignment);
+		
+		if(rect != null){
+			
+			rect.setX(x);
+			rect.setY(y);
+		}
+	}
 }

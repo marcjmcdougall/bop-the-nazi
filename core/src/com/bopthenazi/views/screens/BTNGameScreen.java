@@ -18,6 +18,8 @@ import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.Nazi;
 import com.bopthenazi.models.NaziContainer;
 import com.bopthenazi.models.Score;
+import com.bopthenazi.utils.Action;
+import com.bopthenazi.utils.ActionHandler;
 
 public class BTNGameScreen implements Screen{
 
@@ -36,6 +38,8 @@ public class BTNGameScreen implements Screen{
 	
 	private BTNGame game;
 	private BTNStage gameStage;
+	
+	private ActionHandler handler;
 	
 	private static final float[] NAZI_CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
 
@@ -69,6 +73,10 @@ public class BTNGameScreen implements Screen{
 		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
 		
 		gameStage.addActor(bg);
+		
+		handler = new ActionHandler(this);
+		handler.setRunning(true);
+		handler.start();
 		
 		initializeNaziContainers();
 		gameStage.addActor(glove);
@@ -267,11 +275,23 @@ public class BTNGameScreen implements Screen{
 			}
 		}
 	}
+	
+	public void addActionToHandlerQueue(Action a){
+		
+		this.handler.addAction(a);
+	}
 
 	private void doEndGame() {
 		
 		Gdx.app.log(BTNGame.TAG, "Game Over!");
 		
 		game.setScreen(new BTNMenuScreen(game));
+	}
+
+	/**
+	 * @return the glove
+	 */
+	public Glove getGlove() {
+		return glove;
 	}
 }

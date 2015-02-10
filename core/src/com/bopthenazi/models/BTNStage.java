@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
+import com.bopthenazi.utils.Action;
+import com.bopthenazi.utils.Action.ActionType;
 import com.bopthenazi.views.screens.BTNGameScreen;
 import com.bopthenazi.views.screens.BTNMenuScreen;
 
@@ -75,11 +77,15 @@ public class BTNStage extends Stage {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		
-		System.out.println("It worked!");
-		
 		Vector2 coords = new Vector2(screenX, screenY);
 		
-		screen.notifyNewX(this.screenToStageCoordinates(coords).x);
+		Vector2 screenCoords = screenToStageCoordinates(coords);
+		
+		screen.notifyNewX(screenCoords.x);
+		
+		Action a = new Action(screenCoords.x, screenCoords.y, ActionType.TOUCH_DOWN);
+		
+		screen.addActionToHandlerQueue(a);
 		
 		return super.touchDown(screenX, screenY, pointer, button);
 	}

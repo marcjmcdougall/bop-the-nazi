@@ -16,6 +16,6 @@ public class SynchronizedArray<T> extends Array<T> {
 	
 	public synchronized T popSync(){
 		
-		return this.pop();
+		return this.removeIndex(0);
 	}
 }

@@ -103,4 +103,10 @@ public class Action {
 		
 		return acting;
 	}
+	
+	@Override
+	public String toString() {
+		
+		return "" + getEventX();
+	}
 }

@@ -18,13 +18,6 @@ public class ActionHandler extends Thread {
 	
 	public void consume() {
 		
-		System.out.println("Consuming Action Now! (" + actionQueue.size + ")");
-		
-		if(actionQueue.size > 1){
-			
-			System.out.println("Debug Start.");
-		}
-		
 		actionQueue.peekSync().setConsumed(true);
 	}
 	
@@ -35,15 +28,21 @@ public class ActionHandler extends Thread {
 		
 		while(running){
 			
-			// TODO: Implementation.
+			if(screen.getGlove().getCurrentAction() == null){
+				
+				if(actionQueue.size > 0){
+					
+					screen.getGlove().injectNewAction(actionQueue.popSync());
+				}
+			}
 		}
 	}
 	
 	public void addAction(Action a){
 		
-		System.out.println("Adding action now.");
-		
 		actionQueue.addSync(a);
+		
+		System.out.println("Adding action now: " + actionQueue);
 	}
 
 	/**

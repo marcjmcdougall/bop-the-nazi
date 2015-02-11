@@ -163,7 +163,7 @@ public class Glove extends BTNCollideableActor {
 				sequence.addAction(buildMoveDownAction(this.getX() + (getWidth() / 2.0f)));
 				
 				// Then, move up to the top of the screen.
-				sequence.addAction(buildMoveUpAction(this.getX() + (getWidth() / 2.0f), 0.0f));
+				sequence.addAction(buildMoveUpAction(this.getX() + (getWidth() / 2.0f), this.getY()));
 				
 				// Then, translate across the top of the screen.
 				sequence.addAction(buildTranslateXAction(x));
@@ -181,7 +181,22 @@ public class Glove extends BTNCollideableActor {
 				
 				System.out.println("Moving Up!");
 				
+				// Clear all actions on the Glove.
+				this.clearActions();
 				
+				SequenceAction sequence = new SequenceAction();
+				
+				// Then, move up to the top of the screen.
+				sequence.addAction(buildMoveUpAction(this.getX() + (getWidth() / 2.0f), this.getY()));
+				
+				// Then, translate across the top of the screen.
+				sequence.addAction(buildTranslateXAction(x));
+				
+				// Then, perform another "bop".
+				sequence.addAction(buildMoveDownAction(x));
+				sequence.addAction(buildMoveUpAction(x, 0.0f));
+				
+				this.addAction(sequence);
 				
 				break;
 			}

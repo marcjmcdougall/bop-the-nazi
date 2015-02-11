@@ -25,6 +25,14 @@ import com.bopthenazi.utils.ActionHandler;
 
 public class BTNGameScreen implements Screen{
 
+	private static final boolean USE_HANDLER = false;
+	private static final boolean QUIET_MODE = true;
+	
+	private static final float DEFAULT_VOLUME = 1.0f;
+	
+	private static final int SOUND_ID_SPLAT = 0;
+	private static final int SOUND_ID_PUNCH = 1;
+	
 	private static final int MAX_NAZI_COUNT = 5;
 	private static final int MAX_CONCURRENT_NAZIS = 3;
 	
@@ -80,9 +88,12 @@ public class BTNGameScreen implements Screen{
 		
 		gameStage.addActor(bg);
 		
-		handler = new ActionHandler(this);
-		handler.setRunning(true);
-		handler.start();
+		if(USE_HANDLER){
+		
+			handler = new ActionHandler(this);
+			handler.setRunning(true);
+			handler.start();
+		}
 		
 		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
 		this.splatSound = Gdx.audio.newSound(Gdx.files.internal("sfx/splat.wav"));
@@ -274,19 +285,22 @@ public class BTNGameScreen implements Screen{
 		punchSound.dispose();
 		splatSound.dispose();
 		
-		while(handler.isAlive()){
+		if(USE_HANDLER){
 			
-			try{
+		while(handler.isAlive()){
 				
-				handler.setRunning(false);	
-			}
-			catch(Exception e){
-				
-				// Just try again.
-			}
-			finally{
-				
-				handler.setRunning(false);
+				try{
+					
+					handler.setRunning(false);	
+				}
+				catch(Exception e){
+					
+					// Just try again.
+				}
+				finally{
+					
+					handler.setRunning(false);
+				}
 			}
 		}
 	}
@@ -297,7 +311,7 @@ public class BTNGameScreen implements Screen{
 		
 		if(hit){
 			
-			punchSound.play();
+			playSound(SOUND_ID_PUNCH);
 			
 			score.updateScore(score.getScore() + 1);
 		}
@@ -305,7 +319,8 @@ public class BTNGameScreen implements Screen{
 			
 			score.setLives(score.getLives() - 1);
 			livesModule.popHeart();
-			splatSound.play();
+			
+			playSound(SOUND_ID_SPLAT);
 			
 			if(score.getLives() <= 0){
 				
@@ -316,9 +331,39 @@ public class BTNGameScreen implements Screen{
 	
 	public void addActionToHandlerQueue(Action a){
 		
-		this.handler.addAction(a);
+		if(USE_HANDLER){
+			
+			this.handler.addAction(a);
+		}
 	}
 
+	private void playSound(int soundID){
+		
+		if(!QUIET_MODE){
+			
+			switch(soundID){
+			
+				case SOUND_ID_PUNCH :{
+					
+					splatSound.play(DEFAULT_VOLUME / 2);
+					
+					break;
+				}
+				case SOUND_ID_SPLAT :{
+					
+					punchSound.play(DEFAULT_VOLUME);
+					
+					break;
+				}
+				default :{
+					
+					// Do nothing.
+					break;
+				}
+			}
+		}
+	}
+	
 	private void doEndGame() {
 		
 		Gdx.app.log(BTNGame.TAG, "Game Over!");

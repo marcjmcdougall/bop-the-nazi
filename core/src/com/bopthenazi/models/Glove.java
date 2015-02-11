@@ -149,24 +149,39 @@ public class Glove extends BTNCollideableActor {
 				
 				break;
 			}
+			// If the glove is already moving down...
 			case STATE_MOVING_DOWN :{
 				
 				System.out.println("Moving Down!");
 				
+				// Clear all actions on the Glove.
 				this.clearActions();
 				
 				SequenceAction sequence = new SequenceAction();
+				
+				// First, add an action to simply finish the original "MoveDown" MoveToAction.
 				sequence.addAction(buildMoveDownAction(this.getX() + (getWidth() / 2.0f)));
+				
+				// Then, move up to the top of the screen.
 				sequence.addAction(buildMoveUpAction(this.getX() + (getWidth() / 2.0f), 0.0f));
+				
+				// Then, translate across the top of the screen.
 				sequence.addAction(buildTranslateXAction(x));
+				
+				// Then, perform another "bop".
+				sequence.addAction(buildMoveDownAction(x));
+				sequence.addAction(buildMoveUpAction(x, 0.0f));
 				
 				this.addAction(sequence);
 				
 				break;
 			}
+			// If the glove is already moving up...
 			case STATE_MOVING_UP :{
 				
 				System.out.println("Moving Up!");
+				
+				
 				
 				break;
 			}
@@ -275,7 +290,7 @@ public class Glove extends BTNCollideableActor {
 		MoveToAction translateX = new MoveToAction();
 		
 		translateX.setX(effectiveX);
-		translateX.setY(this.getY());
+		translateX.setY(BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET);
 		translateX.setDuration(Math.abs((effectiveX - this.getX()) / GLOVE_VELOCTY_X));
 		
 		return translateX;

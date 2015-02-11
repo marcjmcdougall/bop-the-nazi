@@ -16,11 +16,25 @@ public class Glove extends BTNCollideableActor {
 	
 	private static final float GLOVE_HEIGHT_OFFSET = 775.0f;
 	
+	public static final boolean COLLIDE = false;
+	
+	private static final int STATE_STATIC = 0;
+	private static final int STATE_MOVING_DOWN = 1;
+	private static final int STATE_MOVING_UP = 2;
+	
+	private volatile int actorState;
+	
 	private float velocityX;
 	private float velocityY;
 	
 	private float toX;
 	private float toXOffset;
+	
+	private SequenceAction moveDown;
+	private SequenceAction moveUp;
+	private MoveToAction translateX;
+	
+	private RunnableAction stateMutator;
 	
 	private volatile Action currentAction;
 	
@@ -48,6 +62,8 @@ public class Glove extends BTNCollideableActor {
 		this.velocityX = GLOVE_VELOCTY_X;
 		this.velocityY = GLOVE_STATIC_VELOCITY_Y;
 		
+		this.actorState = STATE_STATIC;
+		
 		this.toX = getX();
 		this.toXOffset = 2500.0f / 100.0f + 20.0f;
 		
@@ -56,6 +72,11 @@ public class Glove extends BTNCollideableActor {
 		
 		this.gameScreen = game;
 		this.gloveCase = gloveCase;
+		
+		this.moveDown = new SequenceAction();
+		this.moveUp = new SequenceAction();
+		this.translateX = new MoveToAction();
+		this.stateMutator = new RunnableAction();
 		
 		this.currentAction = null;
 	}
@@ -113,6 +134,153 @@ public class Glove extends BTNCollideableActor {
 //		}
 	}
 	
+	public void notifyTouch(float x){
+		
+		switch(actorState){
+			
+			case STATE_STATIC :{
+				
+				SequenceAction sequence = new SequenceAction();
+				sequence.addAction(buildTranslateXAction(x));
+				sequence.addAction(buildMoveDownAction(x));
+				sequence.addAction(buildMoveUpAction(x, 0.0f));
+				
+				this.addAction(sequence);
+				
+				break;
+			}
+			case STATE_MOVING_DOWN :{
+				
+				System.out.println("Moving Down!");
+				
+				this.clearActions();
+				
+				SequenceAction sequence = new SequenceAction();
+				sequence.addAction(buildMoveDownAction(this.getX() + (getWidth() / 2.0f)));
+				sequence.addAction(buildMoveUpAction(this.getX() + (getWidth() / 2.0f), 0.0f));
+				sequence.addAction(buildTranslateXAction(x));
+				
+				this.addAction(sequence);
+				
+				break;
+			}
+			case STATE_MOVING_UP :{
+				
+				System.out.println("Moving Up!");
+				
+				break;
+			}
+			default :{
+				
+				// Do nothing.
+				
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * Generates the "Move Up" MoveToAction for the Glove.  Note that we require the y-parameter here because 
+	 * we will not know where the Glove will be at the time of the execution of the Action, and we need that
+	 * information at execution time.
+	 * 
+	 * For example, we build a MoveToAction from y = 0.0 to y = 10.0, but since the Glove will be moving on the 
+	 * y-axis as the animation executes, we can't use getY().
+	 * 
+	 * Therefore, we just specify the location of the Glove at the execution time of this method.
+	 * 
+	 * @param x The x-coordinate of the MoveToAction.
+	 * @param y The y-coordinate of the Glove.
+	 * @return A MoveToAction built for moving the glove back into it's holster.
+	 */
+	private com.badlogic.gdx.scenes.scene2d.Action buildMoveUpAction(float x, float y) {
+		
+		RunnableAction stateMutatorUp = new RunnableAction();
+		
+		stateMutatorUp.setRunnable(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Glove.this.setActorState(STATE_MOVING_UP);
+			}
+		});
+		
+		MoveToAction moveUpTranslate = new MoveToAction();
+		
+		moveUpTranslate.setX(x - (getWidth() / 2.0f));
+		moveUpTranslate.setY(BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET);
+		moveUpTranslate.setDuration(Math.abs((BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET) - y) / GLOVE_VELOCITY_Y_UP);
+		
+		RunnableAction stateMutatorStatic = new RunnableAction();
+		
+		stateMutatorStatic.setRunnable(new Runnable() {
+			
+			public void run() {
+				
+				Glove.this.setActorState(STATE_STATIC);
+			}
+		});
+		
+		SequenceAction output = new SequenceAction();
+		
+		output.addAction(stateMutatorUp);
+		output.addAction(moveUpTranslate);
+		output.addAction(stateMutatorStatic);
+		
+		return output;
+	}
+
+	private synchronized void setActorState(int stateStatic) {
+		
+		this.actorState = stateStatic;
+	}
+
+	public int getActorState() {
+		
+		return actorState;
+	}
+
+	private com.badlogic.gdx.scenes.scene2d.Action buildMoveDownAction(float x) {
+		
+		RunnableAction stateMutatorDown = new RunnableAction();
+		
+		stateMutatorDown.setRunnable(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Glove.this.setActorState(STATE_MOVING_DOWN);
+			}
+		});
+		
+		MoveToAction moveDownTranslate = new MoveToAction();
+		
+		moveDownTranslate.setX(x - (getWidth() / 2.0f));
+		moveDownTranslate.setY(0.0f);
+		moveDownTranslate.setDuration(Math.abs((getY() - 0.0f)) / GLOVE_VELOCITY_Y_DOWN);
+		
+		SequenceAction output = new SequenceAction();
+		
+		output.addAction(stateMutatorDown);
+		output.addAction(moveDownTranslate);
+		
+		return output;
+	}
+
+	private com.badlogic.gdx.scenes.scene2d.Action buildTranslateXAction(float x) {
+		
+		float effectiveX = x - (getWidth() / 2.0f);
+		
+		MoveToAction translateX = new MoveToAction();
+		
+		translateX.setX(effectiveX);
+		translateX.setY(this.getY());
+		translateX.setDuration(Math.abs((effectiveX - this.getX()) / GLOVE_VELOCTY_X));
+		
+		return translateX;
+	}
+
 	/**
 	 * @return the currentAction
 	 */
@@ -123,40 +291,40 @@ public class Glove extends BTNCollideableActor {
 	
 	public void injectNewAction(Action a){
 		
-		this.currentAction = a;
-		
-		MoveToAction translateX = new MoveToAction();
-		translateX.setX(a.getEventX() - getWidth() / 2.0f);
-		translateX.setY(getY());
-		translateX.setDuration(Math.abs((a.getEventX() - 2.0f) - getX()) / GLOVE_VELOCTY_X);
-		
-		MoveToAction moveDown = new MoveToAction();
-		moveDown.setX(a.getEventX() - getWidth() / 2.0f);
-		moveDown.setY(0.0f);
-		moveDown.setDuration(Math.abs((getY() - 0.0f)) / GLOVE_VELOCITY_Y_DOWN);
-		
-		MoveToAction moveUp = new MoveToAction();
-		moveUp.setX(a.getEventX() - getWidth() / 2.0f);
-		moveUp.setY(getY());
-		moveUp.setDuration(Math.abs((getY() - 0.0f)) / GLOVE_VELOCITY_Y_UP);
-		
-		RunnableAction notifyConsume = new RunnableAction();
-		notifyConsume.setRunnable(new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				Glove.this.currentAction = null;
-			}
-		});
-		
-		SequenceAction sequence = new SequenceAction();
-		sequence.addAction(translateX);
-		sequence.addAction(moveDown);
-		sequence.addAction(moveUp);
-		sequence.addAction(notifyConsume);
-		
-		this.addAction(sequence);
+//		this.currentAction = a;
+//		
+//		MoveToAction translateX = new MoveToAction();
+//		translateX.setX(a.getEventX() - getWidth() / 2.0f);
+//		translateX.setY(getY());
+//		translateX.setDuration(Math.abs((a.getEventX() - 2.0f) - getX()) / GLOVE_VELOCTY_X);
+//		
+//		MoveToAction moveDown = new MoveToAction();
+//		moveDown.setX(a.getEventX() - getWidth() / 2.0f);
+//		moveDown.setY(0.0f);
+//		moveDown.setDuration(Math.abs((getY() - 0.0f)) / GLOVE_VELOCITY_Y_DOWN);
+//		
+//		MoveToAction moveUp = new MoveToAction();
+//		moveUp.setX(a.getEventX() - getWidth() / 2.0f);
+//		moveUp.setY(getY());
+//		moveUp.setDuration(Math.abs((getY() - 0.0f)) / GLOVE_VELOCITY_Y_UP);
+//		
+//		RunnableAction notifyConsume = new RunnableAction();
+//		notifyConsume.setRunnable(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				
+//				Glove.this.currentAction = null;
+//			}
+//		});
+//		
+//		SequenceAction sequence = new SequenceAction();
+//		sequence.addAction(translateX);
+//		sequence.addAction(moveDown);
+//		sequence.addAction(moveUp);
+//		sequence.addAction(notifyConsume);
+//		
+//		this.addAction(sequence);
 	}
 
 	/**
@@ -179,27 +347,9 @@ public class Glove extends BTNCollideableActor {
 		
 		this.clearActions();
 		
-		MoveToAction moveUp = new MoveToAction();
-		moveUp.setX(getX());
-		moveUp.setY(BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET);
-		moveUp.setDuration(Math.abs(getY() - (BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET)) / GLOVE_VELOCITY_Y_UP);
-
-		RunnableAction notifyConsume = new RunnableAction();
-		notifyConsume.setRunnable(new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				Glove.this.currentAction = null;
-			}
-		});
-		
-		SequenceAction sequence = new SequenceAction();
-		
-		sequence.addAction(moveUp);
-		sequence.addAction(notifyConsume);
-		
-		this.addAction(sequence);
+		// We need to add half the width because the method already accommodates for width, and so does getX().
+		// TODO: This functionality needs to be fixed.
+		this.addAction(buildMoveUpAction(this.getX() + (this.getWidth() / 2.0f), this.getY()));
 	}
 	
 	private void release(){

@@ -48,7 +48,7 @@ public class BTNStage extends Stage {
 					
 					if(nazi instanceof Nazi){
 						
-						if(((Nazi) nazi).getRect().overlaps(((Glove) a).getRect()) && !((Nazi) nazi).isHiding() /*&& ((Glove) a).getVelocityY() < 0*/){
+						if(((Nazi) nazi).getRect().overlaps(((Glove) a).getRect()) && !((Nazi) nazi).isHiding() && Glove.COLLIDE){
 							
 							Gdx.app.log(BTNGame.TAG, "Collision detected!");
 							
@@ -74,7 +74,9 @@ public class BTNStage extends Stage {
 		
 		Action a = new Action(screenCoords.x, screenCoords.y, ActionType.TOUCH_DOWN);
 		
-		screen.addActionToHandlerQueue(a);
+//		screen.addActionToHandlerQueue(a);
+		
+		screen.notifyNewX(screenCoords.x);
 		
 		return super.touchDown(screenX, screenY, pointer, button);
 	}

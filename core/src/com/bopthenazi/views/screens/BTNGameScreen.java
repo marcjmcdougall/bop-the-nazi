@@ -78,7 +78,7 @@ public class BTNGameScreen implements Screen{
 		
 		System.out.println("x: " + x);
 		
-		glove.setToX(x - glove.getWidth() / 2.0f);
+		glove.notifyTouch(x);
 //		sliderButton.setX(x - sliderButton.getWidth() / 2.0f);
 //		gloveCase.setX(x - gloveCase.getWidth());
 	}
@@ -368,7 +368,7 @@ public class BTNGameScreen implements Screen{
 	
 	private void doEndGame() {
 		
-		Gdx.app.log(BTNGame.TAG, "Game Over!");
+//		Gdx.app.log(BTNGame.TAG, "Game Over!");
 		
 //		game.setScreen(new BTNMenuScreen(game));
 	}
@@ -388,7 +388,8 @@ public class BTNGameScreen implements Screen{
 		print("==========================");
 		print("> ActionHandler.isRunning: " + handler.isRunning());
 		print("> Glove.getCurrentAction: " + glove.getCurrentAction());
-		print("> ActionHandler.getActionQueue(): " + handler.getActionQueue());
+		print("> ActionHandler.getActionQueue: " + handler.getActionQueue());
+		print("> Glove.getActorState: " + glove.getActorState());
 		
 		print("==========================");
 	}

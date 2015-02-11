@@ -273,6 +273,22 @@ public class BTNGameScreen implements Screen{
 		gameStage.dispose();
 		punchSound.dispose();
 		splatSound.dispose();
+		
+		while(handler.isAlive()){
+			
+			try{
+				
+				handler.setRunning(false);	
+			}
+			catch(Exception e){
+				
+				// Just try again.
+			}
+			finally{
+				
+				handler.setRunning(false);
+			}
+		}
 	}
 
 	public void notifyNaziDeactivate(boolean hit) {

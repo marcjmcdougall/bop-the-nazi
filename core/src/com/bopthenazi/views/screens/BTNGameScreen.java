@@ -34,7 +34,7 @@ public class BTNGameScreen implements Screen{
 	private static final int SOUND_ID_PUNCH = 1;
 	
 	private static final int MAX_NAZI_COUNT = 5;
-	private static final int MAX_CONCURRENT_NAZIS = 3;
+	private static final int MAX_CONCURRENT_NAZIS = 2;
 	
 	private static final float BASE_FREQUENCY_NAZI_REVEAL = 1.0f;
 	

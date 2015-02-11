@@ -76,8 +76,6 @@ public class BTNGameScreen implements Screen{
 	
 	public void notifyNewX(float x) {
 		
-		System.out.println("x: " + x);
-		
 		glove.notifyTouch(x);
 //		sliderButton.setX(x - sliderButton.getWidth() / 2.0f);
 //		gloveCase.setX(x - gloveCase.getWidth());

@@ -23,6 +23,10 @@ public class BTNMenuScreen implements Screen {
 	public BTNMenuScreen(BTNGame game){
 		
 		this.game = game;
+	}
+	
+	@Override
+	public void show() {
 		
 		FitViewport viewport = new FitViewport(MENU_WIDTH, MENU_HEIGHT);
 		menuStage = new Stage(viewport);
@@ -51,11 +55,6 @@ public class BTNMenuScreen implements Screen {
 		menuStage.addActor(newGame);
 		
 		Gdx.input.setInputProcessor(menuStage);
-	}
-	
-	@Override
-	public void show() {
-		
 	}
 
 	@Override

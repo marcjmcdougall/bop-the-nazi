@@ -61,8 +61,6 @@ public class LivesModule{
 		
 		if(heartIndex >= 0){
 			
-			System.out.println("Fading heart now!");
-			
 			AlphaAction fadeOut = Actions.fadeOut(0.5f);
 			
 			hearts.get(heartIndex).remove();

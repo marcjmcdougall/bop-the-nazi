@@ -25,7 +25,7 @@ import com.bopthenazi.utils.ActionHandler;
 
 public class BTNGameScreen implements Screen{
 
-	private static final boolean USE_HANDLER = false;
+	private static final boolean USE_HANDLER = true;
 	private static final boolean QUIET_MODE = true;
 	
 	private static final float DEFAULT_VOLUME = 1.0f;
@@ -72,43 +72,6 @@ public class BTNGameScreen implements Screen{
 	public BTNGameScreen(BTNGame game){
 		
 		this.game = game;
-		this.naziContainers = new Array<NaziContainer>(MAX_NAZI_COUNT);
-		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
-		
-		timeElapsedSinceLastNazi = 0f;
-		
-		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
-		gameStage = new BTNStage(viewport, game, this);
-//		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT, this);
-//		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
-		bg = new BTNActor(new Texture("background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		gloveCase = new BTNMoveableActor(new Texture("mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
-		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
-		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
-		
-		gameStage.addActor(bg);
-		
-		if(USE_HANDLER){
-		
-			handler = new ActionHandler(this);
-			handler.setRunning(true);
-			handler.start();
-		}
-		
-		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
-		this.splatSound = Gdx.audio.newSound(Gdx.files.internal("sfx/splat.wav"));
-		
-		initializeNaziContainers();
-		initializeLivesModule();
-		
-		gameStage.addActor(glove);
-		gameStage.addActor(gloveCase);
-//		gameStage.addActor(slider);
-//		gameStage.addActor(sliderButton);
-		gameStage.addActor(topBar);
-		gameStage.addActor(score);
-		
-		Gdx.input.setInputProcessor(gameStage);
 	}
 	
 	public void notifyNewX(float x) {
@@ -197,6 +160,44 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void show() {
 		
+		this.naziContainers = new Array<NaziContainer>(MAX_NAZI_COUNT);
+		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
+		
+		timeElapsedSinceLastNazi = 0f;
+		
+		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
+		gameStage = new BTNStage(viewport, game, this);
+//		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT, this);
+//		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
+		bg = new BTNActor(new Texture("background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+		gloveCase = new BTNMoveableActor(new Texture("mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
+		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
+		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
+		
+		gameStage.addActor(bg);
+		
+		if(USE_HANDLER){
+		
+			handler = new ActionHandler(this);
+			handler.setRunning(true);
+			handler.start();
+		}
+		
+		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
+		this.splatSound = Gdx.audio.newSound(Gdx.files.internal("sfx/splat.wav"));
+		
+		initializeNaziContainers();
+		initializeLivesModule();
+		
+		gameStage.addActor(glove);
+		gameStage.addActor(gloveCase);
+//		gameStage.addActor(slider);
+//		gameStage.addActor(sliderButton);
+		gameStage.addActor(topBar);
+		gameStage.addActor(score);
+		
+		Gdx.input.setInputProcessor(gameStage);
+		
 		Random r = new Random();
 		
 		int randomIndex = r.nextInt(MAX_NAZI_COUNT);
@@ -275,6 +276,7 @@ public class BTNGameScreen implements Screen{
 	public void hide() {
 
 		// TODO Auto-generated method stub
+		dispose();
 	}
 
 	@Override
@@ -287,7 +289,7 @@ public class BTNGameScreen implements Screen{
 		
 		if(USE_HANDLER){
 			
-		while(handler.isAlive()){
+			while(handler.isAlive()){
 				
 				try{
 					
@@ -368,7 +370,7 @@ public class BTNGameScreen implements Screen{
 		
 		Gdx.app.log(BTNGame.TAG, "Game Over!");
 		
-		game.setScreen(new BTNMenuScreen(game));
+//		game.setScreen(new BTNMenuScreen(game));
 	}
 
 	/**
@@ -377,5 +379,22 @@ public class BTNGameScreen implements Screen{
 	public Glove getGlove() {
 		
 		return glove;
+	}
+	
+	public void printDebug() {
+		
+		print("==========================");
+		print("*      DEBUG OUTPUT      *");
+		print("==========================");
+		print("> ActionHandler.isRunning: " + handler.isRunning());
+		print("> Glove.getCurrentAction: " + glove.getCurrentAction());
+		print("> ActionHandler.getActionQueue(): " + handler.getActionQueue());
+		
+		print("==========================");
+	}
+	
+	private void print(String output){
+		
+		Gdx.app.log(BTNGame.TAG, output);
 	}
 }

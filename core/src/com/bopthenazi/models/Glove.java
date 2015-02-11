@@ -22,7 +22,7 @@ public class Glove extends BTNCollideableActor {
 	private float toX;
 	private float toXOffset;
 	
-	private Action currentAction;
+	private volatile Action currentAction;
 	
 	private boolean readyToDrop;
 	private boolean dropRequested;
@@ -56,6 +56,8 @@ public class Glove extends BTNCollideableActor {
 		
 		this.gameScreen = game;
 		this.gloveCase = gloveCase;
+		
+		this.currentAction = null;
 	}
 	
 	@Override

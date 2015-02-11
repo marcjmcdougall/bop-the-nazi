@@ -86,6 +86,10 @@ public class BTNStage extends Stage {
 			
 			game.setScreen(new BTNMenuScreen(game));
 		}
+		if(keyCode == Keys.P){
+			
+			screen.printDebug();
+		}
 		
 		return super.keyDown(keyCode);
 	}

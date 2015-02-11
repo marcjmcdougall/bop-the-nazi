@@ -1,5 +1,7 @@
 package com.bopthenazi.utils;
 
+import com.badlogic.gdx.Gdx;
+import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class ActionHandler extends Thread {
@@ -36,6 +38,8 @@ public class ActionHandler extends Thread {
 				}
 			}
 		}
+		
+		Gdx.app.log(BTNGame.TAG, "ActionHandler thread exiting now.");
 	}
 	
 	public void addAction(Action a){
@@ -62,5 +66,9 @@ public class ActionHandler extends Thread {
 	public void setRunning(boolean running) {
 		
 		this.running = running;
+	}
+
+	public SynchronizedArray<Action> getActionQueue() {
+		return actionQueue;
 	}
 }

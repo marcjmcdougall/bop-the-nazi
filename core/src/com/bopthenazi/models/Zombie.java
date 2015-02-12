@@ -8,37 +8,35 @@ import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.bopthenazi.utils.Collidable;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
-public class Nazi extends BTNActor {
+public class Zombie extends BTNContainedActor {
 
 	private static final float OSCILLATION_DELTA = 300.0f;
 	
 	public static final float NAZI_WIDTH = 200.0f;
 	public static final float NAZI_HEIGHT = 388.8f;
 	
-	private boolean isHiding;
-	private boolean isActivated;
-	
 	private float startingY;
 	
 	private BTNGameScreen gameScreen;
 	private SequenceAction oscillateSequence;
 	
-	public Nazi(float x, float y, BTNGameScreen screen){
+	public Zombie(float x, float y, BTNGameScreen screen){
 		
-		super(new Random().nextInt(2) == 1 ? new Texture("zombie.png") : new Texture("zombie-2.png"), x, y, NAZI_WIDTH, NAZI_HEIGHT);
+		super(new Random().nextInt(2) == 1 ? new Texture("zombie.png") : new Texture("zombie-2.png"), x, y);
 		
 		this.startingY = getY();
 		this.gameScreen = screen;
 		
-		setHiding(true);
-		setActivated(false);
+		this.initialize();
 	}
 
-	public void onCollide() {
+	@Override
+	public void onCollide(Collidable partner) {
 		
-		setHiding(true);
+		setActorState(STATE_HIT);
 		
 		this.clearActions();
 		
@@ -50,36 +48,29 @@ public class Nazi extends BTNActor {
 		
 		this.addAction(moveDown);
 		
-		performNaziDeactivate(true);
+		deactivate();
 	}
 
-	public void setHiding(boolean newHidingState){
+	@Override
+	public void activate() {
 		
-		this.isHiding = newHidingState;
+		super.activate();
+		
+		this.prepare();
+		this.addAction(oscillateSequence);
+		this.setActivated(true);
+	}
+
+	@Override
+	public void deactivate() {
+		
+		super.deactivate();
+		
+		gameScreen.notifyZombieDeactivate(this);
 	}
 	
-	public boolean isHiding() {
-		
-		return isHiding;
-	}
-	
-	/**
-	 * @return the isActivated
-	 */
-	public boolean isActivated() {
-		
-		return isActivated;
-	}
-
-	/**
-	 * @param isActivated the isActivated to set
-	 */
-	public void setActivated(boolean isActivated) {
-		
-		this.isActivated = isActivated;
-	}
-
-	public void prepareAnimation() {
+	@Override
+	public void prepare() {
 		
 		DelayAction initialDelay = new DelayAction((float) (Math.random() * 2.0f));
 		
@@ -89,7 +80,7 @@ public class Nazi extends BTNActor {
 			@Override
 			public void run() {
 				
-				Nazi.this.setHiding(false);
+				Zombie.this.setActorState(STATE_VISIBLE);
 			}
 		});
 		
@@ -111,8 +102,8 @@ public class Nazi extends BTNActor {
 			@Override
 			public void run() {
 				
-				Nazi.this.setHiding(true);
-				performNaziDeactivate(false);
+				Zombie.this.setActorState(STATE_HIDING);
+				deactivate();
 			}
 		});
 
@@ -126,18 +117,5 @@ public class Nazi extends BTNActor {
 		oscillateSequence.addAction(moveDown);
 		oscillateSequence.addAction(notifyDown);
 		oscillateSequence.addAction(delay2);
-	}
-	
-	private void performNaziDeactivate(boolean hit) {
-		
-		this.setActivated(false);
-		gameScreen.notifyNaziDeactivate(hit);
-	}
-	
-	public void performNaziActivate(){
-		
-		this.prepareAnimation();
-		this.addAction(oscillateSequence);
-		this.setActivated(true);
 	}
 }

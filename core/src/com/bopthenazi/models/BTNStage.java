@@ -46,15 +46,15 @@ public class BTNStage extends Stage {
 				
 				for(Actor nazi : getActors()){
 					
-					if(nazi instanceof Nazi){
+					if(nazi instanceof Zombie){
 						
-						if(((Nazi) nazi).getRect().overlaps(((Glove) a).getRect()) && !((Nazi) nazi).isHiding() && ((Glove) a).willCollide()){
+						if(((Zombie) nazi).getRect().overlaps(((Glove) a).getRect()) && !(((Zombie) nazi).getActorState() == BTNContainedActor.STATE_HIDING) && ((Glove) a).willCollide()){
 							
 							Gdx.app.log(BTNGame.TAG, "Collision detected!");
 							
-							if(!((Nazi) nazi).isHiding()){
+							if(!(((Zombie) nazi).getActorState() == BTNContainedActor.STATE_HIDING)){
 								
-								screen.onGloveCollision((Nazi) nazi);
+								screen.onGloveCollision((Zombie) nazi);
 								
 								break;
 							}

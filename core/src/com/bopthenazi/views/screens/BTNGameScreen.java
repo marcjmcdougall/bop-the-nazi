@@ -12,12 +12,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
+import com.bopthenazi.models.BTNContainedActor;
 import com.bopthenazi.models.BTNStage;
 import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.LivesModule;
-import com.bopthenazi.models.Nazi;
+import com.bopthenazi.models.Zombie;
 import com.bopthenazi.models.Score;
 import com.bopthenazi.utils.Action;
 import com.bopthenazi.utils.ActionHandler;
@@ -32,8 +33,8 @@ public class BTNGameScreen implements Screen{
 	private static final int SOUND_ID_SPLAT = 0;
 	private static final int SOUND_ID_PUNCH = 1;
 	
-	private static final int MAX_NAZI_COUNT = 5;
-	private static final int MAX_CONCURRENT_NAZIS = 2;
+	private static final int MAX_ZOMBIE_COUNT = 5;
+	private static final int MAX_CONCURRENT_ZOMBIES = 3;
 	
 	private static final float BASE_FREQUENCY_NAZI_REVEAL = 1.0f;
 	
@@ -41,7 +42,7 @@ public class BTNGameScreen implements Screen{
 	public static final float GAME_HEIGHT = 1920.0f;
 	
 	public static final float TOP_BAR_HEIGHT = 284.0f;
-	public static final float NAZI_OFFSET_HORIZONTAL_MARGIN = 25.0f;
+	public static final float ZOMBIE_OFFSET_HORIZONTAL_MARGIN = 25.0f;
 	public static final float BAR_OFFSET_LOWER = 136.3f;
 	public static final float BAR_OFFSET_TOP = 256.0f;
 	
@@ -53,9 +54,9 @@ public class BTNGameScreen implements Screen{
 	
 	private ActionHandler handler;
 	
-	private static final float[] NAZI_CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
+	private static final float[] CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
 
-	private Array<Container> naziContainers;
+	private Array<Container> containers;
 
 //	private Slider slider;
 //	private SliderButton sliderButton;
@@ -80,11 +81,11 @@ public class BTNGameScreen implements Screen{
 //		gloveCase.setX(x - gloveCase.getWidth());
 	}
 	
-	public void onGloveCollision(Nazi naziCollided){
+	public void onGloveCollision(Zombie naziCollided){
 		
 		glove.notifyCollide();
 		generateExplosion(naziCollided.getX(), naziCollided.getY() + naziCollided.getHeight() / 2.0f);
-		naziCollided.onCollide();
+		naziCollided.onCollide(glove);
 	}
 	
 	private void generateExplosion(float x, float y) {
@@ -93,39 +94,23 @@ public class BTNGameScreen implements Screen{
 		gameStage.addActor(explosion);
 	}
 
-	private void activateNewNazi(int index){
+	private void activateContainerContents(Container container){
 		
-//		Gdx.audio.newSound(Gdx.files.internal("sfx/zombie-appear.wav")).play();
-		naziContainers.get(index).getNazi().performNaziActivate();
+		BTNContainedActor contents = container.getContents(); 
+		
+		if(contents != null){
+			
+			contents.activate();
+		}
 	}
 	
-	private void initializeNaziContainers() {
-		
-		int count = 0;
+	private void initializeContainers() {
 		
 		Array<Array<Actor>> actors = new Array<Array<Actor>>();
 		
-		for(int i = 0; i < MAX_NAZI_COUNT; i++){
+		for(int i = 0; i < MAX_ZOMBIE_COUNT; i++){
 			
-			if(i < 3){
-				
-				naziContainers.add(new Container(NAZI_CONTAINER_COORDINATES[count], BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN, this));
-			}
-			else if(i >= 3){
-				
-				naziContainers.add(new Container(NAZI_CONTAINER_COORDINATES[count], (BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN) * 2, this));
-			}
-			
-			Array<Actor> containerActors = new Array<Actor>();
-			
-			for (Actor actor : naziContainers.get(i).getActors()){
-				
-				containerActors.add(actor);
-			}
-			
-			actors.add(containerActors);
-			
-			count++;
+			actors.add(initializeContainer(i));
 		}
 		
 		actors.reverse();
@@ -134,9 +119,39 @@ public class BTNGameScreen implements Screen{
 			
 			for(Actor actor : actorContainer){
 				
-				gameStage.addActor(actor);
+				if(actor != null){
+					
+					gameStage.addActor(actor);
+				}
 			}
 		}
+	}
+
+	private Array<Actor> initializeContainer(int i) {
+		
+		if(i < 3){
+			
+			containers.add(new Container(CONTAINER_COORDINATES[i], BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN, this));
+		}
+		else if(i >= 3){
+			
+			containers.add(new Container(CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2, this));
+		}
+		
+		Array<Actor> containerActors = new Array<Actor>();
+		
+		for (Actor actor : containers.get(i).getActors()){
+			
+			containerActors.add(actor);
+		}
+		
+		return containerActors;
+	}
+	
+	private void replaceContainerContents(Container container, BTNContainedActor contents){
+		
+		// TODO: Implementation.
+		container.setContents(contents);
 	}
 	
 	private void initializeLivesModule() {
@@ -157,7 +172,7 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void show() {
 		
-		this.naziContainers = new Array<Container>(MAX_NAZI_COUNT);
+		this.containers = new Array<Container>(MAX_ZOMBIE_COUNT);
 		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
 		
 		timeElapsedSinceLastNazi = 0f;
@@ -183,7 +198,7 @@ public class BTNGameScreen implements Screen{
 		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
 		this.splatSound = Gdx.audio.newSound(Gdx.files.internal("sfx/splat.wav"));
 		
-		initializeNaziContainers();
+		initializeContainers();
 		initializeLivesModule();
 		
 		gameStage.addActor(glove);
@@ -197,9 +212,9 @@ public class BTNGameScreen implements Screen{
 		
 		Random r = new Random();
 		
-		int randomIndex = r.nextInt(MAX_NAZI_COUNT);
+		int randomIndex = r.nextInt(MAX_ZOMBIE_COUNT);
 		
-		activateNewNazi(randomIndex);
+		activateContainerContents(containers.get(randomIndex));
 	}
 
 	@Override
@@ -223,26 +238,26 @@ public class BTNGameScreen implements Screen{
 	private void doActivateUniqueNazi(){
 		
 		// If no Nazis are already activated, then choose one at random.
-		int numNazisActivated = 0;
+		int numContainersActivated = 0;
 		
-		for(Container naziContainer : naziContainers){
+		for(Container container : containers){
 		
-			if(naziContainer.getNazi().isActivated()){
+			if(container.getContents().isActivated()){
 			
-				numNazisActivated++;
+				numContainersActivated++;
 			}
 		}
 		
-		if(numNazisActivated < MAX_CONCURRENT_NAZIS){
+		if(numContainersActivated < MAX_CONCURRENT_ZOMBIES){
 			
-			for(int i = 0; i < MAX_CONCURRENT_NAZIS; i++){
+			for(int i = 0; i < MAX_CONCURRENT_ZOMBIES; i++){
 				
 				// Select a random number.
-				int index = new Random().nextInt(MAX_NAZI_COUNT);
+				int index = new Random().nextInt(MAX_ZOMBIE_COUNT);
 				
-				if(!naziContainers.get(index).getNazi().isActivated()){
+				if(!containers.get(index).getContents().isActivated()){
 					
-					activateNewNazi(index);
+					activateContainerContents(containers.get(index));
 					break;
 				}
 			}
@@ -304,11 +319,11 @@ public class BTNGameScreen implements Screen{
 		}
 	}
 
-	public void notifyNaziDeactivate(boolean hit) {
+	public void notifyZombieDeactivate(Zombie hitTarget) {
 		
 		doActivateUniqueNazi();
 		
-		if(hit){
+		if(hitTarget.getActorState() == Zombie.STATE_HIT){
 			
 			playSound(SOUND_ID_PUNCH);
 			

@@ -18,11 +18,9 @@ public class Glove extends BTNActor {
 	
 	public static final boolean COLLIDE = true;
 	
-	private static final int STATE_STATIC = 0;
-	private static final int STATE_MOVING_DOWN = 1;
-	private static final int STATE_MOVING_UP = 2;
-	
-	private volatile int actorState;
+	private static final int STATE_STATIC = 1;
+	private static final int STATE_MOVING_DOWN = 2;
+	private static final int STATE_MOVING_UP = 3;
 	
 	private volatile boolean willCollide;
 	
@@ -66,7 +64,7 @@ public class Glove extends BTNActor {
 		this.velocityX = GLOVE_VELOCTY_X;
 		this.velocityY = GLOVE_STATIC_VELOCITY_Y;
 		
-		this.actorState = STATE_STATIC;
+		this.setActorState(STATE_STATIC);
 		this.willCollide = true;
 		
 		this.toX = getX();
@@ -142,7 +140,7 @@ public class Glove extends BTNActor {
 	
 	public void notifyTouch(float x){
 		
-		switch(actorState){
+		switch(getActorState()){
 			
 			case STATE_STATIC :{
 				
@@ -273,16 +271,6 @@ public class Glove extends BTNActor {
 		output.addAction(stateMutatorStatic);
 		
 		return output;
-	}
-
-	private synchronized void setActorState(int stateStatic) {
-		
-		this.actorState = stateStatic;
-	}
-
-	public int getActorState() {
-		
-		return actorState;
 	}
 
 	private com.badlogic.gdx.scenes.scene2d.Action buildMoveDownAction(final float x, float y) {
@@ -424,16 +412,6 @@ public class Glove extends BTNActor {
 		return cachedX;
 	}
 
-	private void release(){
-		
-		if(readyToDrop && dropRequested){
-			
-			this.setVelocityY(GLOVE_VELOCITY_Y_DOWN);
-			this.setReadyToDrop(false);
-			this.dropRequested = false;
-		}
-	}
-	
 	public void requestDrop(){
 		
 		this.dropRequested = true;

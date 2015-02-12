@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
-public class Nazi extends BTNCollideableActor {
+public class Nazi extends BTNActor {
 
 	private static final float OSCILLATION_DELTA = 300.0f;
 	

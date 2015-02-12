@@ -3,7 +3,7 @@ package com.bopthenazi.models;
 import com.badlogic.gdx.graphics.Texture;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
-public class LineBreak extends BTNCollideableActor {
+public class LineBreak extends BTNActor {
 
 	private static final float LINE_BREAK_HEIGHT = 50.0f;
 	

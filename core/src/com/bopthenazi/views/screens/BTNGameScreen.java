@@ -12,13 +12,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
-import com.bopthenazi.models.BTNMoveableActor;
 import com.bopthenazi.models.BTNStage;
+import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.LivesModule;
 import com.bopthenazi.models.Nazi;
-import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Score;
 import com.bopthenazi.utils.Action;
 import com.bopthenazi.utils.ActionHandler;
@@ -26,7 +25,7 @@ import com.bopthenazi.utils.ActionHandler;
 public class BTNGameScreen implements Screen{
 
 	private static final boolean USE_HANDLER = true;
-	private static final boolean QUIET_MODE = true;
+	private static final boolean QUIET_MODE = false;
 	
 	private static final float DEFAULT_VOLUME = 1.0f;
 	
@@ -64,7 +63,7 @@ public class BTNGameScreen implements Screen{
 	private BTNActor bg;
 	private Score score;
 	private BTNActor topBar;
-	private BTNMoveableActor gloveCase;
+	private BTNActor gloveCase;
 	private LivesModule livesModule;
 	
 	private float timeElapsedSinceLastNazi;
@@ -84,7 +83,7 @@ public class BTNGameScreen implements Screen{
 	public void onGloveCollision(Nazi naziCollided){
 		
 		glove.notifyCollide();
-		generateExplosion(naziCollided.getX() + naziCollided.getWidth() / 2.0f - 25.0f, naziCollided.getY() + naziCollided.getHeight());
+		generateExplosion(naziCollided.getX(), naziCollided.getY() + naziCollided.getHeight() / 2.0f);
 		naziCollided.onCollide();
 	}
 	
@@ -168,7 +167,7 @@ public class BTNGameScreen implements Screen{
 //		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT, this);
 //		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
 		bg = new BTNActor(new Texture("background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		gloveCase = new BTNMoveableActor(new Texture("mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
+		gloveCase = new BTNActor(new Texture("mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
 		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
 		
@@ -345,13 +344,13 @@ public class BTNGameScreen implements Screen{
 			
 				case SOUND_ID_PUNCH :{
 					
-					splatSound.play(DEFAULT_VOLUME / 2);
+					punchSound.play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}
 				case SOUND_ID_SPLAT :{
 					
-					punchSound.play(DEFAULT_VOLUME);
+					splatSound.play(DEFAULT_VOLUME * 0.25f);
 					
 					break;
 				}

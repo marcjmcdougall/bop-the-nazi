@@ -18,7 +18,7 @@ import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.LivesModule;
 import com.bopthenazi.models.Nazi;
-import com.bopthenazi.models.NaziContainer;
+import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Score;
 import com.bopthenazi.utils.Action;
 import com.bopthenazi.utils.ActionHandler;
@@ -56,7 +56,7 @@ public class BTNGameScreen implements Screen{
 	
 	private static final float[] NAZI_CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
 
-	private Array<NaziContainer> naziContainers;
+	private Array<Container> naziContainers;
 
 //	private Slider slider;
 //	private SliderButton sliderButton;
@@ -110,11 +110,11 @@ public class BTNGameScreen implements Screen{
 			
 			if(i < 3){
 				
-				naziContainers.add(new NaziContainer(NAZI_CONTAINER_COORDINATES[count], BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN, this));
+				naziContainers.add(new Container(NAZI_CONTAINER_COORDINATES[count], BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN, this));
 			}
 			else if(i >= 3){
 				
-				naziContainers.add(new NaziContainer(NAZI_CONTAINER_COORDINATES[count], (BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN) * 2, this));
+				naziContainers.add(new Container(NAZI_CONTAINER_COORDINATES[count], (BAR_OFFSET_LOWER + NAZI_OFFSET_HORIZONTAL_MARGIN) * 2, this));
 			}
 			
 			Array<Actor> containerActors = new Array<Actor>();
@@ -158,7 +158,7 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void show() {
 		
-		this.naziContainers = new Array<NaziContainer>(MAX_NAZI_COUNT);
+		this.naziContainers = new Array<Container>(MAX_NAZI_COUNT);
 		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
 		
 		timeElapsedSinceLastNazi = 0f;
@@ -226,7 +226,7 @@ public class BTNGameScreen implements Screen{
 		// If no Nazis are already activated, then choose one at random.
 		int numNazisActivated = 0;
 		
-		for(NaziContainer naziContainer : naziContainers){
+		for(Container naziContainer : naziContainers){
 		
 			if(naziContainer.getNazi().isActivated()){
 			

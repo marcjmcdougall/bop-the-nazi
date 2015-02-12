@@ -5,14 +5,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
-public class NaziContainer {
+public class Container {
 
 	private Nazi nazi;
 
 	private BTNActor holeFront;
 	private BTNActor holeBack;
 	
-	public NaziContainer(float x, float y, BTNGameScreen gameScreen){
+	public Container(float x, float y, BTNGameScreen gameScreen){
 
 		this.nazi = new Nazi(x, y, gameScreen);
 		this.holeFront = new BTNActor(new Texture("hole-front.png"), x, y, 229.5f, 575.0f);

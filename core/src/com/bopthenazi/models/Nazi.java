@@ -96,7 +96,7 @@ public class Nazi extends BTNCollideableActor {
 		MoveToAction moveUp = new MoveToAction();
 		moveUp.setPosition(this.getX(), startingY + OSCILLATION_DELTA);
 		moveUp.setDuration(0.5f);
-		moveUp.setInterpolation(Interpolation.linear);
+		moveUp.setInterpolation(Interpolation.exp5);
 
 		DelayAction delay = new DelayAction(1.0f);
 

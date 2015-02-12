@@ -241,7 +241,7 @@ public class Glove extends BTNCollideableActor {
 			@Override
 			public void run() {
 				
-				Glove.this.setWillCollide(true);
+				Glove.this.setWillCollide(false);
 				Glove.this.setCachedX(-1.0f);
 				Glove.this.setActorState(STATE_MOVING_UP);
 			}
@@ -259,6 +259,7 @@ public class Glove extends BTNCollideableActor {
 			
 			public void run() {
 				
+				Glove.this.setWillCollide(true);
 				Glove.this.setActorState(STATE_STATIC);
 			}
 		});

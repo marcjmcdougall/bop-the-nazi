@@ -2,11 +2,11 @@ package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.bopthenazi.utils.Action;
-import com.bopthenazi.utils.BTNCollideableActor;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Glove extends BTNCollideableActor {
@@ -23,6 +23,8 @@ public class Glove extends BTNCollideableActor {
 	private static final int STATE_MOVING_UP = 2;
 	
 	private volatile int actorState;
+	
+	private volatile boolean willCollide;
 	
 	private float velocityX;
 	private float velocityY;
@@ -44,6 +46,8 @@ public class Glove extends BTNCollideableActor {
 	private BTNGameScreen gameScreen;
 	private BTNMoveableActor gloveCase;
 	
+	private volatile float cachedX;
+	
 	private static final float GLOVE_UNLOCK_BARRIER = BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET;
 	
 	private static final float GLOVE_STATIC_VELOCITY_X = 0.0f;
@@ -63,12 +67,14 @@ public class Glove extends BTNCollideableActor {
 		this.velocityY = GLOVE_STATIC_VELOCITY_Y;
 		
 		this.actorState = STATE_STATIC;
+		this.willCollide = true;
 		
 		this.toX = getX();
 		this.toXOffset = 2500.0f / 100.0f + 20.0f;
 		
 		this.readyToDrop = true;
 		this.dropRequested = false;
+		this.setCachedX(-1.0f);
 		
 		this.gameScreen = game;
 		this.gloveCase = gloveCase;
@@ -157,6 +163,8 @@ public class Glove extends BTNCollideableActor {
 				// Clear all actions on the Glove.
 				this.clearActions();
 				
+				this.setCachedX(x);
+				
 				SequenceAction sequence = new SequenceAction();
 				
 				// First, add an action to simply finish the original "MoveDown" MoveToAction.
@@ -233,6 +241,8 @@ public class Glove extends BTNCollideableActor {
 			@Override
 			public void run() {
 				
+				Glove.this.setWillCollide(true);
+				Glove.this.setCachedX(-1.0f);
 				Glove.this.setActorState(STATE_MOVING_UP);
 			}
 		});
@@ -272,7 +282,7 @@ public class Glove extends BTNCollideableActor {
 		return actorState;
 	}
 
-	private com.badlogic.gdx.scenes.scene2d.Action buildMoveDownAction(float x, float y) {
+	private com.badlogic.gdx.scenes.scene2d.Action buildMoveDownAction(final float x, float y) {
 		
 		RunnableAction stateMutatorDown = new RunnableAction();
 		
@@ -289,6 +299,7 @@ public class Glove extends BTNCollideableActor {
 		
 		moveDownTranslate.setX(x - (getWidth() / 2.0f));
 		moveDownTranslate.setY(0.0f);
+		moveDownTranslate.setInterpolation(Interpolation.pow3);
 		
 		// We're always moving to the bottom of the screen.
 		moveDownTranslate.setDuration(Math.abs(y - 0.0f) / GLOVE_VELOCITY_Y_DOWN);
@@ -299,6 +310,11 @@ public class Glove extends BTNCollideableActor {
 		output.addAction(moveDownTranslate);
 		
 		return output;
+	}
+
+	private void setCachedX(float x) {
+		
+		this.cachedX = x;
 	}
 
 	private com.badlogic.gdx.scenes.scene2d.Action buildTranslateXAction(float x) {
@@ -380,11 +396,29 @@ public class Glove extends BTNCollideableActor {
 		
 		this.clearActions();
 		
+		this.setWillCollide(false);
+		
+		SequenceAction sequence = new SequenceAction();
+		
+		sequence.addAction(buildMoveUpAction(this.getX() + (this.getWidth() / 2.0f), this.getY()));
+		
+		if(this.getCachedX() >= 0.0f){
+			
+			sequence.addAction(buildTranslateXAction(getCachedX()));
+			sequence.addAction(buildMoveDownAction(getCachedX(), BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET));
+			sequence.addAction(buildMoveUpAction(getCachedX(), 0.0f));
+		}
+		
 		// We need to add half the width because the method already accommodates for width, and so does getX().
 		// TODO: This functionality needs to be fixed.
-		this.addAction(buildMoveUpAction(this.getX() + (this.getWidth() / 2.0f), this.getY()));
+		this.addAction(sequence);
 	}
 	
+	public float getCachedX() {
+		
+		return cachedX;
+	}
+
 	private void release(){
 		
 		if(readyToDrop && dropRequested){
@@ -457,5 +491,13 @@ public class Glove extends BTNCollideableActor {
 	public void setToX(float toX) {
 		
 		this.toX = toX;
+	}
+
+	public boolean willCollide() {
+		return willCollide;
+	}
+
+	public void setWillCollide(boolean willCollide) {
+		this.willCollide = willCollide;
 	}
 }

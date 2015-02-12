@@ -1,7 +1,6 @@
 package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.bopthenazi.utils.BTNCollideableActor;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class LineBreak extends BTNCollideableActor {

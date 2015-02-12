@@ -1,8 +1,7 @@
-package com.bopthenazi.utils;
+package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.bopthenazi.models.BTNActor;
 
 public abstract class BTNCollideableActor extends BTNActor {
 

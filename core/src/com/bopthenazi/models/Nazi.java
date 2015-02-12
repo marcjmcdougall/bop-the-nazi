@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.bopthenazi.utils.BTNCollideableActor;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Nazi extends BTNCollideableActor {
@@ -121,8 +120,8 @@ public class Nazi extends BTNCollideableActor {
 		
 		oscillateSequence = new SequenceAction();
 		oscillateSequence.addAction(initialDelay);
-		oscillateSequence.addAction(notifyUp);
 		oscillateSequence.addAction(moveUp);
+		oscillateSequence.addAction(notifyUp);
 		oscillateSequence.addAction(delay);
 		oscillateSequence.addAction(moveDown);
 		oscillateSequence.addAction(notifyDown);

@@ -34,7 +34,7 @@ public class BTNGameScreen implements Screen{
 	private static final int SOUND_ID_PUNCH = 1;
 	
 	private static final int MAX_ZOMBIE_COUNT = 5;
-	private static final int MAX_CONCURRENT_ZOMBIES = 3;
+	private static final int MAX_CONCURRENT_ZOMBIES = 1;
 	
 	private static final float BASE_FREQUENCY_NAZI_REVEAL = 1.0f;
 	
@@ -75,16 +75,6 @@ public class BTNGameScreen implements Screen{
 	public void notifyNewX(float x) {
 		
 		glove.notifyTouch(x);
-//		sliderButton.setX(x - sliderButton.getWidth() / 2.0f);
-//		gloveCase.setX(x - gloveCase.getWidth());
-	}
-	
-	public void onGloveCollision(Zombie naziCollided){
-		
-		glove.notifyCollide();
-		generateExplosion(naziCollided.getX(), naziCollided.getY() + naziCollided.getHeight() / 2.0f);
-		naziCollided.onCollide(glove);
-		playSound(SOUND_ID_PUNCH);
 	}
 	
 	private void generateExplosion(float x, float y) {
@@ -220,14 +210,14 @@ public class BTNGameScreen implements Screen{
         if(timeElapsedSinceLastZombie >= BASE_FREQUENCY_NAZI_REVEAL){
         	
         	// Activate a random Nazi that has *not yet been activated*
-        	doActivateUniqueZombie();
+        	doActivateUniqueContainer();
         }
         
         gameStage.act(delta);
         gameStage.draw();
 	}
 
-	private void doActivateUniqueZombie(){
+	private void doActivateUniqueContainer(){
 		
 		// If no Nazis are already activated, then choose one at random.
 		int numContainersActivated = 0;
@@ -342,7 +332,6 @@ public class BTNGameScreen implements Screen{
 		print("> Glove.getCurrentAction: " + glove.getCurrentAction());
 		print("> Glove.getActorState: " + glove.getActorState());
 		print("> Glove.getCachedX: " + glove.getCachedX());
-		print("> Glove.willCollide: " + glove.willCollide());
 		
 		print("==========================");
 	}
@@ -371,8 +360,7 @@ public class BTNGameScreen implements Screen{
 		
 		print("Handling Zombie deactivate now");
 		
-		// Activate a new random container!
-		activateContainerContents(containers.get(new Random().nextInt(MAX_ZOMBIE_COUNT)));
+		doActivateUniqueContainer();
 		
 		if(!(zombie.getActorState() == BTNContainedActor.STATE_HIT)){
 			
@@ -386,5 +374,13 @@ public class BTNGameScreen implements Screen{
 				doEndGame();
 			}
 		}
+	}
+
+	public void notifyCollision(BTNContainedActor containerContents) {
+		
+		glove.notifyCollide();
+		generateExplosion(containerContents.getX(), containerContents.getY() + containerContents.getHeight() / 2.0f);
+		containerContents.onCollide(glove);
+		playSound(SOUND_ID_PUNCH);
 	}
 }

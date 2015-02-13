@@ -45,10 +45,10 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	@Override
 	public void activate() {
 		
+		this.setActivated(true);
+		
 		this.prepare();
 		this.addAction(oscillateSequence);
-		
-		this.setActivated(true);
 	}
 	
 	private void prepare() {
@@ -68,6 +68,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 			public void run() {
 				
 				BTNContainedActor.this.setActorState(STATE_VISIBLE);
+				BTNContainedActor.this.setCollide(true);
 			}
 		});
 		
@@ -85,8 +86,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 			@Override
 			public void run() {
 				
-				BTNContainedActor.this.setActorState(STATE_HIDING);
-				gameScreen.notifyDeactivate(BTNContainedActor.this);
+				doContentsDownNormal();
 			}
 		});
 		
@@ -106,6 +106,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	@Override
 	public void deactivate() {
 		
+		this.setCollide(false);
 		this.setActivated(false);
 		this.gameScreen.notifyDeactivate(this);
 	}
@@ -159,6 +160,13 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		moveDown.setInterpolation(Interpolation.linear);
 		
 		this.addAction(moveDown);
+		
+		deactivate();
+	}
+
+	private void doContentsDownNormal() {
+		
+		BTNContainedActor.this.setActorState(STATE_HIDING);
 		
 		deactivate();
 	}

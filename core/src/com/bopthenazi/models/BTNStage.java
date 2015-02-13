@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.utils.Action;
+import com.bopthenazi.utils.Collidable;
 import com.bopthenazi.utils.Action.ActionType;
 import com.bopthenazi.views.screens.BTNGameScreen;
 import com.bopthenazi.views.screens.BTNMenuScreen;
@@ -44,20 +45,15 @@ public class BTNStage extends Stage {
 				
 //				Gdx.app.log(BTNGame.TAG, "Glove Coords: (" + (((Glove) a).getRect().getX()) + ", " + ((BTNCollideableActor) a).getRect().getY() + ")");
 				
-				for(Actor nazi : getActors()){
+				for(Actor containerContents : getActors()){
 					
-					if(nazi instanceof Zombie){
+					if(containerContents instanceof BTNContainedActor){
 						
-						if(((Zombie) nazi).getRect().overlaps(((Glove) a).getRect()) && !(((Zombie) nazi).getActorState() == BTNContainedActor.STATE_HIDING) && ((Glove) a).willCollide()){
+						if(((BTNContainedActor) containerContents).getRect().overlaps(((Glove) a).getRect()) && ((BTNContainedActor) containerContents).canCollide() && ((Glove) a).canCollide()){
 							
 							Gdx.app.log(BTNGame.TAG, "Collision detected!");
 							
-							if(!(((Zombie) nazi).getActorState() == BTNContainedActor.STATE_HIDING)){
-								
-								screen.onGloveCollision((Zombie) nazi);
-								
-								break;
-							}
+							screen.notifyCollision((BTNContainedActor) containerContents);
 						}
 					}
 				}

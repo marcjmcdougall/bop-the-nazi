@@ -22,7 +22,6 @@ public class Glove extends BTNActor {
 	private static final int STATE_MOVING_DOWN = 2;
 	private static final int STATE_MOVING_UP = 3;
 	
-	private volatile boolean willCollide;
 	
 	private float velocityX;
 	private float velocityY;
@@ -65,7 +64,6 @@ public class Glove extends BTNActor {
 		this.velocityY = GLOVE_STATIC_VELOCITY_Y;
 		
 		this.setActorState(STATE_STATIC);
-		this.willCollide = true;
 		
 		this.toX = getX();
 		this.toXOffset = 2500.0f / 100.0f + 20.0f;
@@ -239,7 +237,7 @@ public class Glove extends BTNActor {
 			@Override
 			public void run() {
 				
-				Glove.this.setWillCollide(false);
+				Glove.this.setCollide(false);
 				Glove.this.setCachedX(-1.0f);
 				Glove.this.setActorState(STATE_MOVING_UP);
 			}
@@ -259,7 +257,7 @@ public class Glove extends BTNActor {
 			
 			public void run() {
 				
-				Glove.this.setWillCollide(true);
+				Glove.this.setCollide(true);
 				Glove.this.setActorState(STATE_STATIC);
 			}
 		});
@@ -389,7 +387,7 @@ public class Glove extends BTNActor {
 		this.clearActions();
 		this.setY(this.getY());
 		
-		this.setWillCollide(false);
+		this.setCollide(false);
 		
 		SequenceAction sequence = new SequenceAction();
 		
@@ -474,15 +472,5 @@ public class Glove extends BTNActor {
 	public void setToX(float toX) {
 		
 		this.toX = toX;
-	}
-
-	public boolean willCollide() {
-		
-		return willCollide;
-	}
-
-	public void setWillCollide(boolean willCollide) {
-		
-		this.willCollide = willCollide;
 	}
 }

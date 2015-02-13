@@ -14,7 +14,7 @@ public class BTNActor extends Actor implements Collidable{
 
 	private static final int STATE_DEFAULT = 0;
 	
-	private static final float FRAMES_PER_SECOND = 15.0f;
+	private static final float DEFAULT_FRAMES_PER_SECOND = 15.0f;
 	
 	private static final boolean DEFAULT_COLLIDE_STATE = true;
 	
@@ -29,6 +29,7 @@ public class BTNActor extends Actor implements Collidable{
 	private Array<Texture> textures;
 	private Rectangle rect;
 	
+	private float fps;
 	private int frameIndex;
 	private float timeInSecondsSinceLastFrameUpdate;
 	
@@ -72,6 +73,8 @@ public class BTNActor extends Actor implements Collidable{
 		this.setX(x);
 		this.setY(y);
 		
+		this.fps = DEFAULT_FRAMES_PER_SECOND;
+		
 		this.setRect(new Rectangle(xHitBox, yHitBox, widthHitBox, heightHitBox));
 	}
 	
@@ -82,7 +85,7 @@ public class BTNActor extends Actor implements Collidable{
 		
 		setTimeInSecondsSinceLastFrameUpdate(getTimeInSecondsSinceLastFrameUpdate() + delta);
 		
-		if(getTimeInSecondsSinceLastFrameUpdate() >= (1.0f / FRAMES_PER_SECOND)){
+		if(getTimeInSecondsSinceLastFrameUpdate() >= (1.0f / getFps())){
 			
 			int newFrameIndex = getFrameIndex() + 1;
 			
@@ -220,5 +223,19 @@ public class BTNActor extends Actor implements Collidable{
 	public void setTimeInSecondsSinceLastFrameUpdate( float timeInSecondsSinceLastFrameUpdate) {
 		
 		this.timeInSecondsSinceLastFrameUpdate = timeInSecondsSinceLastFrameUpdate;
+	}
+
+	/**
+	 * @return the fps
+	 */
+	public float getFps() {
+		return fps;
+	}
+
+	/**
+	 * @param fps the fps to set
+	 */
+	public void setFps(float fps) {
+		this.fps = fps;
 	}
 }

@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		
-		config.title="Bop the Zombie";
+		config.title="ZombieBop!";
 		config.width= 320;
 		config.height= 568;
 		

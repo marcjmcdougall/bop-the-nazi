@@ -1,14 +1,11 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.bopthenazi.utils.FontFactory;
 
 public class Score extends Actor {
 
@@ -16,8 +13,6 @@ public class Score extends Actor {
 	public static final float SCORE_HEIGHT = 100.0f;
 	
 	private static final int DEFAULT_NUMBER_LIVES = 3;
-	
-	private BitmapFont font;
 	
 	private int score;
 	private int lives;
@@ -32,9 +27,7 @@ public class Score extends Actor {
 		this.score = 0;
 		this.lives = DEFAULT_NUMBER_LIVES;
 		
-		initializeFont();
-		
-		LabelStyle style = new LabelStyle(font, new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		LabelStyle style = new LabelStyle(FontFactory.buildFont(), new Color(1.0f, 1.0f, 1.0f, 1.0f));
 		
 		label = new Label("Score: " + score, style);
 		label.setX(getX());
@@ -44,16 +37,6 @@ public class Score extends Actor {
 		label.setFontScale(5.0f);
 	}
 	
-	private void initializeFont() {
-		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/chalkdust.ttf"));
-		
-		FreeTypeFontParameter params = new FreeTypeFontParameter();
-		params.size = 20;
-		font = generator.generateFont(params);
-		
-		generator.dispose();
-	}
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {

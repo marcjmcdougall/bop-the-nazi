@@ -13,11 +13,10 @@ public class LivesModule{
 	
 	private static final float HEART_Y = 1520.0f; 
 	
-	private static final float HEART_X_OFFSET = 50.0f; 
-	private static final float HEART_SPACING = 20.0f;
+	private static final float HEART_X_OFFSET = 40.0f; 
 	
-	private static final float HEART_WIDTH = 50.0f;
-	private static final float HEART_HEIGHT = 50.0f;
+	private static final float HEART_WIDTH = 100.0f;
+	private static final float HEART_HEIGHT = 75.0f;
 	
 	private Array<BTNActor> heartOutlines;
 	private Array<BTNActor> hearts;
@@ -43,7 +42,7 @@ public class LivesModule{
 		
 		for(int i = 0; i < TOTAL_LIVES; i++){
 			
-			heartOutlines.add(new BTNActor(new Texture("heart-outline.png"), ((BTNGameScreen.GAME_WIDTH - HEART_X_OFFSET) - HEART_WIDTH * i) - HEART_WIDTH / 2.0f + HEART_SPACING, HEART_Y - HEART_HEIGHT / 2.0f, HEART_WIDTH, HEART_HEIGHT));
+			heartOutlines.add(new BTNActor(new Texture("heart-empty-v2.png"), BTNGameScreen.GAME_WIDTH - ((HEART_X_OFFSET + HEART_WIDTH / 2.0f) * (i + 1)) - (i * HEART_X_OFFSET), HEART_Y, HEART_WIDTH, HEART_HEIGHT));
 		}
 	}
 	
@@ -53,7 +52,7 @@ public class LivesModule{
 		
 		for(int i = 0; i < TOTAL_LIVES; i++){
 			
-			hearts.add(new BTNActor(new Texture("heart.png"), ((BTNGameScreen.GAME_WIDTH - HEART_X_OFFSET) - HEART_WIDTH * i) - HEART_WIDTH / 2.0f + HEART_SPACING, HEART_Y - HEART_HEIGHT / 2.0f, HEART_WIDTH, HEART_HEIGHT));
+			hearts.add(new BTNActor(new Texture("heart.png"), BTNGameScreen.GAME_WIDTH - ((HEART_X_OFFSET + HEART_WIDTH / 2.0f) * (i + 1)) - (i * HEART_X_OFFSET), HEART_Y, HEART_WIDTH, HEART_HEIGHT));
 		}
 	}
 

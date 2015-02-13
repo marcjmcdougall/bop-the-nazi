@@ -7,24 +7,21 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.actions.AddAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNContainedActor;
 import com.bopthenazi.models.BTNStage;
+import com.bopthenazi.models.Bunny;
 import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Dynamite;
 import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.LivesModule;
-import com.bopthenazi.models.Zombie;
 import com.bopthenazi.models.Score;
-import com.bopthenazi.utils.Action;
-import com.bopthenazi.utils.ActionHandler;
+import com.bopthenazi.models.Zombie;
 
 public class BTNGameScreen implements Screen{
 
@@ -35,9 +32,10 @@ public class BTNGameScreen implements Screen{
 	
 	private static final int SOUND_ID_SPLAT = 0;
 	private static final int SOUND_ID_PUNCH = 1;
+	private static final int SOUND_ID_EXPLOSION = 2;
 	
 	private static final int MAX_ZOMBIE_COUNT = 5;
-	private static final int MAX_CONCURRENT_ZOMBIES = 1;
+	private static final int MAX_CONCURRENT_ZOMBIES = 2;
 	
 	private static final float BASE_FREQUENCY_NAZI_REVEAL = 1.0f;
 	
@@ -54,6 +52,7 @@ public class BTNGameScreen implements Screen{
 	
 	private Sound punchSound;
 	private Sound splatSound;
+	private Sound explosionSound;
 	
 	private static final float[] CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
 
@@ -78,9 +77,9 @@ public class BTNGameScreen implements Screen{
 		glove.notifyTouch(x);
 	}
 	
-	private void generateExplosion(float x, float y) {
+	private void generateExplosion(float x, float y, boolean expand) {
 		
-		Explosion explosion = new Explosion(x, y, 0.10f);
+		Explosion explosion = new Explosion(x, y, expand);
 		gameStage.addActor(explosion);
 	}
 
@@ -173,6 +172,7 @@ public class BTNGameScreen implements Screen{
 		
 		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
 		this.splatSound = Gdx.audio.newSound(Gdx.files.internal("sfx/splat.wav"));
+		this.explosionSound = Gdx.audio.newSound(Gdx.files.internal("sfx/explosion.wav"));
 		
 		initializeContainers();
 		initializeLivesModule();
@@ -232,6 +232,34 @@ public class BTNGameScreen implements Screen{
 				int index = new Random().nextInt(MAX_ZOMBIE_COUNT);
 				
 				if(!containers.get(index).getContents().isActivated()){
+					
+					int cursor = new Random().nextInt(3);
+					
+					BTNContainedActor newActor = null;
+					
+					switch(cursor){
+					
+						case 0:{
+							
+							newActor  = new Dynamite(0.0f, 0.0f, this);
+							
+							break;
+						}
+						case 1 :{
+							
+							newActor = new Zombie(0.0f, 0.0f, this);
+							
+							break;
+						}
+						case 2 :{
+							
+							newActor = new Bunny(0.0f, 0.0f, this);
+									
+							break;
+						}
+					}
+					
+					containers.get(index).setContents(newActor);
 					
 					activateContainerContents(containers.get(index));
 					break;
@@ -294,6 +322,10 @@ public class BTNGameScreen implements Screen{
 					
 					break;
 				}
+				case SOUND_ID_EXPLOSION :{
+					
+					explosionSound.play(DEFAULT_VOLUME * 0.75f);
+				}
 				default :{
 					
 					// Do nothing.
@@ -303,11 +335,11 @@ public class BTNGameScreen implements Screen{
 		}
 	}
 	
-	private void doEndGame() {
+	public void doEndGame() {
 		
-//		Gdx.app.log(BTNGame.TAG, "Game Over!");
+		Gdx.app.log(BTNGame.TAG, "Game Over!");
 		
-//		game.setScreen(new BTNMenuScreen(game));
+		game.setScreen(new BTNGameOverScreen(game, score.getScore()));
 	}
 
 	/**
@@ -382,9 +414,21 @@ public class BTNGameScreen implements Screen{
 	public void notifyCollision(BTNContainedActor containerContents) {
 		
 		glove.notifyCollide();
-		generateExplosion(containerContents.getX(), containerContents.getY() + containerContents.getHeight() / 2.0f);
+		
+		String name = containerContents.getClass().getName();
 		containerContents.onCollide(glove);
-		playSound(SOUND_ID_PUNCH);
+		
+		generateExplosion(containerContents.getX(), containerContents.getY() + containerContents.getHeight() / 2.0f, (containerContents instanceof Dynamite) ? true : false);
+		
+		if(name.equals(Zombie.class.getName()) || name.equals(Bunny.class.getName())){
+			
+			playSound(SOUND_ID_PUNCH);
+			score.updateScore(score.getScore() + 1);
+		}
+		else if(name.equals(Dynamite.class.getName())){
+			
+			playSound(SOUND_ID_EXPLOSION);
+		}
 	}
 
 	/**
@@ -397,6 +441,6 @@ public class BTNGameScreen implements Screen{
 
 	public void generate() {
 		
-		containers.get(0).setContents(new Dynamite(0.0f, 0.0f, this));
+		containers.get(new Random().nextInt(MAX_ZOMBIE_COUNT)).setContents(new Dynamite(0.0f, 0.0f, this));
 	}
 }

@@ -91,6 +91,10 @@ public class BTNStage extends Stage {
 			
 			screen.generate();
 		}
+		if(keyCode == Keys.E){
+			
+			screen.doEndGame();
+		}
 		
 		return super.keyDown(keyCode);
 	}

@@ -52,8 +52,6 @@ public class BTNGameScreen implements Screen{
 	private Sound punchSound;
 	private Sound splatSound;
 	
-	private ActionHandler handler;
-	
 	private static final float[] CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
 
 	private Array<Container> containers;
@@ -67,7 +65,7 @@ public class BTNGameScreen implements Screen{
 	private BTNActor gloveCase;
 	private LivesModule livesModule;
 	
-	private float timeElapsedSinceLastNazi;
+	private float timeElapsedSinceLastZombie;
 	
 	public BTNGameScreen(BTNGame game){
 		
@@ -175,7 +173,7 @@ public class BTNGameScreen implements Screen{
 		this.containers = new Array<Container>(MAX_ZOMBIE_COUNT);
 		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
 		
-		timeElapsedSinceLastNazi = 0f;
+		timeElapsedSinceLastZombie = 0f;
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
 		gameStage = new BTNStage(viewport, game, this);
@@ -187,13 +185,6 @@ public class BTNGameScreen implements Screen{
 		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
 		
 		gameStage.addActor(bg);
-		
-		if(USE_HANDLER){
-		
-			handler = new ActionHandler(this);
-			handler.setRunning(true);
-			handler.start();
-		}
 		
 		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
 		this.splatSound = Gdx.audio.newSound(Gdx.files.internal("sfx/splat.wav"));
@@ -223,19 +214,19 @@ public class BTNGameScreen implements Screen{
 		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        timeElapsedSinceLastNazi += delta;
+        timeElapsedSinceLastZombie += delta;
         
-        if(timeElapsedSinceLastNazi >= BASE_FREQUENCY_NAZI_REVEAL){
+        if(timeElapsedSinceLastZombie >= BASE_FREQUENCY_NAZI_REVEAL){
         	
         	// Activate a random Nazi that has *not yet been activated*
-        	doActivateUniqueNazi();
+        	doActivateUniqueZombie();
         }
         
         gameStage.act(delta);
         gameStage.draw();
 	}
 
-	private void doActivateUniqueNazi(){
+	private void doActivateUniqueZombie(){
 		
 		// If no Nazis are already activated, then choose one at random.
 		int numContainersActivated = 0;
@@ -263,7 +254,7 @@ public class BTNGameScreen implements Screen{
 			}
 		}
 		
-	    timeElapsedSinceLastNazi = 0f;
+	    timeElapsedSinceLastZombie = 0f;
 	}
 
 	@Override
@@ -298,30 +289,13 @@ public class BTNGameScreen implements Screen{
 		gameStage.dispose();
 		punchSound.dispose();
 		splatSound.dispose();
-		
-		if(USE_HANDLER){
-			
-			while(handler.isAlive()){
-				
-				try{
-					
-					handler.setRunning(false);	
-				}
-				catch(Exception e){
-					
-					// Just try again.
-				}
-				finally{
-					
-					handler.setRunning(false);
-				}
-			}
-		}
 	}
 
 	public void notifyZombieDeactivate(Zombie hitTarget) {
 		
-		doActivateUniqueNazi();
+		print("Zombie deactivated now.");
+		
+		doActivateUniqueZombie();
 		
 		if(hitTarget.getActorState() == Zombie.STATE_HIT){
 			
@@ -343,14 +317,6 @@ public class BTNGameScreen implements Screen{
 		}
 	}
 	
-	public void addActionToHandlerQueue(Action a){
-		
-		if(USE_HANDLER){
-			
-			this.handler.addAction(a);
-		}
-	}
-
 	private void playSound(int soundID){
 		
 		if(!QUIET_MODE){
@@ -398,9 +364,7 @@ public class BTNGameScreen implements Screen{
 		print("==========================");
 		print("*      DEBUG OUTPUT      *");
 		print("==========================");
-		print("> ActionHandler.isRunning: " + handler.isRunning());
 		print("> Glove.getCurrentAction: " + glove.getCurrentAction());
-		print("> ActionHandler.getActionQueue: " + handler.getActionQueue());
 		print("> Glove.getActorState: " + glove.getActorState());
 		print("> Glove.getCachedX: " + glove.getCachedX());
 		print("> Glove.willCollide: " + glove.willCollide());

@@ -23,6 +23,7 @@ public class Container {
 		
 		// By default, we will place a Nazi in each container.
 		this.contents = new Zombie(x, y, screen);
+		
 		initializeContents();
 	}
 	
@@ -53,7 +54,5 @@ public class Container {
 		
 		contents.setX(holeFront.getX());
 		contents.setY(holeFront.getY());
-		
-		contents.prepare();
 	}
 }

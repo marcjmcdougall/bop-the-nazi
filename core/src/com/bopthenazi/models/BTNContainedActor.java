@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.bopthenazi.utils.Activatable;
+import com.bopthenazi.utils.Collidable;
+import com.bopthenazi.views.screens.BTNGameScreen;
 
 public abstract class BTNContainedActor extends BTNActor implements Activatable{
 
@@ -19,22 +21,25 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	private static final float CONTENT_WIDTH = 200.0f;
 	private static final float CONTENT_HEIGHT = 388.8f;
 	
-	private volatile boolean activated;
-	
+	private BTNGameScreen gameScreen;
 	private SequenceAction oscillateSequence;
+	
+	private volatile boolean activated;
+	private float anchorY;
 	
 	public BTNContainedActor() {
 		
+		// This constructor should never be used for obvious reasons.
 		super();
 		
-		initialize();
+		initialize(null);
 	}
 	
-	public BTNContainedActor(Texture texture, float x, float y){
+	public BTNContainedActor(Texture texture, float x, float y, BTNGameScreen gameScreen){
 		
 		super(texture, x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
 		
-		initialize();
+		initialize(gameScreen);
 	}
 	
 	@Override
@@ -51,7 +56,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		DelayAction initialDelay = new DelayAction((float) (Math.random() * 2.0f));
 		
 		MoveToAction moveUp = new MoveToAction();
-		moveUp.setPosition(this.getX(), this.getY() + OSCILLATION_DELTA);
+		moveUp.setPosition(this.getX(), this.getAnchorY() + OSCILLATION_DELTA);
 		moveUp.setDuration(0.5f);
 		moveUp.setInterpolation(Interpolation.exp5);
 
@@ -69,7 +74,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		DelayAction delay = new DelayAction(1.0f);
 
 		MoveToAction moveDown = new MoveToAction();
-		moveDown.setPosition(this.getX(), getY());
+		moveDown.setPosition(this.getX(), this.getAnchorY());
 		moveDown.setDuration(0.5f);
 		moveDown.setInterpolation(Interpolation.linear);
 		
@@ -81,6 +86,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 			public void run() {
 				
 				BTNContainedActor.this.setActorState(STATE_HIDING);
+				gameScreen.notifyDeactivate(BTNContainedActor.this);
 			}
 		});
 		
@@ -101,12 +107,15 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	public void deactivate() {
 		
 		this.setActivated(false);
+		this.gameScreen.notifyDeactivate(this);
 	}
 	
-	protected void initialize() {
+	protected void initialize(BTNGameScreen gameScreen) {
 		
 		this.setActivated(false);
 		this.setActorState(STATE_HIDING);
+		
+		this.gameScreen = gameScreen;
 	}
 	
 	public boolean isActivated(){
@@ -117,5 +126,40 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	public void setActivated(boolean activated){
 		
 		this.activated = activated;
+	}
+
+	public float getAnchorY() {
+		
+		return anchorY;
+	}
+
+	public void setAnchorY(float anchorY) {
+		
+		this.anchorY = anchorY;
+	}
+
+	public BTNGameScreen getGameScreen() {
+		
+		return gameScreen;
+	}
+	
+	@Override
+	public void onCollide(Collidable partner) {
+		
+		super.onCollide(partner);
+		
+		setActorState(STATE_HIT);
+		
+		this.clearActions();
+		
+		MoveToAction moveDown = new MoveToAction();
+		
+		moveDown.setPosition(getX(), getY() - getHeight());
+		moveDown.setDuration(0.25f);
+		moveDown.setInterpolation(Interpolation.linear);
+		
+		this.addAction(moveDown);
+		
+		deactivate();
 	}
 }

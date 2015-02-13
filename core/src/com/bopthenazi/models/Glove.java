@@ -289,7 +289,7 @@ public class Glove extends BTNActor {
 		MoveToAction moveDownTranslate = new MoveToAction();
 		
 		moveDownTranslate.setX(x);
-		moveDownTranslate.setY(0.0f + BTNGameScreen.GAME_HEIGHT / 2.0f);
+		moveDownTranslate.setY(0.0f + BTNGameScreen.GAME_HEIGHT * 0.65f);
 		moveDownTranslate.setInterpolation(Interpolation.pow3);
 		
 		// We're always moving to the bottom of the screen.

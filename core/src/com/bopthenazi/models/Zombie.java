@@ -16,33 +16,17 @@ public class Zombie extends BTNContainedActor {
 	public static final float NAZI_WIDTH = 200.0f;
 	public static final float NAZI_HEIGHT = 388.8f;
 	
-	private BTNGameScreen gameScreen;
-	
 	public Zombie(float x, float y, BTNGameScreen screen){
 		
-		super(new Random().nextInt(2) == 1 ? new Texture("zombie.png") : new Texture("zombie-2.png"), x, y);
+		super(new Random().nextInt(2) == 1 ? new Texture("zombie.png") : new Texture("zombie-2.png"), x, y, screen);
 		
-		this.gameScreen = screen;
-		
-		this.initialize();
+		this.initialize(screen);
 	}
 
 	@Override
 	public void onCollide(Collidable partner) {
 		
 		super.onCollide(partner);
-		
-		setActorState(STATE_HIT);
-		
-		this.clearActions();
-		
-		MoveToAction moveDown = new MoveToAction();
-		
-		moveDown.setPosition(getX(), getY() - getHeight());
-		moveDown.setDuration(0.25f);
-		moveDown.setInterpolation(Interpolation.linear);
-		
-		this.addAction(moveDown);
 		
 		deactivate();
 	}
@@ -59,7 +43,5 @@ public class Zombie extends BTNContainedActor {
 	public void deactivate() {
 		
 		super.deactivate();
-		
-		gameScreen.notifyZombieDeactivate(this);
 	}
 }

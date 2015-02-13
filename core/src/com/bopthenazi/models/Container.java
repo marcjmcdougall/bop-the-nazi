@@ -54,5 +54,7 @@ public class Container {
 		
 		contents.setX(holeFront.getX());
 		contents.setY(holeFront.getY());
+		
+		contents.setAnchorY(holeFront.getY());
 	}
 }

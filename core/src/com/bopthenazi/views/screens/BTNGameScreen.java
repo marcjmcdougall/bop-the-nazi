@@ -84,6 +84,7 @@ public class BTNGameScreen implements Screen{
 		glove.notifyCollide();
 		generateExplosion(naziCollided.getX(), naziCollided.getY() + naziCollided.getHeight() / 2.0f);
 		naziCollided.onCollide(glove);
+		playSound(SOUND_ID_PUNCH);
 	}
 	
 	private void generateExplosion(float x, float y) {
@@ -291,32 +292,6 @@ public class BTNGameScreen implements Screen{
 		splatSound.dispose();
 	}
 
-	public void notifyZombieDeactivate(Zombie hitTarget) {
-		
-		print("Zombie deactivated now.");
-		
-		doActivateUniqueZombie();
-		
-		if(hitTarget.getActorState() == Zombie.STATE_HIT){
-			
-			playSound(SOUND_ID_PUNCH);
-			
-			score.updateScore(score.getScore() + 1);
-		}
-		else{
-			
-			score.setLives(score.getLives() - 1);
-			livesModule.popHeart();
-			
-			playSound(SOUND_ID_SPLAT);
-			
-			if(score.getLives() <= 0){
-				
-				doEndGame();
-			}
-		}
-	}
-	
 	private void playSound(int soundID){
 		
 		if(!QUIET_MODE){
@@ -375,5 +350,41 @@ public class BTNGameScreen implements Screen{
 	private void print(String output){
 		
 		Gdx.app.log(BTNGame.TAG, output);
+	}
+
+	public void notifyDeactivate(BTNContainedActor btnContainedActor) {
+		
+		String className = btnContainedActor.getClass().getName();
+		
+		if(className.equals(Zombie.class.getName())){
+			
+			handleZombieDeactivate((Zombie) btnContainedActor);
+		}
+		else{
+			
+			// Log that something strange happened.
+			print("A BTNContainedActor was deactivated but not handled.");
+		}
+	}
+
+	private void handleZombieDeactivate(Zombie zombie) {
+		
+		print("Handling Zombie deactivate now");
+		
+		// Activate a new random container!
+		activateContainerContents(containers.get(new Random().nextInt(MAX_ZOMBIE_COUNT)));
+		
+		if(!(zombie.getActorState() == BTNContainedActor.STATE_HIT)){
+			
+			score.setLives(score.getLives() - 1);
+			livesModule.popHeart();
+			
+			playSound(SOUND_ID_SPLAT);
+			
+			if(score.getLives() <= 0){
+				
+				doEndGame();
+			}
+		}
 	}
 }

@@ -32,6 +32,12 @@ public class BTNStage extends Stage {
 	}
 
 	@Override
+	public void draw() {
+		
+		super.draw();
+	}
+	
+	@Override
 	public void act(float delta) {
 		
 		super.act(delta);
@@ -40,25 +46,16 @@ public class BTNStage extends Stage {
 			
 			a.setX(a.getX());
 			a.setY(a.getY());
+		}
+		
+		for(Container container : screen.getContainers()){
 			
-			if(a instanceof Glove){
+			BTNContainedActor contents = container.getContents();
+			Glove glove = screen.getGlove();
+			
+			if(glove.getRect().overlaps(contents.getRect()) && contents.canCollide() && glove.canCollide()){
 				
-//				Gdx.app.log(BTNGame.TAG, "Glove Coords: (" + (((Glove) a).getRect().getX()) + ", " + ((BTNCollideableActor) a).getRect().getY() + ")");
-				
-				for(Actor containerContents : getActors()){
-					
-					if(containerContents instanceof BTNContainedActor){
-						
-						if(((BTNContainedActor) containerContents).getRect().overlaps(((Glove) a).getRect()) && ((BTNContainedActor) containerContents).canCollide() && ((Glove) a).canCollide()){
-							
-							Gdx.app.log(BTNGame.TAG, "Collision detected!");
-							
-							screen.notifyCollision((BTNContainedActor) containerContents);
-						}
-					}
-				}
-				
-				break;
+				screen.notifyCollision(contents);
 			}
 		}
 	}
@@ -89,6 +86,10 @@ public class BTNStage extends Stage {
 		if(keyCode == Keys.P){
 			
 			screen.printDebug();
+		}
+		if(keyCode == Keys.G){
+			
+			screen.generate();
 		}
 		
 		return super.keyDown(keyCode);

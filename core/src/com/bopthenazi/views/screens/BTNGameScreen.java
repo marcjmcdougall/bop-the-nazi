@@ -8,6 +8,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.AddAction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
@@ -15,6 +17,7 @@ import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNContainedActor;
 import com.bopthenazi.models.BTNStage;
 import com.bopthenazi.models.Container;
+import com.bopthenazi.models.Dynamite;
 import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.LivesModule;
@@ -56,8 +59,6 @@ public class BTNGameScreen implements Screen{
 
 	private Array<Container> containers;
 
-//	private Slider slider;
-//	private SliderButton sliderButton;
 	private Glove glove;
 	private BTNActor bg;
 	private Score score;
@@ -95,28 +96,31 @@ public class BTNGameScreen implements Screen{
 	
 	private void initializeContainers() {
 		
-		Array<Array<Actor>> actors = new Array<Array<Actor>>();
+		Group background = new Group();
+		Group foreground = new Group();
 		
 		for(int i = 0; i < MAX_ZOMBIE_COUNT; i++){
 			
-			actors.add(initializeContainer(i));
+			initializeContainer(i);
 		}
 		
-		actors.reverse();
-		
-		for(Array<Actor> actorContainer : actors){
+		for(int i = 0; i < MAX_ZOMBIE_COUNT; i++){
 			
-			for(Actor actor : actorContainer){
+			if(i < 3){
 				
-				if(actor != null){
-					
-					gameStage.addActor(actor);
-				}
+				foreground.addActor(containers.get(i));
+			}
+			else if(i >=3){
+				
+				background.addActor(containers.get(i));
 			}
 		}
+		
+		gameStage.addActor(background);
+		gameStage.addActor(foreground);
 	}
 
-	private Array<Actor> initializeContainer(int i) {
+	private void initializeContainer(int i) {
 		
 		if(i < 3){
 			
@@ -126,20 +130,10 @@ public class BTNGameScreen implements Screen{
 			
 			containers.add(new Container(CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2, this));
 		}
-		
-		Array<Actor> containerActors = new Array<Actor>();
-		
-		for (Actor actor : containers.get(i).getActors()){
-			
-			containerActors.add(actor);
-		}
-		
-		return containerActors;
 	}
 	
 	private void replaceContainerContents(Container container, BTNContainedActor contents){
 		
-		// TODO: Implementation.
 		container.setContents(contents);
 	}
 	
@@ -349,11 +343,20 @@ public class BTNGameScreen implements Screen{
 			
 			handleZombieDeactivate((Zombie) btnContainedActor);
 		}
+		else if(className.equals(Dynamite.class.getName())){
+			
+			handleDynamiteDeactivate((Dynamite) btnContainedActor);
+		}
 		else{
 			
 			// Log that something strange happened.
 			print("A BTNContainedActor was deactivated but not handled.");
 		}
+	}
+
+	private void handleDynamiteDeactivate(Dynamite btnContainedActor) {
+		
+		print("Handling Dynamite deactivate now");
 	}
 
 	private void handleZombieDeactivate(Zombie zombie) {
@@ -382,5 +385,18 @@ public class BTNGameScreen implements Screen{
 		generateExplosion(containerContents.getX(), containerContents.getY() + containerContents.getHeight() / 2.0f);
 		containerContents.onCollide(glove);
 		playSound(SOUND_ID_PUNCH);
+	}
+
+	/**
+	 * @return the containers
+	 */
+	public Array<Container> getContainers() {
+		
+		return containers;
+	}
+
+	public void generate() {
+		
+		containers.get(0).setContents(new Dynamite(0.0f, 0.0f, this));
 	}
 }

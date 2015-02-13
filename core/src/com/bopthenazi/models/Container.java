@@ -1,11 +1,10 @@
 package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
-public class Container {
+public class Container extends Group{
 
 	private static final float HOLE_WIDTH = 229.5f;
 	private static final float HOLE_FRONT_HEIGHT = 575.0f;
@@ -25,22 +24,18 @@ public class Container {
 		this.contents = new Zombie(x, y, screen);
 		
 		initializeContents();
+		
+		this.addActor(holeBack);
+		this.addActor(contents);
+		this.addActor(holeFront);
 	}
 	
-	public Array<Actor> getActors(){
-
-		Array<Actor> output = new Array<Actor>();
-
-		output.add(holeBack);
-		output.add(contents);
-		output.add(holeFront);
-
-		return output;
-	}
-
 	public void setContents(BTNContainedActor contents) {
 		
 		this.contents = contents;
+		
+		this.removeActor(this.contents);
+		this.addActorAt(1, contents);
 		
 		initializeContents();
 	}

@@ -6,12 +6,15 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.utils.Collidable;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class BTNActor extends Actor implements Collidable{
 
 	private static final int STATE_DEFAULT = 0;
+	
+	private static final float FRAMES_PER_SECOND = 15.0f;
 	
 	private static final boolean DEFAULT_COLLIDE_STATE = true;
 	
@@ -23,8 +26,11 @@ public class BTNActor extends Actor implements Collidable{
 	private static final String DEFAULT_TEXTURE = "alpha-25.png";
 	
 	private boolean collidable;
-	private Texture texture;
+	private Array<Texture> textures;
 	private Rectangle rect;
+	
+	private int frameIndex;
+	private float timeInSecondsSinceLastFrameUpdate;
 	
 	private volatile int actorState;
 	
@@ -38,11 +44,25 @@ public class BTNActor extends Actor implements Collidable{
 		this(texture, x, y, width, height, x, y, width, height);
 	}
 	
+	public BTNActor(Array<Texture> textures, float x, float y, float width, float height){
+		
+		this(textures, x, y, width, height, x, y, width, height);
+	}
+	
 	public BTNActor(Texture texture, float x, float y, float width, float height, float xHitBox, float yHitBox, float widthHitBox, float heightHitBox) {
+		
+		this(new Array<Texture>(new Texture[]{texture}), x, y, width, height, x, y, width, height);
+	}
+	
+	public BTNActor(Array<Texture> textures, float x, float y, float width, float height, float xHitBox, float yHitBox, float widthHitBox, float heightHitBox){
 		
 		super();
 		
-		this.texture = texture;
+		this.textures = textures;
+		
+		this.setFrameIndex(0);
+		this.setTimeInSecondsSinceLastFrameUpdate(0.0f);
+		
 		this.setWidth(width);
 		this.setHeight(height);
 		
@@ -56,11 +76,32 @@ public class BTNActor extends Actor implements Collidable{
 	}
 	
 	@Override
+	public void act(float delta) {
+		
+		super.act(delta);
+		
+		setTimeInSecondsSinceLastFrameUpdate(getTimeInSecondsSinceLastFrameUpdate() + delta);
+		
+		if(getTimeInSecondsSinceLastFrameUpdate() >= (1.0f / FRAMES_PER_SECOND)){
+			
+			int newFrameIndex = getFrameIndex() + 1;
+			
+			if(newFrameIndex >= textures.size){
+				
+				newFrameIndex = 0;
+			}
+			
+			setFrameIndex(newFrameIndex);
+			setTimeInSecondsSinceLastFrameUpdate(0.0f);
+		}
+	}
+	
+	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		
 		super.draw(batch, parentAlpha);
 		
-		batch.draw(texture, this.getX() - (this.getWidth() / 2.0f), this.getY() - (this.getHeight() / 2.0f), this.getWidth(), this.getHeight());
+		batch.draw(textures.get(frameIndex), this.getX() - (this.getWidth() / 2.0f), this.getY() - (this.getHeight() / 2.0f), this.getWidth(), this.getHeight());
 	}
 	
 	/**
@@ -147,5 +188,37 @@ public class BTNActor extends Actor implements Collidable{
 	public synchronized void setActorState(int actorState) {
 		
 		this.actorState = actorState;
+	}
+
+	/**
+	 * @return the frameIndex
+	 */
+	public int getFrameIndex() {
+		
+		return frameIndex;
+	}
+
+	/**
+	 * @param frameIndex the frameIndex to set
+	 */
+	public void setFrameIndex(int frameIndex) {
+		
+		this.frameIndex = frameIndex;
+	}
+	
+	/**
+	 * @return the timeInSecondsSinceLastFrameUpdate
+	 */
+	public float getTimeInSecondsSinceLastFrameUpdate() {
+		
+		return timeInSecondsSinceLastFrameUpdate;
+	}
+
+	/**
+	 * @param timeInSecondsSinceLastFrameUpdate the timeInSecondsSinceLastFrameUpdate to set
+	 */
+	public void setTimeInSecondsSinceLastFrameUpdate( float timeInSecondsSinceLastFrameUpdate) {
+		
+		this.timeInSecondsSinceLastFrameUpdate = timeInSecondsSinceLastFrameUpdate;
 	}
 }

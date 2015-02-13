@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.utils.Activatable;
 import com.bopthenazi.utils.Collidable;
 import com.bopthenazi.views.screens.BTNGameScreen;
@@ -33,6 +34,13 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		super();
 		
 		initialize(null);
+	}
+	
+	public BTNContainedActor(Array<Texture> textures, float x, float y, BTNGameScreen gameScreen){
+		
+		super(textures, x, y, CONTENT_WIDTH, CONTENT_HEIGHT, x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
+		
+		initialize(gameScreen);
 	}
 	
 	public BTNContainedActor(Texture texture, float x, float y, BTNGameScreen gameScreen){

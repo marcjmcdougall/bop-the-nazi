@@ -2,6 +2,7 @@ package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -109,7 +110,11 @@ public class BTNActor extends Actor implements Collidable{
 		
 		super.draw(batch, parentAlpha);
 		
-		batch.draw(textures.get(frameIndex), this.getX() - (this.getWidth() / 2.0f), this.getY() - (this.getHeight() / 2.0f), this.getWidth(), this.getHeight());
+//		batch.draw(textures.get(frameIndex), this.getX() - (this.getWidth() / 2.0f), this.getY() - (this.getHeight() / 2.0f), this.getWidth(), this.getHeight());
+		
+//		batch.draw(textures.get(frameIndex), this.getX() - (this.getWidth() / 2.0f), this.getY() - (this.getHeight() / 2.0f), this.getWidth() / 2.0f, this.getHeight() / 2.0f, this.getWidth(), this.getHeight(), 1.0f, 1.0f, this.getRotation(), 0, 0, Math.round(this.getWidth()), Math.round(this.getHeight()), false, false);
+	
+		batch.draw(new TextureRegion(textures.get(frameIndex)), this.getX() - (this.getWidth() / 2.0f), this.getY() - (this.getHeight() / 2.0f), this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), 1.0f, 1.0f, this.getRotation());
 	}
 	
 	/**

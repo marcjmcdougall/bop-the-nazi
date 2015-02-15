@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
@@ -41,19 +43,21 @@ public class BTNMenuScreen implements Screen {
 		
 		this.bg = new BTNActor(new Texture("screen-menu/orange-background.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
 		this.title = new BTNActor(new Texture("screen-menu/zombie-bop-menu-title.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.75f, 850.0f, 600.0f);
-		this.stripes = new BTNActor(new Texture("screen-menu/yellow-stripes.png"), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f), MENU_WIDTH * 1.5f, MENU_HEIGHT * 1.25f);
+		this.stripes = new BTNActor(new Texture("screen-menu/yellow-stripes.png"), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
 		this.zombie = new BTNActor(new Texture("screen-menu/happy-zombie.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
 		this.topBar = new BTNActor(new Texture("screen-menu/top-bar.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT - 76.0f, MENU_WIDTH, 150.0f);
 		this.startGame = new BasicButton(new Texture("screen-menu/start-bar-up-state.png"), new Texture("screen-menu/start-bar-down-state.png"), MENU_WIDTH / 2.0f, 0.0f);
 		this.startGame.setWidth(MENU_WIDTH);
 		this.startGame.setHeight(MENU_HEIGHT * 0.125f);
+		this.stripes.setOriginX(stripes.getWidth() / 2.0f);
+		this.stripes.setOriginY((stripes.getHeight() / 2.0f) - 200.0f);
 		
 		this.startGame.setX(MENU_WIDTH / 2.0f - (startGame.getWidth() / 2.0f));
 		this.startGame.setY(0.0f);
 		
-		RotateToAction rotate = new RotateToAction();
-		rotate.setRotation(180.0f);
-		rotate.setDuration(5.0f);
+		RotateByAction rotate = new RotateByAction();
+		rotate.setAmount(360.0f);
+		rotate.setDuration(12.0f);
 		
 		startGame.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener(){
 			
@@ -74,14 +78,17 @@ public class BTNMenuScreen implements Screen {
 			}
 		});
 		
-		stripes.addAction(rotate);
+		RepeatAction repeat = new RepeatAction();
+		repeat.setAction(rotate);
+		repeat.setCount(RepeatAction.FOREVER);
+		
+		stripes.addAction(repeat);
 		
 		menuStage.addActor(bg);
 		menuStage.addActor(stripes);
 		menuStage.addActor(title);
 		menuStage.addActor(zombie);
 		menuStage.addActor(topBar);
-		menuStage.addActor(startGame);
 		menuStage.addActor(startGame);
 		
 		Gdx.input.setInputProcessor(menuStage);

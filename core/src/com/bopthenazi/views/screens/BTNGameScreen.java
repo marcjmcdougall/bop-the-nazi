@@ -2,18 +2,31 @@ package com.bopthenazi.views.screens;
 
 import java.util.Random;
 
+import javax.swing.GroupLayout.Alignment;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNContainedActor;
 import com.bopthenazi.models.BTNStage;
+import com.bopthenazi.models.BasicButton;
 import com.bopthenazi.models.Bunny;
 import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Dynamite;
@@ -22,6 +35,7 @@ import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.LivesModule;
 import com.bopthenazi.models.Score;
 import com.bopthenazi.models.Zombie;
+import com.bopthenazi.utils.FontFactory;
 
 public class BTNGameScreen implements Screen{
 
@@ -50,6 +64,8 @@ public class BTNGameScreen implements Screen{
 	private BTNGame game;
 	private BTNStage gameStage;
 	
+	private Group gameOverScreen;
+	
 	private Sound punchSound;
 	private Sound splatSound;
 	private Sound explosionSound;
@@ -66,6 +82,8 @@ public class BTNGameScreen implements Screen{
 	private LivesModule livesModule;
 	
 	private float timeElapsedSinceLastZombie;
+	
+	private boolean paused;
 	
 	public BTNGameScreen(BTNGame game){
 		
@@ -151,9 +169,22 @@ public class BTNGameScreen implements Screen{
 		}
 	}
 
+	private void reset(){
+		
+//		score.reset();
+//		livesModule.reset();
+//		
+//		this.gameOverScreen.setVisible(false);
+//		
+//		this.setPaused(false);
+		
+		this.game.setScreen(new BTNGameScreen(this.game));
+	}
+	
 	@Override
 	public void show() {
 		
+		this.setPaused(false);
 		this.containers = new Array<Container>(MAX_ZOMBIE_COUNT);
 		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
 		
@@ -182,7 +213,7 @@ public class BTNGameScreen implements Screen{
 //		gameStage.addActor(slider);
 //		gameStage.addActor(sliderButton);
 		gameStage.addActor(topBar);
-		gameStage.addActor(score);
+		gameStage.addActor(this.score);
 		
 		Gdx.input.setInputProcessor(gameStage);
 		
@@ -193,22 +224,36 @@ public class BTNGameScreen implements Screen{
 		activateContainerContents(containers.get(randomIndex));
 	}
 
+	private void setPaused(boolean paused) {
+		
+		this.paused = paused;
+	}
+
 	@Override
 	public void render(float delta) {
 	
 		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        timeElapsedSinceLastZombie += delta;
-        
-        if(timeElapsedSinceLastZombie >= BASE_FREQUENCY_NAZI_REVEAL){
+        if(!isPaused()){
         	
-        	// Activate a random Nazi that has *not yet been activated*
-        	doActivateUniqueContainer();
+	        timeElapsedSinceLastZombie += delta;
+	        
+	        if(timeElapsedSinceLastZombie >= BASE_FREQUENCY_NAZI_REVEAL){
+	        	
+	        	// Activate a random Nazi that has *not yet been activated*
+	        	doActivateUniqueContainer();
+	        }
+	        
+	        gameStage.act(delta);
         }
         
-        gameStage.act(delta);
         gameStage.draw();
+	}
+
+	private boolean isPaused() {
+		
+		return paused;
 	}
 
 	private void doActivateUniqueContainer(){
@@ -339,7 +384,62 @@ public class BTNGameScreen implements Screen{
 		
 		Gdx.app.log(BTNGame.TAG, "Game Over!");
 		
-		game.setScreen(new BTNGameOverScreen(game, score.getScore()));
+//		game.setScreen(new BTNGameOverScreen(game, score.getScore()));
+		
+		showGameOverScreen(score.getScore());
+	}
+
+	private void showGameOverScreen(int score) {
+		
+		this.gameOverScreen = new Group();
+		
+		BTNActor gameOverAlpha = new BTNActor(new Texture("screen-game-over/alpha-25.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+		BTNActor gameOverBackground = new BTNActor(new Texture("screen-game-over/game-over-box.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, GAME_WIDTH * 0.75f, GAME_HEIGHT * 0.6f);
+		BTNActor gameOverText = new BTNActor(new Texture("screen-game-over/game-over-text.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f + 25.0f, GAME_WIDTH * 0.40f, GAME_HEIGHT * 0.15f);
+		
+		Label scoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+		scoreLabel.setHeight(100.0f);
+		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getWidth() / 2.0f));
+		scoreLabel.setY(650.0f + (this.score.getHeight() / 2.0f));
+		
+		scoreLabel.setDebug(true);
+		
+		BasicButton restart = new BasicButton(new Texture("screen-game-over/restart-button.png"), new Texture("screen-game-over/restart-button-down-state.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 550.0f);
+	
+		restart.setWidth(GAME_WIDTH * 0.45f);
+		restart.setX((GAME_WIDTH / 2.0f) - (restart.getWidth() / 2.0f));
+		
+		restart.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener(){
+			
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				
+				return true;
+			}
+			
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				
+				super.touchUp(event, x, y, pointer, button);
+				
+				Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
+				
+				BTNGameScreen.this.reset();
+			}
+		});
+		
+		this.gameOverScreen.addActor(gameOverAlpha);
+		this.gameOverScreen.addActor(gameOverBackground);
+		this.gameOverScreen.addActor(gameOverText);
+		this.gameOverScreen.addActor(scoreLabel);
+		this.gameOverScreen.addActor(restart);
+		
+		gameOverScreen.setVisible(false);
+		
+		gameStage.addActor(gameOverScreen);
+		
+		this.setPaused(true);
+		gameOverScreen.setVisible(true);
 	}
 
 	/**

@@ -27,7 +27,7 @@ public class Score extends Actor {
 		this.score = 0;
 		this.lives = DEFAULT_NUMBER_LIVES;
 		
-		LabelStyle style = new LabelStyle(FontFactory.buildFont(), new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		LabelStyle style = new LabelStyle(FontFactory.buildFont(22), new Color(1.0f, 1.0f, 1.0f, 1.0f));
 		
 		label = new Label("Score: " + score, style);
 		label.setX(getX());
@@ -75,5 +75,12 @@ public class Score extends Actor {
 	public void setLives(int lives) {
 		
 		this.lives = lives;
+	}
+
+
+	public void reset() {
+		
+		setLives(DEFAULT_NUMBER_LIVES);
+		this.score = 0;
 	}
 }

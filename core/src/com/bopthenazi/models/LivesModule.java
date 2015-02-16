@@ -107,4 +107,9 @@ public class LivesModule{
 		
 		this.hearts = hearts;
 	}
+
+	public void reset() {
+		
+		initializeHearts();
+	}
 }

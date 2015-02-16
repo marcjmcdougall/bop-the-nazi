@@ -7,14 +7,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 
 public class FontFactory {
 
-	public static BitmapFont buildFont(){
+	public static BitmapFont buildFont(int fontSize){
 		
 		BitmapFont output = new BitmapFont();
 		
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/chalkdust.ttf"));
 		
 		FreeTypeFontParameter params = new FreeTypeFontParameter();
-		params.size = 20;
+		params.size = fontSize;
 		output = generator.generateFont(params);
 		
 		generator.dispose();

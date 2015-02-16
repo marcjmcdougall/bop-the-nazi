@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.utils.Action;
@@ -48,9 +49,11 @@ public class BTNStage extends Stage {
 			a.setY(a.getY());
 		}
 		
-		for(Container container : screen.getContainers()){
+		Array<Container> containers = screen.getContainers();
+		
+		for(int i = 0; i < containers.size; i++){
 			
-			BTNContainedActor contents = container.getContents();
+			BTNContainedActor contents = containers.get(i).getContents();
 			Glove glove = screen.getGlove();
 			
 			if(glove.getRect().overlaps(contents.getRect()) && contents.canCollide() && glove.canCollide()){

@@ -14,6 +14,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -35,11 +38,11 @@ import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.LivesModule;
 import com.bopthenazi.models.Score;
 import com.bopthenazi.models.Zombie;
+import com.bopthenazi.models.ZombieBunny;
 import com.bopthenazi.utils.FontFactory;
 
 public class BTNGameScreen implements Screen{
 
-	private static final boolean USE_HANDLER = true;
 	private static final boolean QUIET_MODE = false;
 	
 	private static final float DEFAULT_VOLUME = 1.0f;
@@ -76,6 +79,7 @@ public class BTNGameScreen implements Screen{
 
 	private Glove glove;
 	private BTNActor bg;
+	private BTNActor explosionSplash;
 	private Score score;
 	private BTNActor topBar;
 	private BTNActor gloveCase;
@@ -149,11 +153,6 @@ public class BTNGameScreen implements Screen{
 		}
 	}
 	
-	private void replaceContainerContents(Container container, BTNContainedActor contents){
-		
-		container.setContents(contents);
-	}
-	
 	private void initializeLivesModule() {
 		
 		this.livesModule = new LivesModule();
@@ -199,6 +198,10 @@ public class BTNGameScreen implements Screen{
 		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
 		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
 		
+		explosionSplash = new BTNActor(new Texture("explosion-splash.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+		
+		glove.setDebug(true);
+		
 		gameStage.addActor(bg);
 		
 		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
@@ -208,10 +211,13 @@ public class BTNGameScreen implements Screen{
 		initializeContainers();
 		initializeLivesModule();
 		
+		explosionSplash.setVisible(false);
+		
 		gameStage.addActor(glove);
 		gameStage.addActor(gloveCase);
 //		gameStage.addActor(slider);
 //		gameStage.addActor(sliderButton);
+		gameStage.addActor(explosionSplash);
 		gameStage.addActor(topBar);
 		gameStage.addActor(this.score);
 		
@@ -278,7 +284,7 @@ public class BTNGameScreen implements Screen{
 				
 				if(!containers.get(index).getContents().isActivated()){
 					
-					int cursor = new Random().nextInt(3);
+					int cursor = new Random().nextInt(4);
 					
 					BTNContainedActor newActor = null;
 					
@@ -300,6 +306,17 @@ public class BTNGameScreen implements Screen{
 							
 							newActor = new Bunny(0.0f, 0.0f, this);
 									
+							break;
+						}
+						case 3 :{
+							
+							newActor = new ZombieBunny(0.0f, 0.0f, this);
+							
+							break;
+						}
+						default: {
+							
+							// Do nothing.
 							break;
 						}
 					}
@@ -469,9 +486,9 @@ public class BTNGameScreen implements Screen{
 		
 		String className = btnContainedActor.getClass().getName();
 		
-		if(className.equals(Zombie.class.getName())){
+		if(className.equals(Zombie.class.getName()) || className.equals(ZombieBunny.class.getName())){
 			
-			handleZombieDeactivate((Zombie) btnContainedActor);
+			handleZombieDeactivate(btnContainedActor);
 		}
 		else if(className.equals(Dynamite.class.getName())){
 			
@@ -502,7 +519,7 @@ public class BTNGameScreen implements Screen{
 		// Do nothing.
 	}
 
-	private void handleZombieDeactivate(Zombie zombie) {
+	private void handleZombieDeactivate(BTNContainedActor zombie) {
 		
 		print("Handling Zombie deactivate now");
 		
@@ -510,15 +527,7 @@ public class BTNGameScreen implements Screen{
 		
 		if(!(zombie.getActorState() == BTNContainedActor.STATE_HIT)){
 			
-			score.setLives(score.getLives() - 1);
-			livesModule.popHeart();
-			
-			playSound(SOUND_ID_SPLAT);
-			
-			if(score.getLives() <= 0){
-				
-				doEndGame();
-			}
+			subtractLife();
 		}
 	}
 
@@ -531,7 +540,7 @@ public class BTNGameScreen implements Screen{
 		
 		generateExplosion(containerContents.getX(), containerContents.getY() + containerContents.getHeight() / 2.0f, (containerContents instanceof Dynamite) ? true : false);
 		
-		if(name.equals(Zombie.class.getName())){
+		if(name.equals(Zombie.class.getName()) || name.equals(ZombieBunny.class.getName())){
 			
 			playSound(SOUND_ID_PUNCH);
 			score.updateScore(score.getScore() + 1);
@@ -539,11 +548,69 @@ public class BTNGameScreen implements Screen{
 		else if(name.equals(Bunny.class.getName())){
 			
 			playSound(SOUND_ID_PUNCH);
-			score.updateScore(score.getScore() - 1);
+			subtractLife();
 		}
 		else if(name.equals(Dynamite.class.getName())){
 			
 			playSound(SOUND_ID_EXPLOSION);
+			
+			doExplosionSplash();
+			
+//			doEndGame();
+		}
+	}
+
+	private void doExplosionSplash() {
+		
+		Color originalColor = explosionSplash.getColor();
+		
+//		explosionSplash.setColor(originalColor.r, originalColor.g, originalColor.b, 0.0f);
+		
+		explosionSplash.setVisible(true);
+		
+		AlphaAction fadein = new AlphaAction();
+		fadein.setAlpha(1.0f);
+		fadein.setDuration(3.0f);
+		
+		AlphaAction fadeout = new AlphaAction();
+		fadein.setAlpha(0.0f);
+		fadein.setDuration(2.0f);
+		
+		RunnableAction endGame = new RunnableAction();
+		endGame.setRunnable(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				explosionSplash.setVisible(false);
+			}
+		});
+		
+		AlphaAction fadeBackIn = new AlphaAction();
+		fadeBackIn.setAlpha(1.0f);
+		
+		for(int i = 0; i < getContainers().size; i++){
+			
+			getContainers().get(i).getContents().onCollide(null);
+		}
+		
+		SequenceAction sequence = new SequenceAction();
+		sequence.addAction(fadein);
+		sequence.addAction(fadeout);
+		sequence.addAction(endGame);
+		sequence.addAction(fadeBackIn);
+		
+		explosionSplash.addAction(sequence);
+	}
+
+	private void subtractLife() {
+		
+		score.setLives(score.getLives() - 1);
+		livesModule.popHeart();
+		
+		playSound(SOUND_ID_SPLAT);
+		
+		if(score.getLives() <= 0){
 			
 			doEndGame();
 		}

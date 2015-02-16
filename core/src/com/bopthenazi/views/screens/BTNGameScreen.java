@@ -402,8 +402,6 @@ public class BTNGameScreen implements Screen{
 		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getWidth() / 2.0f));
 		scoreLabel.setY(650.0f + (this.score.getHeight() / 2.0f));
 		
-		scoreLabel.setDebug(true);
-		
 		BasicButton restart = new BasicButton(new Texture("screen-game-over/restart-button.png"), new Texture("screen-game-over/restart-button-down-state.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 550.0f);
 	
 		restart.setWidth(GAME_WIDTH * 0.45f);
@@ -479,6 +477,10 @@ public class BTNGameScreen implements Screen{
 			
 			handleDynamiteDeactivate((Dynamite) btnContainedActor);
 		}
+		else if(className.equals(Bunny.class.getName())){
+			
+			handleBunnyDeactivate((Bunny) btnContainedActor);
+		}
 		else{
 			
 			// Log that something strange happened.
@@ -486,9 +488,18 @@ public class BTNGameScreen implements Screen{
 		}
 	}
 
+	private void handleBunnyDeactivate(Bunny btnContainedActor) {
+		
+		print("Handling Bunny deactivate now");
+		
+		// Do nothing.
+	}
+
 	private void handleDynamiteDeactivate(Dynamite btnContainedActor) {
 		
 		print("Handling Dynamite deactivate now");
+		
+		// Do nothing.
 	}
 
 	private void handleZombieDeactivate(Zombie zombie) {
@@ -520,14 +531,21 @@ public class BTNGameScreen implements Screen{
 		
 		generateExplosion(containerContents.getX(), containerContents.getY() + containerContents.getHeight() / 2.0f, (containerContents instanceof Dynamite) ? true : false);
 		
-		if(name.equals(Zombie.class.getName()) || name.equals(Bunny.class.getName())){
+		if(name.equals(Zombie.class.getName())){
 			
 			playSound(SOUND_ID_PUNCH);
 			score.updateScore(score.getScore() + 1);
 		}
+		else if(name.equals(Bunny.class.getName())){
+			
+			playSound(SOUND_ID_PUNCH);
+			score.updateScore(score.getScore() - 1);
+		}
 		else if(name.equals(Dynamite.class.getName())){
 			
 			playSound(SOUND_ID_EXPLOSION);
+			
+			doEndGame();
 		}
 	}
 

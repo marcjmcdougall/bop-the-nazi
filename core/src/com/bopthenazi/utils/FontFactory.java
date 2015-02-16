@@ -11,7 +11,7 @@ public class FontFactory {
 		
 		BitmapFont output = new BitmapFont();
 		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/chalkdust.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Masaaki-Regular.otf"));
 		
 		FreeTypeFontParameter params = new FreeTypeFontParameter();
 		params.size = fontSize;

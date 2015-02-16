@@ -16,8 +16,6 @@ public class Glove extends BTNActor {
 	
 	private static final float GLOVE_HEIGHT_OFFSET = 775.0f;
 	
-	public static final boolean COLLIDE = true;
-	
 	private static final int STATE_STATIC = 1;
 	private static final int STATE_MOVING_DOWN = 2;
 	private static final int STATE_MOVING_UP = 3;
@@ -35,8 +33,6 @@ public class Glove extends BTNActor {
 	
 	private RunnableAction stateMutator;
 	
-	private volatile Action currentAction;
-	
 	private boolean readyToDrop;
 	private boolean dropRequested;
 
@@ -44,6 +40,9 @@ public class Glove extends BTNActor {
 	private BTNActor gloveCase;
 	
 	private volatile float cachedX;
+	
+	private volatile SequenceAction currentAction;
+	private volatile SequenceAction cachedAction;
 	
 	private static final float GLOVE_UNLOCK_BARRIER = BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET;
 	
@@ -74,6 +73,10 @@ public class Glove extends BTNActor {
 		
 		this.gameScreen = game;
 		this.gloveCase = gloveCase;
+		
+		this.setCurrentAction(null);
+		this.setCachedAction(null);
+		this.setCollide(true);
 		
 		this.moveDown = new SequenceAction();
 		this.moveUp = new SequenceAction();
@@ -138,79 +141,27 @@ public class Glove extends BTNActor {
 	
 	public void notifyTouch(float x){
 		
-		switch(getActorState()){
+		if(currentAction == null){
 			
-			case STATE_STATIC :{
-				
-				SequenceAction sequence = new SequenceAction();
-				sequence.addAction(buildTranslateXAction(x));
-				sequence.addAction(buildMoveDownAction(x, BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f));
-				sequence.addAction(buildMoveUpAction(x, 0.0f));
-				
-				this.addAction(sequence);
-				
-				break;
-			}
-			// If the glove is already moving down...
-			case STATE_MOVING_DOWN :{
-				
-				System.out.println("Moving Down!");
-				
-				// Clear all actions on the Glove.
-				this.clearActions();
-				
-				this.setCachedX(x);
-				
-				SequenceAction sequence = new SequenceAction();
-				
-				// First, add an action to simply finish the original "MoveDown" MoveToAction.
-				sequence.addAction(buildMoveDownAction(this.getX(), this.getY()));
-				
-				// Then, move up to the top of the screen.
-				sequence.addAction(buildMoveUpAction(this.getX(), 0.0f));
-				
-				// Then, translate across the top of the screen.
-				sequence.addAction(buildTranslateXAction(x));
-				
-				// Then, perform another "bop".
-				sequence.addAction(buildMoveDownAction(x, BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f));
-				sequence.addAction(buildMoveUpAction(x, 0.0f));
-				
-				this.addAction(sequence);
-				
-				break;
-			}
-			// If the glove is already moving up...
-			case STATE_MOVING_UP :{
-				
-				System.out.println("Moving Up!");
-				
-				// Clear all actions on the Glove.
-				this.clearActions();
-				
-				SequenceAction sequence = new SequenceAction();
-				
-				// Then, move up to the top of the screen.
-				sequence.addAction(buildMoveUpAction(this.getX(), this.getY()));
-				
-				// Then, translate across the top of the screen.
-				sequence.addAction(buildTranslateXAction(x));
-				
-				// Then, perform another "bop".  
-				// Note: We know that the glove will be at the top of the screen here, so we put that value as y.
-				sequence.addAction(buildMoveDownAction(x, BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f));
-				sequence.addAction(buildMoveUpAction(x, 0.0f));
-				
-				this.addAction(sequence);
-				
-				break;
-			}
-			default :{
-				
-				// Do nothing.
-				
-				break;
-			}
+			this.setCurrentAction(buildAction(x));
+			this.addAction(getCurrentAction());
+		}
+		else{
+			
+			this.setCachedAction(buildAction(x));
+		}
+	}
+	
+	private synchronized void pushCachedAction(){
+		
+		this.setCurrentAction(null);
+		
+		if(this.getCachedAction() != null){
+			
+			this.setCurrentAction(this.getCachedAction());
+			this.addAction(getCurrentAction());
+			
+			this.setCachedAction(null);
 		}
 	}
 	
@@ -228,61 +179,19 @@ public class Glove extends BTNActor {
 	 * @param y The y-coordinate of the Glove.
 	 * @return A MoveToAction built for moving the glove back into it's holster.
 	 */
-	private com.badlogic.gdx.scenes.scene2d.Action buildMoveUpAction(float x, float y) {
-		
-		RunnableAction stateMutatorUp = new RunnableAction();
-		
-		stateMutatorUp.setRunnable(new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				Glove.this.setCollide(false);
-				Glove.this.setCachedX(-1.0f);
-				Glove.this.setActorState(STATE_MOVING_UP);
-			}
-		});
+	private MoveToAction buildMoveUpAction(float x, float y) {
 		
 		MoveToAction moveUpTranslate = new MoveToAction();
 		
 		moveUpTranslate.setX(x);
 		moveUpTranslate.setY(BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f);
-		System.out.println("y: " + (BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET));
 		
 		moveUpTranslate.setDuration(Math.abs((BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f) - y) / GLOVE_VELOCITY_Y_UP);
 		
-		RunnableAction stateMutatorStatic = new RunnableAction();
-		
-		stateMutatorStatic.setRunnable(new Runnable() {
-			
-			public void run() {
-				
-				Glove.this.setCollide(true);
-				Glove.this.setActorState(STATE_STATIC);
-			}
-		});
-		
-		SequenceAction output = new SequenceAction();
-		
-		output.addAction(stateMutatorUp);
-		output.addAction(moveUpTranslate);
-		output.addAction(stateMutatorStatic);
-		
-		return output;
+		return moveUpTranslate;
 	}
 
-	private com.badlogic.gdx.scenes.scene2d.Action buildMoveDownAction(final float x, float y) {
-		
-		RunnableAction stateMutatorDown = new RunnableAction();
-		
-		stateMutatorDown.setRunnable(new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				Glove.this.setActorState(STATE_MOVING_DOWN);
-			}
-		});
+	private MoveToAction buildMoveDownAction(float x) {
 		
 		MoveToAction moveDownTranslate = new MoveToAction();
 		
@@ -291,14 +200,9 @@ public class Glove extends BTNActor {
 		moveDownTranslate.setInterpolation(Interpolation.pow3);
 		
 		// We're always moving to the bottom of the screen.
-		moveDownTranslate.setDuration(Math.abs(y - 0.0f) / GLOVE_VELOCITY_Y_DOWN);
+		moveDownTranslate.setDuration((BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f) / GLOVE_VELOCITY_Y_DOWN);
 		
-		SequenceAction output = new SequenceAction();
-		
-		output.addAction(stateMutatorDown);
-		output.addAction(moveDownTranslate);
-		
-		return output;
+		return moveDownTranslate;
 	}
 
 	private void setCachedX(float x) {
@@ -306,7 +210,7 @@ public class Glove extends BTNActor {
 		this.cachedX = x;
 	}
 
-	private com.badlogic.gdx.scenes.scene2d.Action buildTranslateXAction(float x) {
+	private MoveToAction buildTranslateXAction(float x) {
 		
 		float effectiveX = x;
 		
@@ -320,12 +224,30 @@ public class Glove extends BTNActor {
 		return translateX;
 	}
 
-	/**
-	 * @return the currentAction
-	 */
-	public Action getCurrentAction() {
+	private SequenceAction buildAction(float newX){
 		
-		return currentAction;
+		SequenceAction output = new SequenceAction();
+		
+		MoveToAction translateX = buildTranslateXAction(newX);
+		MoveToAction moveDown = buildMoveDownAction(newX);
+		MoveToAction moveUp = buildMoveUpAction(newX, 0.0f);
+		
+		RunnableAction finish = new RunnableAction();
+		finish.setRunnable(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Glove.this.pushCachedAction();
+			}
+		});
+		
+		output.addAction(translateX);
+		output.addAction(moveDown);
+		output.addAction(moveUp);
+		output.addAction(finish);
+		
+		return output;
 	}
 	
 	public void injectNewAction(Action a){
@@ -389,18 +311,21 @@ public class Glove extends BTNActor {
 		
 		this.setCollide(false);
 		
+		RunnableAction finished = new RunnableAction();
+		finished.setRunnable(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Glove.this.setCollide(true);
+				Glove.this.pushCachedAction();
+			}
+		});
+
 		SequenceAction sequence = new SequenceAction();
 		
 		sequence.addAction(buildMoveUpAction(this.getX(), this.getY()));
-		
-		if(this.getCachedX() >= 0.0f){
-			
-			sequence.addAction(buildTranslateXAction(getCachedX()));
-			sequence.addAction(buildMoveDownAction(getCachedX(), BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f));
-			sequence.addAction(buildMoveUpAction(getCachedX(), 0.0f));
-			
-			System.out.println("");
-		}
+		sequence.addAction(finished);
 		
 		this.addAction(sequence);
 	}
@@ -472,5 +397,23 @@ public class Glove extends BTNActor {
 	public void setToX(float toX) {
 		
 		this.toX = toX;
+	}
+
+	public SequenceAction getCachedAction() {
+		return cachedAction;
+	}
+
+	public void setCachedAction(SequenceAction cachedAction) {
+		this.cachedAction = cachedAction;
+	}
+
+	public void setCurrentAction(SequenceAction currentAction) {
+		
+		this.currentAction = currentAction;
+	}
+	
+	public SequenceAction getCurrentAction(){
+		
+		return currentAction;
 	}
 }

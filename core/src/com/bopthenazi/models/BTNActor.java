@@ -17,7 +17,7 @@ public class BTNActor extends Actor implements Collidable{
 	
 	private static final float DEFAULT_FRAMES_PER_SECOND = 15.0f;
 	
-	private static final boolean DEFAULT_COLLIDE_STATE = true;
+	private static final boolean DEFAULT_COLLIDE_STATE = false;
 	
 	private static final float DEFAULT_X = BTNGameScreen.GAME_WIDTH / 2.0f;
 	private static final float DEFAULT_Y = BTNGameScreen.GAME_HEIGHT / 2.0f;

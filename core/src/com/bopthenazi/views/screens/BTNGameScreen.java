@@ -471,8 +471,7 @@ public class BTNGameScreen implements Screen{
 		print("*      DEBUG OUTPUT      *");
 		print("==========================");
 		print("> Glove.getCurrentAction: " + glove.getCurrentAction());
-		print("> Glove.getActorState: " + glove.getActorState());
-		print("> Glove.getCachedX: " + glove.getCachedX());
+		print("> Glove.getCachedAction: " + glove.getCachedAction());
 		
 		print("==========================");
 	}

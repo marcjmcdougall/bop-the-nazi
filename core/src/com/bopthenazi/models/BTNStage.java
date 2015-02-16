@@ -16,6 +16,8 @@ import com.bopthenazi.views.screens.BTNMenuScreen;
 
 public class BTNStage extends Stage {
 
+	private static final boolean DEBUG_NO_COLLIDE = false;
+	
 	private BTNGame game;
 	private BTNGameScreen screen;
 	
@@ -56,7 +58,7 @@ public class BTNStage extends Stage {
 			BTNContainedActor contents = containers.get(i).getContents();
 			Glove glove = screen.getGlove();
 			
-			if(glove.getRect().overlaps(contents.getRect()) && contents.canCollide() && glove.canCollide()){
+			if(glove.getRect().overlaps(contents.getRect()) && contents.canCollide() && glove.canCollide() && !DEBUG_NO_COLLIDE){
 				
 				screen.notifyCollision(contents);
 			}

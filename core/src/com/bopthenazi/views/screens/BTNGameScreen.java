@@ -4,12 +4,11 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -65,6 +64,8 @@ public class BTNGameScreen implements Screen{
 	
 	private float baseFrequencyContainerActivate = 0.25f;
 	
+	private AssetManager assetManager;
+	
 	private BTNGame game;
 	private BTNStage gameStage;
 	
@@ -100,6 +101,23 @@ public class BTNGameScreen implements Screen{
 	public BTNGameScreen(BTNGame game){
 		
 		this.game = game;
+		this.assetManager = new AssetManager();
+	}
+	
+	public void beginAssetLoad(){
+		
+		// Load textures...
+		this.assetManager.load("", Texture.class);
+		this.assetManager.load(fileName, Texture.class);
+		this.assetManager.load(fileName, Texture.class);
+		this.assetManager.load(fileName, Texture.class);
+		this.assetManager.load(fileName, Texture.class);
+		this.assetManager.load(fileName, Texture.class);
+		this.assetManager.load(fileName, Texture.class);
+		this.assetManager.load(fileName, Texture.class);
+		this.assetManager.load(fileName, Texture.class);
+		
+		// Load sounds...
 	}
 	
 	public void notifyNewX(float x) {

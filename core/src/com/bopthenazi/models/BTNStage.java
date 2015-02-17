@@ -100,6 +100,10 @@ public class BTNStage extends Stage {
 			
 			screen.doEndGame();
 		}
+		if(keyCode == Keys.R){
+			
+			screen.resetScore();
+		}
 		
 		return super.keyDown(keyCode);
 	}

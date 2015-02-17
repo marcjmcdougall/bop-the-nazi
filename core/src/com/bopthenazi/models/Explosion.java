@@ -2,6 +2,7 @@ package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Explosion extends BTNActor {
 
@@ -13,15 +14,17 @@ public class Explosion extends BTNActor {
 	
 	private float aliveDuration;
 	
-	public Explosion(float x, float y) {
+	private BTNGameScreen gameScreen;
+	
+	public Explosion(float x, float y, BTNGameScreen screen) {
 		
-		this(x, y, false);
+		this(x, y, false, screen);
 	}
 	
-	public Explosion(float x, float y, boolean expand){
+	public Explosion(float x, float y, boolean expand, BTNGameScreen gameScreen){
 		
-		super(new Array<Texture>(new Texture[]{new Texture("explosion-03.png"), new Texture("explosion-02.png"), 
-				new Texture("explosion-01.png"), /*new Texture("explosion-04.png")*/}), 
+		super(new Array<Texture>(new Texture[]{gameScreen.getTexture("screen-game/explosion/explosion-01.png"), gameScreen.getTexture("screen-game/explosion/explosion-02.png"), 
+				gameScreen.getTexture("screen-game/explosion/explosion-03.png"), /*new Texture("explosion-04.png")*/}), 
 				x, y, EXPLOSION_WIDTH, EXPLOSION_HEIGHT, x, y, EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
 	
 		this.aliveDuration = (1 / EXPLOSION_FPS) * EXPLOSION_FRAME_COUNT - .05f;

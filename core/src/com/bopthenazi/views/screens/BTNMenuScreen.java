@@ -43,12 +43,12 @@ public class BTNMenuScreen implements Screen {
 		FitViewport viewport = new FitViewport(MENU_WIDTH, MENU_HEIGHT);
 		menuStage = new Stage(viewport);
 		
-		this.bg = new BTNActor(new Texture("screen-menu/orange-background.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
-		this.title = new BTNActor(new Texture("screen-menu/zombie-bop-menu-title.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.75f, 850.0f, 600.0f);
-		this.stripes = new BTNActor(new Texture("screen-menu/yellow-stripes.png"), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
-		this.zombie = new BTNActor(new Texture("screen-menu/happy-zombie.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
-		this.topBar = new BTNActor(new Texture("screen-menu/top-bar.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT - 76.0f, MENU_WIDTH, 150.0f);
-		this.startGame = new BasicButton(new Texture("screen-menu/start-bar-up-state.png"), new Texture("screen-menu/start-bar-down-state.png"), MENU_WIDTH / 2.0f, 0.0f);
+		this.bg = new BTNActor(new Texture("textures/screen-menu/orange-background.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
+		this.title = new BTNActor(new Texture("textures/screen-menu/zombie-bop-menu-title.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.75f, 850.0f, 600.0f);
+		this.stripes = new BTNActor(new Texture("textures/screen-menu/yellow-stripes.png"), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
+		this.zombie = new BTNActor(new Texture("textures/screen-menu/happy-zombie.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
+		this.topBar = new BTNActor(new Texture("textures/screen-menu/top-bar.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT - 76.0f, MENU_WIDTH, 150.0f);
+		this.startGame = new BasicButton(new Texture("textures/screen-menu/start-bar-up-state.png"), new Texture("textures/screen-menu/start-bar-down-state.png"), MENU_WIDTH / 2.0f, 0.0f);
 		this.startGame.setWidth(MENU_WIDTH);
 		this.startGame.setHeight(MENU_HEIGHT * 0.125f);
 		this.stripes.setOriginX(stripes.getWidth() / 2.0f);
@@ -76,7 +76,8 @@ public class BTNMenuScreen implements Screen {
 				
 				Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
 				
-				BTNMenuScreen.this.game.setScreen(new BTNGameScreen(BTNMenuScreen.this.game));
+//				BTNMenuScreen.this.game.setScreen(new BTNGameScreen(BTNMenuScreen.this.game));
+				BTNMenuScreen.this.game.setScreen(new BTNLoadingScreen(game));
 			}
 		});
 		

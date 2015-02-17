@@ -9,7 +9,7 @@ public class Heart extends BTNContainedActor {
 	
 	public Heart(float x, float y, BTNGameScreen gameScreen){
 		
-		super(new Array<Texture>(new Texture[]{new Texture("heart-contained.png")}), x, y, gameScreen);
+		super(new Array<Texture>(new Texture[]{gameScreen.getTexture("screen-game/heart-contained/heart-contained.png")}), x, y, gameScreen);
 	}
 	
 	@Override

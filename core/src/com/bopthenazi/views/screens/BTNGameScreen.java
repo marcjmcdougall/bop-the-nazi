@@ -5,10 +5,12 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -67,6 +69,7 @@ public class BTNGameScreen implements Screen{
 	private AssetManager assetManager;
 	
 	private BTNGame game;
+
 	private BTNStage gameStage;
 	
 	private SaveManager saveManager;
@@ -98,26 +101,102 @@ public class BTNGameScreen implements Screen{
 	
 	private boolean paused;
 	
+	private static final String TEXTURE_PREPEND = "textures/";
+	private static final String SFX_PREPEND = "sfx/";
+	private static final String FONTS_PREPEND = "fonts/";
+	private static final String MUSIC_PREPEND = "music/";
+	
 	public BTNGameScreen(BTNGame game){
 		
 		this.game = game;
 		this.assetManager = new AssetManager();
+		
+		beginAssetLoad();
 	}
 	
 	public void beginAssetLoad(){
 		
 		// Load textures...
-		this.assetManager.load("", Texture.class);
-		this.assetManager.load(fileName, Texture.class);
-		this.assetManager.load(fileName, Texture.class);
-		this.assetManager.load(fileName, Texture.class);
-		this.assetManager.load(fileName, Texture.class);
-		this.assetManager.load(fileName, Texture.class);
-		this.assetManager.load(fileName, Texture.class);
-		this.assetManager.load(fileName, Texture.class);
-		this.assetManager.load(fileName, Texture.class);
+		loadTexture("screen-game/bunny/bunny-hit-frame.png");
+		loadTexture("screen-game/bunny/bunny.png");
+		
+		loadTexture("screen-game/bunny-2/bunny-2.png");
+		loadTexture("screen-game/bunny-2/bunny2-hit-frame.png");
+		
+		loadTexture("screen-game/container/hole-back.png");
+		loadTexture("screen-game/container/hole-front.png");
+		
+		loadTexture("screen-game/dynamite/dynamite-01.png");
+		loadTexture("screen-game/dynamite/dynamite-02.png");
+		loadTexture("screen-game/dynamite/dynamite-03.png");
+		loadTexture("screen-game/dynamite/dynamite-04.png");
+		loadTexture("screen-game/dynamite/dynamite-05.png");
+		
+		loadTexture("screen-game/explosion/explosion-01.png");
+		loadTexture("screen-game/explosion/explosion-02.png");
+		loadTexture("screen-game/explosion/explosion-03.png");
+		loadTexture("screen-game/explosion/explosion-04.png");
+		
+		loadTexture("screen-game/heart/heart-empty-v2.png");
+		loadTexture("screen-game/heart/heart.png");
+		
+		loadTexture("screen-game/heart-contained/heart-contained.png");
+		loadTexture("screen-game/heart-contained/heart-contained-01.png");
+		loadTexture("screen-game/heart-contained/heart-contained-02.png");
+		loadTexture("screen-game/heart-contained/heart-contained-03.png");
+		loadTexture("screen-game/heart-contained/heart-contained-04.png");
+		loadTexture("screen-game/heart-contained/heart-contained-05.png");
+		
+		loadTexture("screen-game/zombie/zombie.png");
+		loadTexture("screen-game/zombie/zombie1-hit-frame.png");
+		
+		loadTexture("screen-game/zombie-2/zombie-2.png");
+		loadTexture("screen-game/zombie-2/zombie2-hit-frame.png");
+
+		loadTexture("screen-game/zombie-bunny/zombie-bunny.png");
+		loadTexture("screen-game/zombie-bunny/zombie-bunny-hit-frame.png");
+		
+		loadTexture("screen-game/background.png");
+		loadTexture("screen-game/explosion-splash.png");
+		loadTexture("screen-game/glove.png");
+		loadTexture("screen-game/mover.png");
+		loadTexture("screen-game/top-bar.png");
 		
 		// Load sounds...
+		loadSFX("bunny-die.wav");
+		loadSFX("explosion.wav");
+		loadSFX("game-over.wav");
+		loadSFX("lets-go.wav");
+		loadSFX("new-record.wav");
+		loadSFX("punch.wav");
+		loadSFX("splat.wav");
+		loadSFX("zombie-die-2.wav");
+		
+		// Load music...
+		// TODO: Implementation.
+		
+		// Load fonts...
+		// TODO: Implementation.
+	}
+	
+	private void loadFont(String fileNamePostPrepend){
+		
+		this.assetManager.load(FONTS_PREPEND + fileNamePostPrepend, BitmapFont.class);
+	}
+	
+	private void loadTexture(String fileNamePostPrepend){
+		
+		this.assetManager.load(TEXTURE_PREPEND + fileNamePostPrepend, Texture.class);
+	}
+	
+	private void loadSFX(String fileNamePostPrepend){
+		
+		this.assetManager.load(SFX_PREPEND + fileNamePostPrepend, Sound.class);
+	}
+	
+	private void loadMusic(String fileNamePostPrepend){
+		
+		this.assetManager.load(MUSIC_PREPEND + fileNamePostPrepend, Music.class);
 	}
 	
 	public void notifyNewX(float x) {
@@ -130,7 +209,7 @@ public class BTNGameScreen implements Screen{
 	
 	private void generateExplosion(float x, float y, boolean expand) {
 		
-		Explosion explosion = new Explosion(x, y, expand);
+		Explosion explosion = new Explosion(x, y, expand, this);
 		gameStage.addActor(explosion);
 	}
 
@@ -184,7 +263,7 @@ public class BTNGameScreen implements Screen{
 	
 	private void initializeLivesModule() {
 		
-		this.livesModule = new LivesModule();
+		this.livesModule = new LivesModule(this);
 		
 		for(BTNActor heartOutline : livesModule.getHeartOutlines()){
 			
@@ -215,25 +294,25 @@ public class BTNGameScreen implements Screen{
 		gameStage = new BTNStage(viewport, game, this);
 //		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT, this);
 //		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
-		bg = new BTNActor(new Texture("background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		gloveCase = new BTNActor(new Texture("mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
+		bg = new BTNActor(getTexture("screen-game/background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
-		topBar = new BTNActor(new Texture("top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
+		topBar = new BTNActor(getTexture("screen-game/top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
 		
 		saveManager = new SaveManager();
 		
-		explosionSplash = new BTNActor(new Texture("explosion-splash.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+		explosionSplash = new BTNActor(getTexture("screen-game/explosion-splash.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
 		
 		gameStage.addActor(bg);
 		
-		this.punchSound = Gdx.audio.newSound(Gdx.files.internal("sfx/punch.wav"));
-		this.splatSound = Gdx.audio.newSound(Gdx.files.internal("sfx/splat.wav"));
-		this.explosionSound = Gdx.audio.newSound(Gdx.files.internal("sfx/explosion.wav"));
-		this.gameOverSound = Gdx.audio.newSound(Gdx.files.internal("sfx/game-over.wav"));
-		this.letsGoSound = Gdx.audio.newSound(Gdx.files.internal("sfx/lets-go.wav"));
-		this.bunnyDeathSound = Gdx.audio.newSound(Gdx.files.internal("sfx/bunny-die.wav"));
-		this.zombieDeathSound = Gdx.audio.newSound(Gdx.files.internal("sfx/zombie-die-2.wav"));
-		this.newRecordSound = Gdx.audio.newSound(Gdx.files.internal("sfx/new-record.wav"));
+		this.punchSound = getSound("punch.wav");
+		this.splatSound = getSound("splat.wav");
+		this.explosionSound = getSound("explosion.wav");
+		this.gameOverSound = getSound("game-over.wav");
+		this.letsGoSound = getSound("lets-go.wav");
+		this.bunnyDeathSound = getSound("bunny-die.wav");
+		this.zombieDeathSound = getSound("zombie-die-2.wav");
+		this.newRecordSound = getSound("new-record.wav");
 		
 		initializeContainers();
 		initializeLivesModule();
@@ -257,6 +336,16 @@ public class BTNGameScreen implements Screen{
 		activateContainerContents(containers.get(randomIndex));
 		
 		playSound(SOUND_ID_LETS_GO);
+	}
+
+	public Texture getTexture(String textureNamePostPrepend) {
+		
+		return assetManager.get(TEXTURE_PREPEND + textureNamePostPrepend, Texture.class);
+	}
+	
+	public Sound getSound(String soundNamePostPrepend){
+		
+		return assetManager.get(SFX_PREPEND + soundNamePostPrepend, Sound.class);
 	}
 
 	private void setPaused(boolean paused) {
@@ -399,6 +488,8 @@ public class BTNGameScreen implements Screen{
 		gameStage.dispose();
 		punchSound.dispose();
 		splatSound.dispose();
+		
+		assetManager.dispose();
 	}
 
 	public void playSound(int soundID){
@@ -493,9 +584,9 @@ public class BTNGameScreen implements Screen{
 		
 		this.gameOverScreen = new Group();
 		
-		BTNActor gameOverAlpha = new BTNActor(new Texture("screen-game-over/alpha-25.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		BTNActor gameOverBackground = new BTNActor(new Texture("screen-game-over/game-over-box.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, GAME_WIDTH * 0.75f, GAME_HEIGHT * 0.6f);
-		BTNActor gameOverText = new BTNActor(new Texture("screen-game-over/game-over-text.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f + 25.0f, GAME_WIDTH * 0.40f, GAME_HEIGHT * 0.15f);
+		BTNActor gameOverAlpha = new BTNActor(new Texture("textures/screen-game-over/alpha-25.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+		BTNActor gameOverBackground = new BTNActor(new Texture("textures/screen-game-over/game-over-box.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, GAME_WIDTH * 0.75f, GAME_HEIGHT * 0.6f);
+		BTNActor gameOverText = new BTNActor(new Texture("textures/screen-game-over/game-over-text.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f + 25.0f, GAME_WIDTH * 0.40f, GAME_HEIGHT * 0.15f);
 		
 		Label scoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		scoreLabel.setHeight(100.0f);
@@ -549,7 +640,7 @@ public class BTNGameScreen implements Screen{
 		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
 		highScoreLabel.setY(570.0f + (this.score.getHeight() / 2.0f));
 		
-		BasicButton restart = new BasicButton(new Texture("screen-game-over/restart-button.png"), new Texture("screen-game-over/restart-button-down-state.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 550.0f);
+		BasicButton restart = new BasicButton(new Texture("textures/screen-game-over/restart-button.png"), new Texture("textures/screen-game-over/restart-button-down-state.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 550.0f);
 	
 		restart.setWidth(GAME_WIDTH * 0.45f);
 		restart.setX((GAME_WIDTH / 2.0f) - (restart.getWidth() / 2.0f));
@@ -569,7 +660,7 @@ public class BTNGameScreen implements Screen{
 				
 				Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
 				
-				BTNGameScreen.this.reset();
+				BTNGameScreen.this.getGame().setScreen(new BTNLoadingScreen(BTNGameScreen.this.getGame()));
 			}
 		});
 		
@@ -757,5 +848,15 @@ public class BTNGameScreen implements Screen{
 			this.score.setLives(currentLives + 1);
 			this.livesModule.pushHeart();
 		}
+	}
+	
+	public BTNGame getGame() {
+		
+		return game;
+	}
+	
+	public AssetManager getAssetManager() {
+		
+		return assetManager;
 	}
 }

@@ -16,7 +16,7 @@ public class Bunny extends BTNContainedActor {
 	
 	public Bunny(float x, float y, BTNGameScreen gameScreen) {
 	
-		super(new Texture("bunny.png"), x, y, gameScreen);
+		super(gameScreen.getTexture("screen-game/bunny/bunny.png"), x, y, gameScreen);
 		
 		initializeBunnyTextures();
 	}
@@ -41,15 +41,15 @@ public class Bunny extends BTNContainedActor {
 		
 			case BUNNY_TYPE_BLUE :{
 				
-				this.setTextures(new Array<Texture>(new Texture[]{new Texture("bunny.png")/*, new Texture("zombie-2.png"), new Texture("zombie-2.png"), new Texture("zombie2-hit-frame.png")*/}));
-				this.onHitTexture = new Texture("bunny-hit-frame.png");
+				this.setTextures(new Array<Texture>(new Texture[]{gameScreen.getTexture("screen-game/bunny/bunny.png")/*, new Texture("zombie-2.png"), new Texture("zombie-2.png"), new Texture("zombie2-hit-frame.png")*/}));
+				this.onHitTexture = gameScreen.getTexture("screen-game/bunny/bunny-hit-frame.png");
 				
 				break;
 			}
 			case BUNNY_TYPE_BROWN :{
 				
-				this.setTextures(new Array<Texture>(new Texture[]{new Texture("bunny-2.png")/*, new Texture("zombie.png"), new Texture("zombie.png"), new Texture("zombie1-hit-frame.png")*/}));
-				this.onHitTexture = new Texture("bunny2-hit-frame.png");
+				this.setTextures(new Array<Texture>(new Texture[]{gameScreen.getTexture("screen-game/bunny-2/bunny-2.png")/*, new Texture("zombie.png"), new Texture("zombie.png"), new Texture("zombie1-hit-frame.png")*/}));
+				this.onHitTexture = gameScreen.getTexture("screen-game/bunny-2/bunny2-hit-frame.png");
 				
 				break;
 			}

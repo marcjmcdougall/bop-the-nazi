@@ -13,7 +13,7 @@ public class DesktopLauncher {
 		config.title="ZombieBop!";
 		config.width= 320;
 		config.height= 568;
-		config.addIcon("icon-small.png", FileType.Internal);
+		config.addIcon("textures/icon-small.png", FileType.Internal);
 		
 		new LwjglApplication(new BTNGame(), config);
 	}

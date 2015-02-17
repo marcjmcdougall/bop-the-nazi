@@ -20,17 +20,20 @@ public class LivesModule{
 	private Array<BTNActor> heartOutlines;
 	private Array<BTNActor> hearts;
 	
+	private BTNGameScreen gameScreen;
+	
 	private int heartIndex;
 	
-	public LivesModule(){
-
+	public LivesModule(BTNGameScreen gameScreen){
+		
+		this.gameScreen = gameScreen;
+		
 		initialize();
 	}
 	
 	private void initialize(){
 		
 		heartIndex = Score.DEFAULT_NUMBER_LIVES - 1;
-		
 		intializeHeartOutlines();
 		initializeHearts();
 	}
@@ -41,7 +44,7 @@ public class LivesModule{
 		
 		for(int i = 0; i < Score.DEFAULT_NUMBER_LIVES; i++){
 			
-			heartOutlines.add(new BTNActor(new Texture("heart-empty-v2.png"), BTNGameScreen.GAME_WIDTH - ((HEART_X_OFFSET + HEART_WIDTH / 2.0f) * (i + 1)) - (i * HEART_X_OFFSET), HEART_Y, HEART_WIDTH, HEART_HEIGHT));
+			heartOutlines.add(new BTNActor(gameScreen.getTexture("screen-game/heart/heart-empty-v2.png"), BTNGameScreen.GAME_WIDTH - ((HEART_X_OFFSET + HEART_WIDTH / 2.0f) * (i + 1)) - (i * HEART_X_OFFSET), HEART_Y, HEART_WIDTH, HEART_HEIGHT));
 		}
 	}
 	
@@ -51,7 +54,7 @@ public class LivesModule{
 		
 		for(int i = 0; i < Score.DEFAULT_NUMBER_LIVES; i++){
 			
-			hearts.add(new BTNActor(new Texture("heart.png"), BTNGameScreen.GAME_WIDTH - ((HEART_X_OFFSET + HEART_WIDTH / 2.0f) * (i + 1)) - (i * HEART_X_OFFSET), HEART_Y, HEART_WIDTH, HEART_HEIGHT));
+			hearts.add(new BTNActor(gameScreen.getTexture("screen-game/heart/heart.png"), BTNGameScreen.GAME_WIDTH - ((HEART_X_OFFSET + HEART_WIDTH / 2.0f) * (i + 1)) - (i * HEART_X_OFFSET), HEART_Y, HEART_WIDTH, HEART_HEIGHT));
 			hearts.get(i).setOrigin(hearts.get(i).getWidth() / 2.0f, hearts.get(i).getHeight() / 2.0f);
 		}
 	}

@@ -23,7 +23,7 @@ public class Zombie extends BTNContainedActor {
 	
 	public Zombie(float x, float y, BTNGameScreen screen){
 		
-		super(new Random().nextInt(2) == 1 ? new Texture("zombie.png") : new Texture("zombie-2.png"), x, y, screen);
+		super(new Random().nextInt(2) == 1 ? screen.getTexture("screen-game/zombie/zombie.png") : screen.getTexture("screen-game/zombie-2/zombie-2.png"), x, y, screen);
 		
 		random = new Random();
 		
@@ -50,15 +50,15 @@ public class Zombie extends BTNContainedActor {
 		
 			case ZOMBIE_TYPE_OFFICE :{
 				
-				this.setTextures(new Array<Texture>(new Texture[]{new Texture("zombie-2.png")/*, new Texture("zombie-2.png"), new Texture("zombie-2.png"), new Texture("zombie2-hit-frame.png")*/}));
-				this.onHitTexture = new Texture("zombie2-hit-frame.png");
+				this.setTextures(new Array<Texture>(new Texture[]{getGameScreen().getTexture("screen-game/zombie-2/zombie-2.png")/*, new Texture("zombie-2.png"), new Texture("zombie-2.png"), new Texture("zombie2-hit-frame.png")*/}));
+				this.onHitTexture = getGameScreen().getTexture("screen-game/zombie-2/zombie2-hit-frame.png");
 				
 				break;
 			}
 			case ZOMBIE_TYPE_SHIRT :{
 				
-				this.setTextures(new Array<Texture>(new Texture[]{new Texture("zombie.png")/*, new Texture("zombie.png"), new Texture("zombie.png"), new Texture("zombie1-hit-frame.png")*/}));
-				this.onHitTexture = new Texture("zombie1-hit-frame.png");
+				this.setTextures(new Array<Texture>(new Texture[]{getGameScreen().getTexture("screen-game/zombie/zombie.png")/*, new Texture("zombie.png"), new Texture("zombie.png"), new Texture("zombie1-hit-frame.png")*/}));
+				this.onHitTexture = getGameScreen().getTexture("screen-game/zombie/zombie1-hit-frame.png");
 				
 				break;
 			}

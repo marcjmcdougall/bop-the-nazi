@@ -1,19 +1,21 @@
 package com.bopthenazi.views.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNStage;
 
-public class LoadingScreen implements Screen {
+public class BTNLoadingScreen implements Screen {
 
 	private Stage loadingScreenStage;
 	
 	private BTNGame game;
 	private BTNGameScreen gameScreen;
 	
-	public LoadingScreen(BTNGame game) {
+	public BTNLoadingScreen(BTNGame game) {
 	
 		this.game = game;
 		this.gameScreen = new BTNGameScreen(game);
@@ -24,15 +26,25 @@ public class LoadingScreen implements Screen {
 	
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-
+	
+		
 	}
 
 	@Override
 	public void render(float delta) {
 		
+		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
 		loadingScreenStage.act(delta);
 		loadingScreenStage.draw();
+		
+		if(gameScreen.getAssetManager().update()){
+			
+			game.setScreen(gameScreen);
+		}
+		
+		System.out.println("Progress: " + gameScreen.getAssetManager().getProgress());
 	}
 
 	@Override

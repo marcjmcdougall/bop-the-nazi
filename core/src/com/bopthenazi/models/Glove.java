@@ -62,7 +62,7 @@ public class Glove extends BTNActor {
 	
 	public Glove(float x, float y, float width, float height, BTNGameScreen game, BTNActor gloveCase) {
 		
-		super(new Texture("glove.png"), x, y, width, height);
+		super(game.getTexture("screen-game/glove.png"), x, y, width, height);
 		
 		// Velocity is measured in game-pixels / second.
 		this.velocityX = GLOVE_VELOCTY_X;

@@ -1,5 +1,6 @@
 package com.bopthenazi.game.desktop;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.bopthenazi.game.BTNGame;
@@ -12,6 +13,7 @@ public class DesktopLauncher {
 		config.title="ZombieBop!";
 		config.width= 320;
 		config.height= 568;
+		config.addIcon("icon-small.png", FileType.Internal);
 		
 		new LwjglApplication(new BTNGame(), config);
 	}

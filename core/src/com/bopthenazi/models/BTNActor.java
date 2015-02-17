@@ -250,4 +250,12 @@ public class BTNActor extends Actor implements Collidable{
 	public void setFps(float fps) {
 		this.fps = fps;
 	}
+
+	public Array<Texture> getTextures() {
+		return textures;
+	}
+
+	public void setTextures(Array<Texture> textures) {
+		this.textures = textures;
+	}
 }

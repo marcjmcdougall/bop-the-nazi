@@ -22,7 +22,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	private static final float CONTENT_WIDTH = 200.0f;
 	private static final float CONTENT_HEIGHT = 388.8f;
 	
-	private BTNGameScreen gameScreen;
+	protected BTNGameScreen gameScreen;
 	private SequenceAction oscillateSequence;
 	
 	private volatile boolean activated;

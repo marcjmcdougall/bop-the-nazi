@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.bopthenazi.utils.Action;
+import com.bopthenazi.utils.Collidable;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Glove extends BTNActor {
@@ -52,7 +53,7 @@ public class Glove extends BTNActor {
 	private static final float GLOVE_VELOCTY_X = 4000.0f;
 	
 	private static final float GLOVE_VELOCITY_Y_DOWN = 5000.0f;
-	private static final float GLOVE_VELOCITY_Y_UP = 5000.0f;
+	private static final float GLOVE_VELOCITY_Y_UP = 8000.0f;
 	
 	public Glove(float x, float y, float width, float height, BTNGameScreen game, BTNActor gloveCase) {
 		
@@ -304,7 +305,10 @@ public class Glove extends BTNActor {
 		this.readyToDrop = readyToDrop;
 	}
 
-	public void notifyCollide() {
+	@Override
+	public void onCollide(Collidable partner) {
+		
+		super.onCollide(partner);
 		
 		this.clearActions();
 		this.setY(this.getY());

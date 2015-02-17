@@ -21,14 +21,8 @@ public class Zombie extends BTNContainedActor {
 		
 		super.onCollide(partner);
 		
-		deactivate();
-	}
-
-	@Override
-	public void activate() {
-		
-		super.activate();
-		
-		// TODO: Implementation.
+		gameScreen.playSound(BTNGameScreen.SOUND_ID_PUNCH);
+		gameScreen.playSound(BTNGameScreen.SOUND_ID_ZOMBIE_DEATH);
+		gameScreen.incrementScore();
 	}
 }

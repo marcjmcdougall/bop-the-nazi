@@ -104,6 +104,10 @@ public class BTNStage extends Stage {
 			
 			screen.resetScore();
 		}
+		if(keyCode == Keys.A){
+			
+			screen.addLife();
+		}
 		
 		return super.keyDown(keyCode);
 	}

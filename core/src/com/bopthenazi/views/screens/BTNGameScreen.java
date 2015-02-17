@@ -29,6 +29,7 @@ import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Dynamite;
 import com.bopthenazi.models.Explosion;
 import com.bopthenazi.models.Glove;
+import com.bopthenazi.models.Heart;
 import com.bopthenazi.models.LivesModule;
 import com.bopthenazi.models.Score;
 import com.bopthenazi.models.Zombie;
@@ -52,7 +53,7 @@ public class BTNGameScreen implements Screen{
 	public static final int SOUND_ID_NEW_RECORD = 7;
 	
 	private static final int MAX_ZOMBIE_COUNT = 5;
-	private static final int MAX_CONCURRENT_ZOMBIES = 3;
+	private static final int MAX_CONCURRENT_ZOMBIES = 4;
 	
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
@@ -62,7 +63,7 @@ public class BTNGameScreen implements Screen{
 	public static final float BAR_OFFSET_LOWER = 136.3f;
 	public static final float BAR_OFFSET_TOP = 256.0f;
 	
-	private float baseFrequencyContainerActivate = 1.0f;
+	private float baseFrequencyContainerActivate = 0.25f;
 	
 	private BTNGame game;
 	private BTNStage gameStage;
@@ -180,13 +181,6 @@ public class BTNGameScreen implements Screen{
 
 	private void reset(){
 		
-//		score.reset();
-//		livesModule.reset();
-//		
-//		this.gameOverScreen.setVisible(false);
-//		
-//		this.setPaused(false);
-		
 		this.game.setScreen(new BTNGameScreen(this.game));
 	}
 	
@@ -302,40 +296,45 @@ public class BTNGameScreen implements Screen{
 				
 				if(!containers.get(index).getContents().isActivated()){
 					
-					int cursor = new Random().nextInt(4);
+					int cursor = new Random().nextInt(10);
 					
 					BTNContainedActor newActor = null;
 					
-					switch(cursor){
-					
-						case 0:{
-							
-							newActor  = new Dynamite(0.0f, 0.0f, this);
-							
-							break;
-						}
-						case 1 :{
+					// 60% chance...
+					if(cursor < 6){
+						
+						cursor = new Random().nextInt(2);
+						
+						// 30% chance...
+						if(cursor == 0){
 							
 							newActor = new Zombie(0.0f, 0.0f, this);
-							
-							break;
 						}
-						case 2 :{
+						// 30% chance...
+						else{
 							
-							newActor = new Bunny(0.0f, 0.0f, this);
-									
-							break;
+							newActor = new ZombieBunny(0.0f, 0.0f, this);						
 						}
-						case 3 :{
+					}
+					// 30% chance...
+					else if(cursor < 9){
+						
+						newActor = new Bunny(0.0f, 0.0f, this);
+					}
+					// 10% chance...
+					else{
+						
+						cursor = new Random().nextInt(2);
+						
+						// 5% chance...
+						if(cursor == 0){
 							
-							newActor = new ZombieBunny(0.0f, 0.0f, this);
-							
-							break;
+							newActor = new Heart(0.0f, 0.0f, this);
 						}
-						default: {
+						// 5% chance...
+						else{
 							
-							// Do nothing.
-							break;
+							newActor  = new Dynamite(0.0f, 0.0f, this);						
 						}
 					}
 					
@@ -565,7 +564,6 @@ public class BTNGameScreen implements Screen{
 		
 		gameOverScreen.setVisible(false);
 		
-		
 		gameStage.addActor(gameOverScreen);
 		
 		gameOverScreen.setVisible(true);
@@ -730,5 +728,16 @@ public class BTNGameScreen implements Screen{
 	public void resetScore() {
 		
 		saveManager.saveScore(0);
+	}
+
+	public void addLife() {
+		
+		int currentLives = this.score.getLives(); 
+		
+		if(currentLives < Score.DEFAULT_NUMBER_LIVES){
+			
+			this.score.setLives(currentLives + 1);
+			this.livesModule.pushHeart();
+		}
 	}
 }

@@ -63,7 +63,8 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	
 	private void prepare() {
 		
-		DelayAction initialDelay = new DelayAction((float) (Math.random() * 2.0f));
+		// TODO: Removed initial delay.
+//		DelayAction initialDelay = new DelayAction((float) (Math.random() * 2.0f));
 		
 		MoveToAction moveUp = new MoveToAction();
 		moveUp.setPosition(this.getX(), this.getAnchorY() + OSCILLATION_DELTA);
@@ -104,7 +105,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		
 		oscillateSequence = new SequenceAction();
 		
-		oscillateSequence.addAction(initialDelay);
+//		oscillateSequence.addAction(initialDelay);
 		oscillateSequence.addAction(moveUp);
 		oscillateSequence.addAction(notifyUp);
 		oscillateSequence.addAction(delay);

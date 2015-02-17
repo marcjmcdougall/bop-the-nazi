@@ -4,13 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class LivesModule{
 
-	private static final int TOTAL_LIVES = 3;
-	
 	private static final float HEART_Y = 1520.0f; 
 	
 	private static final float HEART_X_OFFSET = 40.0f; 
@@ -30,7 +29,7 @@ public class LivesModule{
 	
 	private void initialize(){
 		
-		heartIndex = TOTAL_LIVES - 1;
+		heartIndex = Score.DEFAULT_NUMBER_LIVES - 1;
 		
 		intializeHeartOutlines();
 		initializeHearts();
@@ -40,7 +39,7 @@ public class LivesModule{
 		
 		this.heartOutlines = new Array<BTNActor>();
 		
-		for(int i = 0; i < TOTAL_LIVES; i++){
+		for(int i = 0; i < Score.DEFAULT_NUMBER_LIVES; i++){
 			
 			heartOutlines.add(new BTNActor(new Texture("heart-empty-v2.png"), BTNGameScreen.GAME_WIDTH - ((HEART_X_OFFSET + HEART_WIDTH / 2.0f) * (i + 1)) - (i * HEART_X_OFFSET), HEART_Y, HEART_WIDTH, HEART_HEIGHT));
 		}
@@ -50,9 +49,10 @@ public class LivesModule{
 		
 		this.hearts = new Array<BTNActor>();
 		
-		for(int i = 0; i < TOTAL_LIVES; i++){
+		for(int i = 0; i < Score.DEFAULT_NUMBER_LIVES; i++){
 			
 			hearts.add(new BTNActor(new Texture("heart.png"), BTNGameScreen.GAME_WIDTH - ((HEART_X_OFFSET + HEART_WIDTH / 2.0f) * (i + 1)) - (i * HEART_X_OFFSET), HEART_Y, HEART_WIDTH, HEART_HEIGHT));
+			hearts.get(i).setOrigin(hearts.get(i).getWidth() / 2.0f, hearts.get(i).getHeight() / 2.0f);
 		}
 	}
 
@@ -62,9 +62,27 @@ public class LivesModule{
 			
 			AlphaAction fadeOut = Actions.fadeOut(0.5f);
 			
-			hearts.get(heartIndex).remove();
+			ScaleToAction scaleTo = Actions.scaleTo(3.0f, 3.0f, 0.5f);
+			
+			hearts.get(heartIndex).addAction(fadeOut);
+			hearts.get(heartIndex).addAction(scaleTo);
 			
 			heartIndex--;
+		}
+	}
+	
+	public void pushHeart() {
+
+		// If we have at least a single heart deficit.
+		if(heartIndex < Score.DEFAULT_NUMBER_LIVES - 1){
+			
+			AlphaAction fadeIn = Actions.fadeIn(0.5f);
+			ScaleToAction scaleTo = Actions.scaleTo(1.0f, 1.0f, 0.5f);
+			
+			heartIndex++;
+			
+			hearts.get(heartIndex).addAction(fadeIn);
+			hearts.get(heartIndex).addAction(scaleTo);
 		}
 	}
 	
@@ -73,7 +91,7 @@ public class LivesModule{
 	 */
 	public static int getTotalLives() {
 		
-		return TOTAL_LIVES;
+		return Score.DEFAULT_NUMBER_LIVES;
 	}
 
 	/**

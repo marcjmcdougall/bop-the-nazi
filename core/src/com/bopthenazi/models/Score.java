@@ -12,7 +12,7 @@ public class Score extends Actor {
 	public static final float SCORE_WIDTH = 200.0f;
 	public static final float SCORE_HEIGHT = 100.0f;
 	
-	private static final int DEFAULT_NUMBER_LIVES = 3;
+	public static final int DEFAULT_NUMBER_LIVES = 3;
 	
 	private int score;
 	private int lives;

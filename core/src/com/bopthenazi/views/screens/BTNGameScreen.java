@@ -552,61 +552,70 @@ public class BTNGameScreen implements Screen{
 			
 				case SOUND_ID_PUNCH :{
 					
-					punchSound.play(DEFAULT_VOLUME * 0.75f);
+//					punchSound.play(DEFAULT_VOLUME * 0.75f);
+					getSound("punch.wav").play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}
 				case SOUND_ID_SPLAT :{
 					
-					splatSound.play(DEFAULT_VOLUME * 0.25f);
+//					splatSound.play(DEFAULT_VOLUME * 0.25f);
+					getSound("splat.wav").play(DEFAULT_VOLUME * 0.25f);
 					
 					break;
 				}
 				case SOUND_ID_EXPLOSION :{
 					
-					explosionSound.play(DEFAULT_VOLUME * 0.15f);
+//					explosionSound.play(DEFAULT_VOLUME * 0.15f);
+					getSound("explosion.wav").play(DEFAULT_VOLUME * 0.15f);
 					
 					break;
 				}
 				case SOUND_ID_GAME_OVER :{
 					
-					gameOverSound.play(DEFAULT_VOLUME);
+//					gameOverSound.play(DEFAULT_VOLUME);
+					getSound("game-over.wav").play(DEFAULT_VOLUME);
 					
 					break;
 				}
 				case SOUND_ID_LETS_GO : {
 					
-					letsGoSound.play(DEFAULT_VOLUME);
+//					letsGoSound.play(DEFAULT_VOLUME);
+					getSound("lets-go.wav").play(DEFAULT_VOLUME);
 					
 					break;
 				}
 				case SOUND_ID_BUNNY_DEATH : {
 					
-					bunnyDeathSound.play(DEFAULT_VOLUME * 0.75f);
+//					bunnyDeathSound.play(DEFAULT_VOLUME * 0.75f);
+					getSound("bunny-die.wav").play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}
 				case SOUND_ID_ZOMBIE_DEATH : {
 					
-					zombieDeathSound.play(DEFAULT_VOLUME * 0.75f);
+//					zombieDeathSound.play(DEFAULT_VOLUME * 0.75f);
+					getSound("zombie-die-2.wav").play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}
 				case SOUND_ID_NEW_RECORD : {
 					
-					newRecordSound.play(DEFAULT_VOLUME * 0.75f);
+//					newRecordSound.play(DEFAULT_VOLUME * 0.75f);
+					getSound("new-record.wav").play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}
 				case SOUND_ID_POWERUP :{
 					
-					heartHitSound.play(DEFAULT_VOLUME * 0.75f);
+					getSound("powerup.wav").play();
 					
 					break;
 				}
 				case SOUND_ID_ZOMBIE_BUNNY_DEATH :{
 					
-					zombieBunnyDieSound.play(DEFAULT_VOLUME * 0.75f);
+//					zombieBunnyDieSound.play(DEFAULT_VOLUME * 0.75f);
+					getSound("zombie-bunny-die.wav").play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}

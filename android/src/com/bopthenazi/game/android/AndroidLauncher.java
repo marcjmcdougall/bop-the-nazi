@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -20,7 +21,6 @@ public class AndroidLauncher extends AndroidApplication {
 	  private static final String AD_UNIT_ID = "ca-app-pub-8229376725623531/7395624009";
 
 	  protected AdView adView;
-	  protected View gameView;
 
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
@@ -37,15 +37,16 @@ public class AndroidLauncher extends AndroidApplication {
 		    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 	
-		    RelativeLayout layout = new RelativeLayout(this);
-		    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		    FrameLayout layout = new FrameLayout(this);
+		    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
 		    layout.setLayoutParams(params);
 	
-		    AdView admobView = createAdView();
-		    layout.addView(admobView);
 		    View gameView = createGameView(cfg);
 		    layout.addView(gameView);
-	
+		    
+		    AdView admobView = createAdView();
+		    layout.addView(admobView);
+		    
 		    setContentView(layout);
 		    startAdvertising(admobView);
 	  }
@@ -56,9 +57,11 @@ public class AndroidLauncher extends AndroidApplication {
 			adView.setAdSize(AdSize.SMART_BANNER);
 		    adView.setAdUnitId(AD_UNIT_ID);
 		    adView.setId(12345); // this is an arbitrary id, allows for relative positioning in createGameView()
+		   
 		    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		    params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
 		    params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+		    
 		    adView.setLayoutParams(params);
 		    adView.setBackgroundColor(Color.BLACK);
 		    
@@ -67,22 +70,17 @@ public class AndroidLauncher extends AndroidApplication {
 
 	  private View createGameView(AndroidApplicationConfiguration cfg) {
 	    
-			gameView = initializeForView(new BTNGame(), cfg);
-		    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-		    params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-		    params.addRule(RelativeLayout.BELOW, adView.getId());
-		    gameView.setLayoutParams(params);
-		   
-		    return gameView;
+		  	View output = initializeForView(new BTNGame(), cfg);
+		  
+		    return output;
 	  }
 
-	  private void startAdvertising(AdView adView) {
+	  public void startAdvertising(AdView adView) {
 	   
 //			AdRequest adRequest = new AdRequest.Builder().build();
-		  AdRequest request = new AdRequest.Builder().addTestDevice("B791A64DEE8D9C6CECF0940D5A78F774").build();
+		  	AdRequest request = new AdRequest.Builder().addTestDevice("B791A64DEE8D9C6CECF0940D5A78F774").build();
 		  
-		  adView.loadAd(request);
+		  	adView.loadAd(request);
 	  }
 	  
 	  @Override

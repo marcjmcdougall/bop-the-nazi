@@ -54,6 +54,7 @@ public class Score extends Actor {
 	private void updateScoreText() {
 		
 		label.setText("Score: " + score);
+		label.setX(this.getX() - this.getWidth() / 2.0f);
 	}
 
 	public int getScore() {

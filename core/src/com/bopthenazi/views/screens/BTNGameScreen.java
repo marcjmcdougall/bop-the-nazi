@@ -61,6 +61,8 @@ public class BTNGameScreen implements Screen{
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
 	
+	public static final float AD_TOP_OFFSET = 150.0f;
+	
 	public static final float TOP_BAR_HEIGHT = 284.0f;
 	public static final float ZOMBIE_OFFSET_HORIZONTAL_MARGIN = 25.0f;
 	public static final float BAR_OFFSET_LOWER = 136.3f;
@@ -104,7 +106,6 @@ public class BTNGameScreen implements Screen{
 	private Score score;
 	private BTNActor topBar;
 	private BTNActor gloveCase;
-	private BTNActor adTexture;
 	private LivesModule livesModule;
 	
 	private float timeElapsedSinceLastZombie;
@@ -272,11 +273,11 @@ public class BTNGameScreen implements Screen{
 			
 			if(i < 3){
 				
-				containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN, this));
+				containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) - AD_TOP_OFFSET, this));
 			}
 			else if(i >= 3){
 				
-				containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2, this));
+				containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], ((BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2) - AD_TOP_OFFSET, this));
 			}
 		}
 		else if(CONTAINER_LAYOUT == LAYOUT_U){
@@ -329,17 +330,16 @@ public class BTNGameScreen implements Screen{
 		
 		this.setPaused(false);
 		this.containers = new Array<Container>(MAX_ZOMBIE_COUNT);
-		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, GAME_HEIGHT - Score.SCORE_HEIGHT);
+		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, (GAME_HEIGHT - Score.SCORE_HEIGHT) - AD_TOP_OFFSET);
 		
 		timeElapsedSinceLastZombie = 0f;
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
 		gameStage = new BTNStage(viewport, game, this);
-		bg = new BTNActor(getTexture("screen-game/background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
+		bg = new BTNActor(getTexture("screen-game/background.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f) - AD_TOP_OFFSET, GAME_WIDTH, GAME_HEIGHT);
+		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
-		topBar = new BTNActor(getTexture("screen-game/top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
-		adTexture = new BTNActor(getTexture("screen-game/ad-placeholder.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - getTexture("screen-game/ad-placeholder.png").getHeight() / 2.0f, 1080.0f, 133.5f);
+		topBar = new BTNActor(getTexture("screen-game/top-bar.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f) - AD_TOP_OFFSET, GAME_WIDTH, TOP_BAR_HEIGHT);
 		
 		saveManager = new SaveManager();
 		
@@ -369,8 +369,6 @@ public class BTNGameScreen implements Screen{
 		
 		explosionSplash.setVisible(false);
 		
-		adTexture.setDebug(true);
-		
 
 		gameStage.addActor(glove);
 		gameStage.addActor(gloveCase);
@@ -378,7 +376,6 @@ public class BTNGameScreen implements Screen{
 //		gameStage.addActor(sliderButton);
 		gameStage.addActor(explosionSplash);
 		gameStage.addActor(topBar);
-		gameStage.addActor(adTexture);
 		gameStage.addActor(this.score);
 		
 		Gdx.input.setInputProcessor(gameStage);
@@ -675,7 +672,7 @@ public class BTNGameScreen implements Screen{
 			gameOverScoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 			gameOverScoreLabel.setHeight(100.0f);
 			gameOverScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (gameOverScoreLabel.getWidth() / 2.0f));
-			gameOverScoreLabel.setY(670.0f + (this.score.getHeight() / 2.0f));
+			gameOverScoreLabel.setY((670.0f + (this.score.getHeight() / 2.0f))/* - AD_TOP_OFFSET*/);
 			
 			int highScore = Integer.parseInt(saveManager.retrieveScore());
 			
@@ -722,7 +719,7 @@ public class BTNGameScreen implements Screen{
 			Label highScoreLabel = new Label("High Score: " + highScore, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 			highScoreLabel.setHeight(100.0f);
 			highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
-			highScoreLabel.setY(570.0f + (this.score.getHeight() / 2.0f));
+			highScoreLabel.setY((570.0f + (this.score.getHeight() / 2.0f))/* - AD_TOP_OFFSET*/);
 			
 			BasicButton restart = new BasicButton(new Texture("textures/screen-game-over/restart-button.png"), new Texture("textures/screen-game-over/restart-button-down-state.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 550.0f);
 		

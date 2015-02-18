@@ -10,7 +10,7 @@ import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class LivesModule{
 
-	private static final float HEART_Y = 1520.0f; 
+	private static final float HEART_Y = 1520.0f - BTNGameScreen.AD_TOP_OFFSET; 
 	
 	private static final float HEART_X_OFFSET = 40.0f; 
 	

@@ -45,7 +45,7 @@ public class Glove extends BTNActor {
 	private volatile SequenceAction currentAction;
 	private volatile SequenceAction cachedAction;
 	
-	public static final float GLOVE_UNLOCK_BARRIER = BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT * 0.10f;
+	public static final float GLOVE_UNLOCK_BARRIER = (BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT * 0.10f) - BTNGameScreen.AD_TOP_OFFSET;
 	
 	private static final float GLOVE_STATIC_VELOCITY_X = 0.0f;
 	private static final float GLOVE_STATIC_VELOCITY_Y = 0.0f;

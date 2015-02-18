@@ -138,8 +138,8 @@ public class BTNGameScreen implements Screen{
 		loadTexture("screen-game/bunny-2/bunny-2.png");
 		loadTexture("screen-game/bunny-2/bunny2-hit-frame.png");
 		
-		loadTexture("screen-game/container/hole-back.png");
-		loadTexture("screen-game/container/hole-front.png");
+		loadTexture("screen-game/container/tunnel-back.png");
+		loadTexture("screen-game/container/tunnel-front.png");
 		
 		loadTexture("screen-game/dynamite/dynamite-01.png");
 		loadTexture("screen-game/dynamite/dynamite-02.png");
@@ -268,21 +268,14 @@ public class BTNGameScreen implements Screen{
 	}
 
 	private void initializeContainer(int i) {
-		
-		if(CONTAINER_LAYOUT == LAYOUT_NORMAL){
 			
-			if(i < 3){
-				
-				containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) - AD_TOP_OFFSET, this));
-			}
-			else if(i >= 3){
-				
-				containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], ((BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2) - AD_TOP_OFFSET, this));
-			}
+		if(i < 3){
+			
+			containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) - AD_TOP_OFFSET, this));
 		}
-		else if(CONTAINER_LAYOUT == LAYOUT_U){
+		else if(i >= 3){
 			
-			
+			containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], ((BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2) - AD_TOP_OFFSET, this));
 		}
 	}
 	
@@ -388,7 +381,14 @@ public class BTNGameScreen implements Screen{
 		
 		activateContainerContents(containers.get(randomIndex));
 		
-		playSound(SOUND_ID_LETS_GO);
+		if(saveManager.isOneShot()){
+			
+			// TODO: Show the tutorial image as an overlay dialog.  Then play "LETS GO!"
+		}
+		else{
+			
+			playSound(SOUND_ID_LETS_GO);
+		}
 	}
 
 	public Texture getTexture(String textureNamePostPrepend) {
@@ -462,6 +462,8 @@ public class BTNGameScreen implements Screen{
 				if(!containers.get(index).getContents().isActivated()){
 					
 					int cursor = new Random().nextInt(10);
+					
+					containers.get(index).getContents().remove();
 					
 					BTNContainedActor newActor = null;
 					

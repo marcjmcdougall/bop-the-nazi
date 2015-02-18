@@ -7,25 +7,28 @@ import com.badlogic.gdx.utils.Base64Coder;
 
 public class SaveManager {
 
-	private FileHandle file;
+	private FileHandle scoreFile;
+	private FileHandle oneShotFile;
+	
 	
 	public SaveManager(){
 		
-		file = Gdx.files.local("bin/save.txt");
+		scoreFile = Gdx.files.local("bin/save.txt");
+		oneShotFile = Gdx.files.local("bin/oneshot.txt");
 	}
 	
 	public void saveScore(int newScore){
 		
-		file.writeString(Base64Coder.encodeString("" + newScore), false);
+		scoreFile.writeString(Base64Coder.encodeString("" + newScore), false);
 	}
 	
 	public String retrieveScore(){
 		
 		String output = "0";
 		
-		if(file.exists()){
+		if(scoreFile.exists()){
 			
-			output = Base64Coder.decodeString(file.readString());
+			output = Base64Coder.decodeString(scoreFile.readString());
 			
 			if(output == ""){
 				
@@ -34,5 +37,17 @@ public class SaveManager {
 		}
 		
 		return output;
+	}
+	
+	public boolean isOneShot(){
+		
+		if(oneShotFile.readString() == ""){
+			
+			oneShotFile.writeString("You have accessed the application once before.", false);
+			
+			return true;
+		}
+		
+		return false;
 	}
 }

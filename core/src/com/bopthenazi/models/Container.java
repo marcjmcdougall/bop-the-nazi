@@ -17,8 +17,8 @@ public class Container extends Group{
 	
 	public Container(float x, float y, BTNGameScreen screen){
 
-		this.holeFront = new BTNActor(screen.getTexture("screen-game/container/hole-front.png"), x, y, HOLE_WIDTH, HOLE_FRONT_HEIGHT);
-		this.holeBack = new BTNActor(screen.getTexture("screen-game/container/hole-back.png"), x, y + 256.5f, HOLE_WIDTH, HOLE_BACK_HEIGHT);
+		this.holeFront = new BTNActor(screen.getTexture("screen-game/container/tunnel-front.png"), x, y + 55.0f, HOLE_WIDTH, HOLE_FRONT_HEIGHT);
+		this.holeBack = new BTNActor(screen.getTexture("screen-game/container/tunnel-back.png"), x, y + 256.5f, HOLE_WIDTH, HOLE_BACK_HEIGHT);
 		
 		// By default, we will place a Nazi in each container.
 		this.contents = new Zombie(x, y, screen);
@@ -48,8 +48,8 @@ public class Container extends Group{
 	private void initializeContents(){
 		
 		contents.setX(holeFront.getX());
-		contents.setY(holeFront.getY());
+		contents.setY(holeFront.getY() - 55.0f);
 		
-		contents.setAnchorY(holeFront.getY());
+		contents.setAnchorY(holeFront.getY() - 55.0f);
 	}
 }

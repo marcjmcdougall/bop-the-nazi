@@ -22,7 +22,7 @@ public class ZombieBunny extends BTNContainedActor {
 		super.onCollide(partner);
 		
 		gameScreen.playSound(BTNGameScreen.SOUND_ID_PUNCH);
-		gameScreen.playSound(BTNGameScreen.SOUND_ID_ZOMBIE_DEATH);
+		gameScreen.playSound(BTNGameScreen.SOUND_ID_ZOMBIE_BUNNY_DEATH);
 		gameScreen.incrementScore();
 		
 		this.setTextures(new Array<Texture>(new Texture[]{onHitTexture}));

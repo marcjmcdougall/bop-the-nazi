@@ -18,6 +18,7 @@ public class Heart extends BTNContainedActor {
 		super.onCollide(partner);
 		
 		gameScreen.playSound(BTNGameScreen.SOUND_ID_PUNCH);
+		gameScreen.playSound(BTNGameScreen.SOUND_ID_POWERUP);
 		gameScreen.addLife();
 	}
 }

@@ -52,9 +52,11 @@ public class BTNGameScreen implements Screen{
 	public static final int SOUND_ID_ZOMBIE_DEATH = 5;
 	public static final int SOUND_ID_BUNNY_DEATH = 6;
 	public static final int SOUND_ID_NEW_RECORD = 7;
+	public static final int SOUND_ID_POWERUP = 8;
+	public static final int SOUND_ID_ZOMBIE_BUNNY_DEATH = 9;
 	
 	private static final int MAX_ZOMBIE_COUNT = 5;
-	private static final int MAX_CONCURRENT_ZOMBIES = 4;
+	private static final int MAX_CONCURRENT_ZOMBIES = 3;
 	
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
@@ -85,8 +87,14 @@ public class BTNGameScreen implements Screen{
 	private Sound zombieDeathSound;
 	private Sound bunnyDeathSound;
 	private Sound newRecordSound;
+	private Sound heartHitSound;
+	private Sound zombieBunnyDieSound;
 	
-	private static final float[] CONTAINER_COORDINATES = {212.625f, 540.0f, 867.375f, 376.3125f, 703.6875f};
+	private static final int LAYOUT_NORMAL = 0;
+	private static final int LAYOUT_U = 1;
+	private static final int CONTAINER_LAYOUT = LAYOUT_NORMAL;
+	
+	private static final float[] NORMAL_CONTAINER_COORDINATES = {137.625f, 540.0f, 942.375f, 341.3125f, 752.6875f};
 
 	private Array<Container> containers;
 
@@ -176,6 +184,8 @@ public class BTNGameScreen implements Screen{
 		loadSFX("punch.wav");
 		loadSFX("splat.wav");
 		loadSFX("zombie-die-2.wav");
+		loadSFX("powerup.wav");
+		loadSFX("zombie-bunny-die.wav");
 		
 		// Load music...
 		loadMusic("candyland.mp3");
@@ -256,13 +266,20 @@ public class BTNGameScreen implements Screen{
 
 	private void initializeContainer(int i) {
 		
-		if(i < 3){
+		if(CONTAINER_LAYOUT == LAYOUT_NORMAL){
 			
-			containers.add(new Container(CONTAINER_COORDINATES[i], BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN, this));
+			if(i < 3){
+				
+				containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN, this));
+			}
+			else if(i >= 3){
+				
+				containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2, this));
+			}
 		}
-		else if(i >= 3){
+		else if(CONTAINER_LAYOUT == LAYOUT_U){
 			
-			containers.add(new Container(CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2, this));
+			
 		}
 	}
 	
@@ -318,7 +335,7 @@ public class BTNGameScreen implements Screen{
 		gameStage = new BTNStage(viewport, game, this);
 		bg = new BTNActor(getTexture("screen-game/background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
 		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
-		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
+		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
 		topBar = new BTNActor(getTexture("screen-game/top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
 		
 		saveManager = new SaveManager();
@@ -335,6 +352,8 @@ public class BTNGameScreen implements Screen{
 		this.bunnyDeathSound = getSound("bunny-die.wav");
 		this.zombieDeathSound = getSound("zombie-die-2.wav");
 		this.newRecordSound = getSound("new-record.wav");
+		this.heartHitSound = getSound("powerup.wav");
+		this.zombieBunnyDieSound = getSound("zombie-bunny-die.wav");
 		
 		this.backgroundMusic = getMusic("candyland.mp3");
 		
@@ -469,7 +488,7 @@ public class BTNGameScreen implements Screen{
 						cursor = new Random().nextInt(2);
 						
 						// 5% chance...
-						if(cursor == 0){
+						if(cursor == 0 && this.score.getLives() < Score.DEFAULT_NUMBER_LIVES){
 							
 							newActor = new Heart(0.0f, 0.0f, this);
 						}
@@ -576,6 +595,20 @@ public class BTNGameScreen implements Screen{
 				case SOUND_ID_NEW_RECORD : {
 					
 					newRecordSound.play(DEFAULT_VOLUME * 0.75f);
+					
+					break;
+				}
+				case SOUND_ID_POWERUP :{
+					
+					heartHitSound.play(DEFAULT_VOLUME * 0.75f);
+					
+					break;
+				}
+				case SOUND_ID_ZOMBIE_BUNNY_DEATH :{
+					
+					zombieBunnyDieSound.play(DEFAULT_VOLUME * 0.75f);
+					
+					break;
 				}
 				default :{
 					

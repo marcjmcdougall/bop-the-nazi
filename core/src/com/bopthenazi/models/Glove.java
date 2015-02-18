@@ -12,8 +12,8 @@ import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Glove extends BTNActor {
 
-	public static final float GLOVE_WIDTH = 192.0f;
-	public static final float GLOVE_HEIGHT = 2367.0f;
+	public static final float GLOVE_WIDTH = 144.0f;
+	public static final float GLOVE_HEIGHT = 1775.25f;
 	
 	private static final float GLOVE_HEIGHT_OFFSET = 775.0f;
 	
@@ -45,7 +45,7 @@ public class Glove extends BTNActor {
 	private volatile SequenceAction currentAction;
 	private volatile SequenceAction cachedAction;
 	
-	private static final float GLOVE_UNLOCK_BARRIER = BTNGameScreen.GAME_HEIGHT - GLOVE_HEIGHT_OFFSET;
+	public static final float GLOVE_UNLOCK_BARRIER = BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT * 0.10f;
 	
 	private static final float GLOVE_STATIC_VELOCITY_X = 0.0f;
 	private static final float GLOVE_STATIC_VELOCITY_Y = 0.0f;
@@ -190,9 +190,9 @@ public class Glove extends BTNActor {
 		MoveToAction moveUpTranslate = new MoveToAction();
 		
 		moveUpTranslate.setX(x);
-		moveUpTranslate.setY(BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f);
+		moveUpTranslate.setY(GLOVE_UNLOCK_BARRIER);
 		
-		moveUpTranslate.setDuration(Math.abs((BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f) - y) / GLOVE_VELOCITY_Y_UP);
+		moveUpTranslate.setDuration(Math.abs((GLOVE_UNLOCK_BARRIER) - y) / GLOVE_VELOCITY_Y_UP);
 		
 		return moveUpTranslate;
 	}
@@ -202,11 +202,11 @@ public class Glove extends BTNActor {
 		MoveToAction moveDownTranslate = new MoveToAction();
 		
 		moveDownTranslate.setX(x);
-		moveDownTranslate.setY(0.0f + BTNGameScreen.GAME_HEIGHT * 0.65f);
+		moveDownTranslate.setY(0.0f + BTNGameScreen.GAME_HEIGHT * 0.55f);
 		moveDownTranslate.setInterpolation(Interpolation.pow3);
 		
 		// We're always moving to the bottom of the screen.
-		moveDownTranslate.setDuration((BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f) / GLOVE_VELOCITY_Y_DOWN);
+		moveDownTranslate.setDuration((GLOVE_UNLOCK_BARRIER) / GLOVE_VELOCITY_Y_DOWN);
 		
 		return moveDownTranslate;
 	}
@@ -223,7 +223,7 @@ public class Glove extends BTNActor {
 		MoveToAction translateX = new MoveToAction();
 		
 		translateX.setX(effectiveX);
-		translateX.setY(BTNGameScreen.GAME_HEIGHT + BTNGameScreen.GAME_HEIGHT / 4.5f);
+		translateX.setY(GLOVE_UNLOCK_BARRIER);
 		translateX.setDuration(Math.abs((effectiveX - this.getX()) / GLOVE_VELOCTY_X));
 		translateX.setInterpolation(Interpolation.pow2);
 		

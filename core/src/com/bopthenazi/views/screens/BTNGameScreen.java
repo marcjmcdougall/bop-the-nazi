@@ -104,6 +104,7 @@ public class BTNGameScreen implements Screen{
 	private Score score;
 	private BTNActor topBar;
 	private BTNActor gloveCase;
+	private BTNActor adTexture;
 	private LivesModule livesModule;
 	
 	private float timeElapsedSinceLastZombie;
@@ -113,7 +114,7 @@ public class BTNGameScreen implements Screen{
 	private Music backgroundMusic;
 
 	private boolean showingGameOverScreen;
-	
+
 	private static final String TEXTURE_PREPEND = "textures/";
 	private static final String SFX_PREPEND = "sfx/";
 	private static final String FONTS_PREPEND = "fonts/";
@@ -174,6 +175,7 @@ public class BTNGameScreen implements Screen{
 		loadTexture("screen-game/glove.png");
 		loadTexture("screen-game/mover.png");
 		loadTexture("screen-game/top-bar.png");
+		loadTexture("screen-game/ad-placeholder.png");
 		
 		// Load sounds...
 		loadSFX("bunny-die.wav");
@@ -337,6 +339,7 @@ public class BTNGameScreen implements Screen{
 		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
 		topBar = new BTNActor(getTexture("screen-game/top-bar.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f, GAME_WIDTH, TOP_BAR_HEIGHT);
+		adTexture = new BTNActor(getTexture("screen-game/ad-placeholder.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - getTexture("screen-game/ad-placeholder.png").getHeight() / 2.0f, 1080.0f, 133.5f);
 		
 		saveManager = new SaveManager();
 		
@@ -366,12 +369,16 @@ public class BTNGameScreen implements Screen{
 		
 		explosionSplash.setVisible(false);
 		
+		adTexture.setDebug(true);
+		
+
 		gameStage.addActor(glove);
 		gameStage.addActor(gloveCase);
 //		gameStage.addActor(slider);
 //		gameStage.addActor(sliderButton);
 		gameStage.addActor(explosionSplash);
 		gameStage.addActor(topBar);
+		gameStage.addActor(adTexture);
 		gameStage.addActor(this.score);
 		
 		Gdx.input.setInputProcessor(gameStage);
@@ -637,8 +644,6 @@ public class BTNGameScreen implements Screen{
 			container.getContents().clearActions();
 		}
 		
-//		glove.clearActions();
-
 		// Pause the game.
 		this.setPaused(true);
 		

@@ -75,6 +75,7 @@ public class BTNGameScreen implements Screen{
 	private SaveManager saveManager;
 	
 	private Group gameOverScreen;
+	private Label gameOverScoreLabel;
 	
 	private Sound punchSound;
 	private Sound splatSound;
@@ -100,6 +101,10 @@ public class BTNGameScreen implements Screen{
 	private float timeElapsedSinceLastZombie;
 	
 	private boolean paused;
+
+	private Music backgroundMusic;
+
+	private boolean showingGameOverScreen;
 	
 	private static final String TEXTURE_PREPEND = "textures/";
 	private static final String SFX_PREPEND = "sfx/";
@@ -109,8 +114,8 @@ public class BTNGameScreen implements Screen{
 	public BTNGameScreen(BTNGame game){
 		
 		this.game = game;
-		this.assetManager = new AssetManager();
 		
+		this.assetManager = new AssetManager();
 		beginAssetLoad();
 	}
 	
@@ -173,7 +178,7 @@ public class BTNGameScreen implements Screen{
 		loadSFX("zombie-die-2.wav");
 		
 		// Load music...
-		// TODO: Implementation.
+		loadMusic("candyland.mp3");
 		
 		// Load fonts...
 		// TODO: Implementation.
@@ -278,7 +283,26 @@ public class BTNGameScreen implements Screen{
 
 	private void reset(){
 		
-		this.game.setScreen(new BTNGameScreen(this.game));
+//		this.game.setScreen(new BTNGameScreen(this.game));
+		
+		// Reset the game to the startState.
+//		this.gameOverScreen.setVisible(false);
+//		this.setPaused(false);
+//		this.score.updateScore(0);
+//		this.score.setLives(Score.DEFAULT_NUMBER_LIVES);
+//		this.livesModule.reset();
+		
+		// Remove all the actors.
+		gameStage.getActors().removeRange(0, gameStage.getActors().size - 1);
+		
+		// Simply call "show" again to restart the whole game.
+		this.show();
+		
+//		for(int i = 0; i < MAX_ZOMBIE_COUNT; i++){
+//			
+////			containers.get(i).getContents().remove();
+//			initializeContainer(i);
+//		}
 	}
 	
 	@Override
@@ -292,8 +316,6 @@ public class BTNGameScreen implements Screen{
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
 		gameStage = new BTNStage(viewport, game, this);
-//		slider = new Slider(GAME_WIDTH / 2.0f, BAR_OFFSET_LOWER, Slider.SLIDER_WIDTH, Slider.SLIDER_HEIGHT, this);
-//		sliderButton = new SliderButton(BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.BAR_OFFSET_LOWER, SliderButton.SLIDER_BUTTON_WIDTH, SliderButton.SLIDER_BUTTON_HEIGHT, this);
 		bg = new BTNActor(getTexture("screen-game/background.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
 		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT - 350.0f, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, GAME_HEIGHT + GAME_HEIGHT / 4.5f, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
@@ -314,6 +336,12 @@ public class BTNGameScreen implements Screen{
 		this.zombieDeathSound = getSound("zombie-die-2.wav");
 		this.newRecordSound = getSound("new-record.wav");
 		
+		this.backgroundMusic = getMusic("candyland.mp3");
+		
+		this.backgroundMusic.setVolume(0.25f);
+		this.backgroundMusic.setLooping(true);
+//		this.backgroundMusic.play();
+		
 		initializeContainers();
 		initializeLivesModule();
 		
@@ -333,6 +361,8 @@ public class BTNGameScreen implements Screen{
 		
 		int randomIndex = r.nextInt(MAX_ZOMBIE_COUNT);
 		
+		this.showingGameOverScreen = false;
+		
 		activateContainerContents(containers.get(randomIndex));
 		
 		playSound(SOUND_ID_LETS_GO);
@@ -348,6 +378,11 @@ public class BTNGameScreen implements Screen{
 		return assetManager.get(SFX_PREPEND + soundNamePostPrepend, Sound.class);
 	}
 
+	public Music getMusic(String musicNamePostPrepend){
+		
+		return assetManager.get(MUSIC_PREPEND + musicNamePostPrepend, Music.class);
+	}
+	
 	private void setPaused(boolean paused) {
 		
 		this.paused = paused;
@@ -486,8 +521,6 @@ public class BTNGameScreen implements Screen{
 		
 		// TODO Auto-generated method stub
 		gameStage.dispose();
-		punchSound.dispose();
-		splatSound.dispose();
 		
 		assetManager.dispose();
 	}
@@ -582,100 +615,109 @@ public class BTNGameScreen implements Screen{
 
 	private void showGameOverScreen(int score, boolean isHighScore) {
 		
-		this.gameOverScreen = new Group();
-		
-		BTNActor gameOverAlpha = new BTNActor(new Texture("textures/screen-game-over/alpha-25.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-		BTNActor gameOverBackground = new BTNActor(new Texture("textures/screen-game-over/game-over-box.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, GAME_WIDTH * 0.75f, GAME_HEIGHT * 0.6f);
-		BTNActor gameOverText = new BTNActor(new Texture("textures/screen-game-over/game-over-text.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f + 25.0f, GAME_WIDTH * 0.40f, GAME_HEIGHT * 0.15f);
-		
-		Label scoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
-		scoreLabel.setHeight(100.0f);
-		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getWidth() / 2.0f));
-		scoreLabel.setY(670.0f + (this.score.getHeight() / 2.0f));
-		
-		int highScore = Integer.parseInt(saveManager.retrieveScore());
-		
-		SequenceAction sequence = new SequenceAction();
-		
-		RunnableAction gameOverSound = new RunnableAction();
-		
-		gameOverSound.setRunnable(new Runnable() {
+		if(!showingGameOverScreen){
 			
-			@Override
-			public void run() {
-				
-				playSound(SOUND_ID_GAME_OVER);
-			}
-		});
-		
-		sequence.addAction(gameOverSound);
-		
-		RunnableAction newRecord = null;
-		
-		if(isHighScore){
+			// Clear the glove cache so that Actions cached due to rapid clicking do not get pushed to the currentAction slot.
+			this.glove.clearCache();
+			this.gameOverScreen = new Group();
 			
-			highScore = score;
+			BTNActor gameOverAlpha = new BTNActor(new Texture("textures/screen-game-over/alpha-25.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+			BTNActor gameOverBackground = new BTNActor(new Texture("textures/screen-game-over/game-over-box.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, GAME_WIDTH * 0.75f, GAME_HEIGHT * 0.6f);
+			BTNActor gameOverText = new BTNActor(new Texture("textures/screen-game-over/game-over-text.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f + 25.0f, GAME_WIDTH * 0.40f, GAME_HEIGHT * 0.15f);
 			
-			newRecord = new RunnableAction();
+			gameOverScoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+			gameOverScoreLabel.setHeight(100.0f);
+			gameOverScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (gameOverScoreLabel.getWidth() / 2.0f));
+			gameOverScoreLabel.setY(670.0f + (this.score.getHeight() / 2.0f));
 			
-			newRecord.setRunnable(new Runnable() {
+			int highScore = Integer.parseInt(saveManager.retrieveScore());
+			
+			SequenceAction sequence = new SequenceAction();
+			
+			RunnableAction gameOverSound = new RunnableAction();
+			
+			gameOverSound.setRunnable(new Runnable() {
 				
 				@Override
 				public void run() {
 					
-					playSound(SOUND_ID_NEW_RECORD);
+					playSound(SOUND_ID_GAME_OVER);
 				}
 			});
-		}
-		
-		if(newRecord != null){
 			
-			sequence.addAction(newRecord);
-		}
-		
-		gameOverScreen.addAction(sequence);
-		
-		Label highScoreLabel = new Label("High Score: " + highScore, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
-		highScoreLabel.setHeight(100.0f);
-		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
-		highScoreLabel.setY(570.0f + (this.score.getHeight() / 2.0f));
-		
-		BasicButton restart = new BasicButton(new Texture("textures/screen-game-over/restart-button.png"), new Texture("textures/screen-game-over/restart-button-down-state.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 550.0f);
-	
-		restart.setWidth(GAME_WIDTH * 0.45f);
-		restart.setX((GAME_WIDTH / 2.0f) - (restart.getWidth() / 2.0f));
-		
-		restart.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener(){
+			sequence.addAction(gameOverSound);
 			
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			RunnableAction newRecord = null;
+			
+			if(isHighScore){
 				
-				return true;
+				highScore = score;
+				
+				newRecord = new RunnableAction();
+				
+				newRecord.setRunnable(new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						playSound(SOUND_ID_NEW_RECORD);
+					}
+				});
 			}
 			
-			@Override
-			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+			if(newRecord != null){
 				
-				super.touchUp(event, x, y, pointer, button);
-				
-				Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
-				
-				BTNGameScreen.this.getGame().setScreen(new BTNLoadingScreen(BTNGameScreen.this.getGame()));
+				sequence.addAction(newRecord);
 			}
-		});
+			
+			gameOverScreen.addAction(sequence);
+			
+			Label highScoreLabel = new Label("High Score: " + highScore, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+			highScoreLabel.setHeight(100.0f);
+			highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
+			highScoreLabel.setY(570.0f + (this.score.getHeight() / 2.0f));
+			
+			BasicButton restart = new BasicButton(new Texture("textures/screen-game-over/restart-button.png"), new Texture("textures/screen-game-over/restart-button-down-state.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 550.0f);
 		
-		this.gameOverScreen.addActor(gameOverAlpha);
-		this.gameOverScreen.addActor(gameOverBackground);
-		this.gameOverScreen.addActor(gameOverText);
-		this.gameOverScreen.addActor(scoreLabel);
-		this.gameOverScreen.addActor(highScoreLabel);
-		this.gameOverScreen.addActor(restart);
-		
-		gameOverScreen.setVisible(false);
-		
-		gameStage.addActor(gameOverScreen);
-		
-		gameOverScreen.setVisible(true);
+			restart.setWidth(GAME_WIDTH * 0.45f);
+			restart.setX((GAME_WIDTH / 2.0f) - (restart.getWidth() / 2.0f));
+			
+			restart.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener(){
+				
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+					
+					return true;
+				}
+				
+				@Override
+				public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+					
+					super.touchUp(event, x, y, pointer, button);
+					
+					Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
+					
+	//				BTNGameScreen.this.getGame().setScreen(new BTNLoadingScreen(BTNGameScreen.this.getGame()));
+					BTNGameScreen.this.reset();
+					BTNGameScreen.this.showingGameOverScreen = false;
+				}
+			});
+			
+			this.gameOverScreen.addActor(gameOverAlpha);
+			this.gameOverScreen.addActor(gameOverBackground);
+			this.gameOverScreen.addActor(gameOverText);
+			this.gameOverScreen.addActor(gameOverScoreLabel);
+			this.gameOverScreen.addActor(highScoreLabel);
+			this.gameOverScreen.addActor(restart);
+			
+			gameOverScreen.setVisible(false);
+			
+			gameStage.addActor(gameOverScreen);
+			
+			gameOverScreen.setVisible(true);
+			
+			showingGameOverScreen = true;
+		}
 	}
 
 	/**
@@ -807,8 +849,6 @@ public class BTNGameScreen implements Screen{
 		
 		score.setLives(score.getLives() - 1);
 		livesModule.popHeart();
-		
-		playSound(SOUND_ID_SPLAT);
 		
 		if(score.getLives() <= 0){
 			

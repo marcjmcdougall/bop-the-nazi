@@ -425,4 +425,9 @@ public class Glove extends BTNActor {
 		
 		return currentAction;
 	}
+
+	public void clearCache() {
+		
+		this.setCachedAction(null);
+	}
 }

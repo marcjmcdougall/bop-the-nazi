@@ -71,6 +71,8 @@ public class LivesModule{
 			hearts.get(heartIndex).addAction(scaleTo);
 			
 			heartIndex--;
+			
+			gameScreen.playSound(BTNGameScreen.SOUND_ID_SPLAT);
 		}
 	}
 	
@@ -131,6 +133,9 @@ public class LivesModule{
 
 	public void reset() {
 		
-		initializeHearts();
+		for(int i = 0; i < Score.DEFAULT_NUMBER_LIVES; i++){
+			
+			pushHeart();
+		}
 	}
 }

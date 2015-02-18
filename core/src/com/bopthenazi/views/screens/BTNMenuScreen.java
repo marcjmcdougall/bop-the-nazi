@@ -43,7 +43,7 @@ public class BTNMenuScreen implements Screen {
 		FitViewport viewport = new FitViewport(MENU_WIDTH, MENU_HEIGHT);
 		menuStage = new Stage(viewport);
 		
-		this.bg = new BTNActor(new Texture("textures/screen-menu/orange-background.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
+		this.bg = new BTNActor(new Texture(Gdx.files.internal("textures/screen-menu/orange-background.png")), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
 		this.title = new BTNActor(new Texture("textures/screen-menu/zombie-bop-menu-title.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.75f, 850.0f, 600.0f);
 		this.stripes = new BTNActor(new Texture("textures/screen-menu/yellow-stripes.png"), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
 		this.zombie = new BTNActor(new Texture("textures/screen-menu/happy-zombie.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);

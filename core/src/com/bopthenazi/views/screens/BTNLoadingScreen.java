@@ -2,10 +2,13 @@ package com.bopthenazi.views.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
+import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNStage;
 
 public class BTNLoadingScreen implements Screen {
@@ -14,6 +17,8 @@ public class BTNLoadingScreen implements Screen {
 	
 	private BTNGame game;
 	private BTNGameScreen gameScreen;
+	
+	private BTNActor background;
 	
 	public BTNLoadingScreen(BTNGame game) {
 	
@@ -27,7 +32,9 @@ public class BTNLoadingScreen implements Screen {
 	@Override
 	public void show() {
 	
+		this.background = new BTNActor(new Texture(Gdx.files.internal("textures/screen-loading/bg.png")), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH, BTNGameScreen.GAME_HEIGHT);
 		
+		loadingScreenStage.addActor(background);
 	}
 
 	@Override

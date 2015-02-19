@@ -44,6 +44,7 @@ import com.bopthenazi.models.Zombie;
 import com.bopthenazi.models.ZombieBunny;
 import com.bopthenazi.utils.FontFactory;
 import com.bopthenazi.utils.SaveManager;
+import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 
 public class BTNGameScreen implements Screen{
 
@@ -83,6 +84,11 @@ public class BTNGameScreen implements Screen{
 	
 	private float baseFrequencyContainerActivate = 0.25f;
 	
+	private static final int MODE_STANDARD = 0;
+	public static final int MODE_APOCALYPSE = 1;
+	
+	private int mode = MODE_STANDARD;
+	
 	private AssetManager assetManager;
 	
 	private BTNGame game;
@@ -94,17 +100,6 @@ public class BTNGameScreen implements Screen{
 	
 	private Group gameOverScreen;
 	private Label gameOverScoreLabel;
-	
-	private Sound punchSound;
-	private Sound splatSound;
-	private Sound explosionSound;
-	private Sound gameOverSound;
-	private Sound letsGoSound;
-	private Sound zombieDeathSound;
-	private Sound bunnyDeathSound;
-	private Sound newRecordSound;
-	private Sound heartHitSound;
-	private Sound zombieBunnyDieSound;
 	
 	private static final int LAYOUT_NORMAL = 0;
 	private static final int LAYOUT_U = 1;
@@ -202,6 +197,10 @@ public class BTNGameScreen implements Screen{
 		loadTexture("screen-game/ad-placeholder.png");
 		
 		loadTexture("screen-game-over/alpha-25.png");
+		loadTexture("screen-game-over/game-over-box.png");
+		loadTexture("screen-game-over/game-over-text.png");
+		loadTexture("screen-game-over/restart-button.png");
+		loadTexture("screen-game-over/restart-button-down-state.png");
 		
 		loadTexture("screen-tutorial/instructions-screen.png");
 		loadTexture("screen-tutorial/ok-button-down-state.png");
@@ -393,17 +392,6 @@ public class BTNGameScreen implements Screen{
 		explosionSplash = new BTNActor(getTexture("screen-game/explosion-splash.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
 		
 		gameStage.addActor(bg);
-		
-		this.punchSound = getSound("punch.wav");
-		this.splatSound = getSound("splat.wav");
-		this.explosionSound = getSound("explosion.wav");
-		this.gameOverSound = getSound("game-over.wav");
-		this.letsGoSound = getSound("lets-go.wav");
-		this.bunnyDeathSound = getSound("bunny-die.wav");
-		this.zombieDeathSound = getSound("zombie-die-2.wav");
-		this.newRecordSound = getSound("new-record.wav");
-		this.heartHitSound = getSound("powerup.wav");
-		this.zombieBunnyDieSound = getSound("zombie-bunny-die.wav");
 		
 		this.backgroundMusic = getMusic("candyland.mp3");
 		
@@ -634,50 +622,59 @@ public class BTNGameScreen implements Screen{
 				
 				if(!containers.get(index).getContents().isActivated()){
 					
-					int cursor = new Random().nextInt(10);
-					
 					containers.get(index).getContents().remove();
 					
 					BTNContainedActor newActor = null;
 					
-					// 60% chance...
-					if(cursor < 6){
+					if(getMode() == MODE_STANDARD){
 						
-						cursor = new Random().nextInt(2);
+						int cursor = new Random().nextInt(10);
 						
-						// 30% chance...
-						if(cursor == 0){
+						
+						// 60% chance...
+						if(cursor < 6){
 							
-							newActor = new Zombie(0.0f, 0.0f, this);
+							cursor = new Random().nextInt(2);
+							
+							// 30% chance...
+							if(cursor == 0){
+								
+								newActor = new Zombie(0.0f, 0.0f, this);
+							}
+							// 30% chance...
+							else{
+								
+								newActor = new ZombieBunny(0.0f, 0.0f, this);						
+							}
 						}
 						// 30% chance...
+						else if(cursor < 9){
+							
+							newActor = new Bunny(0.0f, 0.0f, this);
+						}
+						// 10% chance...
 						else{
 							
-							newActor = new ZombieBunny(0.0f, 0.0f, this);						
-						}
-					}
-					// 30% chance...
-					else if(cursor < 9){
-						
-						newActor = new Bunny(0.0f, 0.0f, this);
-					}
-					// 10% chance...
-					else{
-						
-						cursor = new Random().nextInt(2);
-						
-						// 5% chance...
-						if(cursor == 0 && this.score.getLives() < Score.DEFAULT_NUMBER_LIVES){
+							cursor = new Random().nextInt(2);
 							
-							newActor = new Heart(0.0f, 0.0f, this);
+							// 5% chance...
+							if(cursor == 0 && this.score.getLives() < Score.DEFAULT_NUMBER_LIVES){
+								
+								newActor = new Heart(0.0f, 0.0f, this);
+							}
+							// 5% chance...
+							else{
+								
+								newActor  = new Dynamite(0.0f, 0.0f, this);						
+							}
 						}
-						// 5% chance...
-						else{
-							
-							newActor  = new Dynamite(0.0f, 0.0f, this);						
-						}
+						
 					}
-					
+					else if(getMode() == MODE_APOCALYPSE){
+						
+						newActor = new Random().nextInt(2) == 1 ? new Zombie(0.0f, 0.0f, this) : new ZombieBunny(0.0f, 0.0f, this);
+					}
+
 					containers.get(index).setContents(newActor);
 					
 					activateContainerContents(containers.get(index));
@@ -1131,5 +1128,13 @@ public class BTNGameScreen implements Screen{
 	public AssetManager getAssetManager() {
 		
 		return assetManager;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 }

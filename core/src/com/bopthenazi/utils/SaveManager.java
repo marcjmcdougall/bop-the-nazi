@@ -52,6 +52,8 @@ public class SaveManager {
 			// Change it to true
 			prefs.putBoolean(PREF_ONE_SHOT, true);
 			
+			prefs.flush();
+			
 			// Return true to tell the system that this is the first (and only time)
 			return true;
 		}

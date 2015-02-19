@@ -2,19 +2,24 @@ package com.bopthenazi.utils;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Base64Coder;
 
 public class SaveManager {
 
 	private FileHandle scoreFile;
-	private FileHandle oneShotFile;
 	
+	private Preferences prefs;
+	
+	private static final String DEFAULT_PREFERENCES = "default";
+	private static final String PREF_ONE_SHOT = "one_shot";
 	
 	public SaveManager(){
 		
 		scoreFile = Gdx.files.local("bin/save.txt");
-		oneShotFile = Gdx.files.local("bin/oneshot.txt");
+		
+		prefs = Gdx.app.getPreferences(DEFAULT_PREFERENCES);
 	}
 	
 	public void saveScore(int newScore){
@@ -39,18 +44,19 @@ public class SaveManager {
 		return output;
 	}
 	
-	public boolean isOneShot(){
+	public boolean isFirstShot(){
 		
-		if(oneShotFile.exists()){
+		// If the preference returns false (it has not been accessed before)
+		if(!prefs.getBoolean(PREF_ONE_SHOT, false)){
 			
-			if(oneShotFile.readString() == ""){
-				
-				oneShotFile.writeString("You have accessed the application once before.", false);
-				
-				return true;
-			}
+			// Change it to true
+			prefs.putBoolean(PREF_ONE_SHOT, true);
+			
+			// Return true to tell the system that this is the first (and only time)
+			return true;
 		}
 		
+		// Otherwise, simply return false.
 		return false;
 	}
 }

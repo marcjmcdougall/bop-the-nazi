@@ -17,8 +17,13 @@ public class BasicButton extends Actor {
 	
 	public BasicButton(Texture unclicked, Texture clicked, float x, float y){
 		
-		this.setWidth(400.0f);
-		this.setHeight(206.0f);
+		this(unclicked, clicked, x, y, unclicked.getWidth(), unclicked.getHeight());
+	}
+	
+	public BasicButton(Texture unclicked, Texture clicked, float x, float y, float width, float height){
+		
+		this.setWidth(width);
+		this.setHeight(height);
 		
 		this.setX(x - this.getWidth() / 2.0f);
 		this.setY(y - this.getHeight() / 2.0f);

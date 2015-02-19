@@ -3,6 +3,7 @@ package com.bopthenazi.views.screens;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -75,6 +78,7 @@ public class BTNGameScreen implements Screen{
 	private BTNGame game;
 
 	private BTNStage gameStage;
+	private Stage hudStage;
 	
 	private SaveManager saveManager;
 	
@@ -225,10 +229,7 @@ public class BTNGameScreen implements Screen{
 	
 	public void notifyNewX(float x) {
 		
-		if(!isPaused()){
-			
-			glove.notifyTouch(x);
-		}
+		glove.notifyTouch(x);
 	}
 	
 	private void generateExplosion(float x, float y, boolean expand) {
@@ -334,7 +335,10 @@ public class BTNGameScreen implements Screen{
 		timeElapsedSinceLastZombie = 0f;
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
+		
 		gameStage = new BTNStage(viewport, game, this);
+		hudStage = new Stage(viewport);
+		
 		bg = new BTNActor(getTexture("screen-game/background.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f) - AD_TOP_OFFSET, GAME_WIDTH, GAME_HEIGHT);
 		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
@@ -377,7 +381,11 @@ public class BTNGameScreen implements Screen{
 		gameStage.addActor(topBar);
 		gameStage.addActor(this.score);
 		
-		Gdx.input.setInputProcessor(gameStage);
+		InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(hudStage);
+		multiplexer.addProcessor(gameStage);
+		
+		Gdx.input.setInputProcessor(multiplexer);
 		
 		Random r = new Random();
 		
@@ -387,9 +395,8 @@ public class BTNGameScreen implements Screen{
 		
 		activateContainerContents(containers.get(randomIndex));
 		
-		if(/*saveManager.isOneShot()*/ true){
+		if(saveManager.isFirstShot()){
 			
-			// TODO: Show the tutorial image as an overlay dialog.  Then play "LET'S GO!"
 			showTutorialScreen();
 		}
 		else{
@@ -400,12 +407,37 @@ public class BTNGameScreen implements Screen{
 
 	private void showTutorialScreen() {
 		
-		Group tutorialScreen = new Group();
+		this.setPaused(true);
+		
+		final Group tutorialScreen = new Group();
 		
 		tutorialScreen.addActor(new BTNActor(getTexture("screen-game-over/alpha-25.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f));
-		tutorialScreen.addActor(new BTNActor(getTexture("screen-tutorial/instructions-screen.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f));
+		tutorialScreen.addActor(new BTNActor(getTexture("screen-tutorial/instructions-screen.png"), BTNGameScreen.GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.55f));
 		
-		gameStage.addActor(tutorialScreen);
+		BasicButton ok = new BasicButton(getTexture("screen-tutorial/ok-button-up-state.png"), getTexture("screen-tutorial/ok-button-down-state.png"), GAME_WIDTH * 0.72f, GAME_HEIGHT * 0.2f, 200.0f, 150.0f);
+		
+		ok.addListener(new InputListener(){
+			
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				
+				return true;
+			}
+			
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				
+				super.touchUp(event, x, y, pointer, button);
+				
+				playSound(SOUND_ID_LETS_GO);
+				BTNGameScreen.this.setPaused(false);
+				tutorialScreen.setVisible(false);
+			}
+		});
+		
+		tutorialScreen.addActor(ok);
+		
+		hudStage.addActor(tutorialScreen);
 	}
 
 	public Texture getTexture(String textureNamePostPrepend) {
@@ -434,19 +466,25 @@ public class BTNGameScreen implements Screen{
 		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        timeElapsedSinceLastZombie += delta;
-        
-        if(timeElapsedSinceLastZombie >= baseFrequencyContainerActivate){
+        if(!this.isPaused()){
         	
-        	// Activate a random Nazi that has *not yet been activated*
-        	doActivateUniqueContainer();
-        	
-        	timeElapsedSinceLastZombie = 0.0f;
+	        timeElapsedSinceLastZombie += delta;
+	        
+	        if(timeElapsedSinceLastZombie >= baseFrequencyContainerActivate){
+	        	
+	        	// Activate a random Nazi that has *not yet been activated*
+	        	doActivateUniqueContainer();
+	        	
+	        	timeElapsedSinceLastZombie = 0.0f;
+	        }
+	        
+	        gameStage.act(delta);
         }
-        
-        gameStage.act(delta);
+	        
+        hudStage.act(delta);
         
         gameStage.draw();
+        hudStage.draw();
 	}
 
 	public boolean isPaused() {
@@ -742,8 +780,10 @@ public class BTNGameScreen implements Screen{
 			
 			BasicButton restart = new BasicButton(new Texture("textures/screen-game-over/restart-button.png"), new Texture("textures/screen-game-over/restart-button-down-state.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 550.0f);
 		
+			restart.setHeight(GAME_HEIGHT * 0.1f); 
 			restart.setWidth(GAME_WIDTH * 0.45f);
 			restart.setX((GAME_WIDTH / 2.0f) - (restart.getWidth() / 2.0f));
+			restart.setY(restart.getY() - restart.getHeight() / 2.0f);
 			
 			restart.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener(){
 				

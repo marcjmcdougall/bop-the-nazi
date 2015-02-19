@@ -413,8 +413,6 @@ public class BTNGameScreen implements Screen{
 
 		gameStage.addActor(glove);
 		gameStage.addActor(gloveCase);
-//		gameStage.addActor(slider);
-//		gameStage.addActor(sliderButton);
 		gameStage.addActor(explosionSplash);
 		
 		hudStage.addActor(topBar);

@@ -409,7 +409,7 @@ public class BTNGameScreen implements Screen{
 		
 		this.backgroundMusic.setVolume(0.25f);
 		this.backgroundMusic.setLooping(true);
-		this.backgroundMusic.play();
+//		this.backgroundMusic.play();
 		
 		initializeContainers();
 		initializeLivesModule();
@@ -526,14 +526,14 @@ public class BTNGameScreen implements Screen{
 				bg.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));
 				ok.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));
 				
+				begin();
+				
 				tutorialScreen.addAction(Actions.sequence(Actions.alpha(0.0f, 1.0f), Actions.run(new Runnable() {
 					
 					@Override
 					public void run() {
 						
 						tutorialScreen.setVisible(false);
-						
-						begin();
 					}
 				})));
 			}

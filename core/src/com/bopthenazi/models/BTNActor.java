@@ -115,7 +115,7 @@ public class BTNActor extends Actor implements Collidable{
 		
 //		batch.draw(textures.get(frameIndex), this.getX() - (this.getWidth() / 2.0f), this.getY() - (this.getHeight() / 2.0f), this.getWidth() / 2.0f, this.getHeight() / 2.0f, this.getWidth(), this.getHeight(), 1.0f, 1.0f, this.getRotation(), 0, 0, Math.round(this.getWidth()), Math.round(this.getHeight()), false, false);
 	
-		batch.setColor(this.getColor().a, this.getColor().g, this.getColor().b, this.getColor().a);
+		batch.setColor(this.getColor().a, this.getColor().g, this.getColor().b, this.getColor().a * parentAlpha);
 		batch.draw(new TextureRegion(textures.get(frameIndex)), this.getX() - (this.getWidth() / 2.0f), (this.getY()/* - 133.5f*/) - (this.getHeight() / 2.0f), this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
 	}
 	

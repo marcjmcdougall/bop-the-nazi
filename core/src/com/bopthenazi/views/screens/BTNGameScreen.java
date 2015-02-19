@@ -12,11 +12,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.AddAction;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -411,10 +415,10 @@ public class BTNGameScreen implements Screen{
 		
 		final Group tutorialScreen = new Group();
 		
-		tutorialScreen.addActor(new BTNActor(getTexture("screen-game-over/alpha-25.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f));
-		tutorialScreen.addActor(new BTNActor(getTexture("screen-tutorial/instructions-screen.png"), BTNGameScreen.GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.55f));
+		final BTNActor alpha = new BTNActor(getTexture("screen-game-over/alpha-25.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f);
+		final BTNActor bg = new BTNActor(getTexture("screen-tutorial/instructions-screen.png"), BTNGameScreen.GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.55f);
 		
-		BasicButton ok = new BasicButton(getTexture("screen-tutorial/ok-button-up-state.png"), getTexture("screen-tutorial/ok-button-down-state.png"), GAME_WIDTH * 0.72f, GAME_HEIGHT * 0.2f, 200.0f, 150.0f);
+		final BasicButton ok = new BasicButton(getTexture("screen-tutorial/ok-button-up-state.png"), getTexture("screen-tutorial/ok-button-down-state.png"), GAME_WIDTH * 0.72f, GAME_HEIGHT * 0.2f, 200.0f, 150.0f);
 		
 		ok.addListener(new InputListener(){
 			
@@ -429,13 +433,37 @@ public class BTNGameScreen implements Screen{
 				
 				super.touchUp(event, x, y, pointer, button);
 				
-				playSound(SOUND_ID_LETS_GO);
-				BTNGameScreen.this.setPaused(false);
-				tutorialScreen.setVisible(false);
+				bg.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));
+				ok.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));
+				
+				tutorialScreen.addAction(Actions.sequence(Actions.alpha(0.0f, 1.0f), Actions.run(new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						tutorialScreen.setVisible(false);
+						playSound(SOUND_ID_LETS_GO);
+						BTNGameScreen.this.setPaused(false);
+					}
+				})));
 			}
 		});
 		
+		bg.addAction(Actions.moveBy(0.0f, 2000.0f));
+		bg.addAction(Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4));
+		
+		ok.addAction(Actions.moveBy(0.0f, 2000.0f));
+		ok.addAction(Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4));
+		
+		tutorialScreen.addActor(alpha);
+		tutorialScreen.addActor(bg);
 		tutorialScreen.addActor(ok);
+		
+		tutorialScreen.getColor().a = 0.0f;
+		
+		AlphaAction fadeIn = Actions.alpha(1.0f, 1.0f);
+		
+		tutorialScreen.addAction(fadeIn);
 		
 		hudStage.addActor(tutorialScreen);
 	}
@@ -718,26 +746,14 @@ public class BTNGameScreen implements Screen{
 		
 		if(!showingGameOverScreen){
 			
-			// Clear the glove cache so that Actions cached due to rapid clicking do not get pushed to the currentAction slot.
-			this.glove.clearCache();
-			this.gameOverScreen = new Group();
+			final MoveByAction moveOut = Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4);
+			MoveByAction moveOutInstant = Actions.moveBy(0.0f, 2000.0f);
 			
-			BTNActor gameOverAlpha = new BTNActor(new Texture("textures/screen-game-over/alpha-25.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
-			BTNActor gameOverBackground = new BTNActor(new Texture("textures/screen-game-over/game-over-box.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, GAME_WIDTH * 0.75f, GAME_HEIGHT * 0.6f);
-			BTNActor gameOverText = new BTNActor(new Texture("textures/screen-game-over/game-over-text.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f + 25.0f, GAME_WIDTH * 0.40f, GAME_HEIGHT * 0.15f);
+			MoveByAction moveIn = Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4);
 			
-			gameOverScoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
-			gameOverScoreLabel.setHeight(100.0f);
-			gameOverScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (gameOverScoreLabel.getWidth() / 2.0f));
-			gameOverScoreLabel.setY((670.0f + (this.score.getHeight() / 2.0f))/* - AD_TOP_OFFSET*/);
-			
-			int highScore = Integer.parseInt(saveManager.retrieveScore());
-			
-			SequenceAction sequence = new SequenceAction();
-			
-			RunnableAction gameOverSound = new RunnableAction();
-			
-			gameOverSound.setRunnable(new Runnable() {
+			final AlphaAction fadeOut = Actions.fadeOut(1.0f);
+			AlphaAction fadeIn = Actions.fadeIn(1.0f);
+			RunnableAction playGameOver = Actions.run(new Runnable() {
 				
 				@Override
 				public void run() {
@@ -746,32 +762,51 @@ public class BTNGameScreen implements Screen{
 				}
 			});
 			
-			sequence.addAction(gameOverSound);
+			RunnableAction playNewRecord = Actions.run(new Runnable() {
+				
+				@Override
+				public void run() {
+					
+					playSound(SOUND_ID_NEW_RECORD);
+				}
+			});
 			
-			RunnableAction newRecord = null;
+		
+			SequenceAction sequence = null;
 			
 			if(isHighScore){
 				
-				highScore = score;
+				sequence = Actions.sequence(playGameOver, Actions.delay(1.2f), playNewRecord);
+			}
+			else{
 				
-				newRecord = new RunnableAction();
+				sequence = Actions.sequence(playGameOver);
+			}
+			
+			final RunnableAction notifyAnimationOut = Actions.run(new Runnable() {
 				
-				newRecord.setRunnable(new Runnable() {
+				@Override
+				public void run() {
 					
-					@Override
-					public void run() {
-						
-						playSound(SOUND_ID_NEW_RECORD);
-					}
-				});
-			}
+					BTNGameScreen.this.reset();
+					BTNGameScreen.this.showingGameOverScreen = false;
+				}
+			});
 			
-			if(newRecord != null){
-				
-				sequence.addAction(newRecord);
-			}
+			// Clear the glove cache so that Actions cached due to rapid clicking do not get pushed to the currentAction slot.
+			this.glove.clearCache();
+			this.gameOverScreen = new Group();
 			
-			gameOverScreen.addAction(sequence);
+			final BTNActor gameOverAlpha = new BTNActor(new Texture("textures/screen-game-over/alpha-25.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+			BTNActor gameOverBackground = new BTNActor(new Texture("textures/screen-game-over/game-over-box.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, GAME_WIDTH * 0.75f, GAME_HEIGHT * 0.6f);
+			BTNActor gameOverText = new BTNActor(new Texture("textures/screen-game-over/game-over-text.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f + 25.0f, GAME_WIDTH * 0.40f, GAME_HEIGHT * 0.15f);
+			
+			gameOverScoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+			gameOverScoreLabel.setHeight(100.0f);
+			gameOverScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (gameOverScoreLabel.getWidth() / 2.0f));
+			gameOverScoreLabel.setY((670.0f + (this.score.getHeight() / 2.0f)));
+			
+			int highScore = Integer.parseInt(saveManager.retrieveScore());
 			
 			Label highScoreLabel = new Label("High Score: " + highScore, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 			highScoreLabel.setHeight(100.0f);
@@ -798,24 +833,31 @@ public class BTNGameScreen implements Screen{
 					
 					super.touchUp(event, x, y, pointer, button);
 					
-					Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
+					gameOverAlpha.addAction(Actions.fadeOut(1.0f));
+					gameOverScreen.addAction(moveOut);
+					gameOverScreen.addAction(Actions.sequence(fadeOut, notifyAnimationOut));
 					
 	//				BTNGameScreen.this.getGame().setScreen(new BTNLoadingScreen(BTNGameScreen.this.getGame()));
-					BTNGameScreen.this.reset();
-					BTNGameScreen.this.showingGameOverScreen = false;
 				}
 			});
 			
-			this.gameOverScreen.addActor(gameOverAlpha);
 			this.gameOverScreen.addActor(gameOverBackground);
 			this.gameOverScreen.addActor(gameOverText);
 			this.gameOverScreen.addActor(gameOverScoreLabel);
 			this.gameOverScreen.addActor(highScoreLabel);
 			this.gameOverScreen.addActor(restart);
 			
-			gameOverScreen.setVisible(false);
+			gameOverScreen.getColor().a = 0.0f;
+			gameOverAlpha.getColor().a = 0.0f;
 			
-			gameStage.addActor(gameOverScreen);
+			gameOverScreen.addAction(moveOutInstant);
+			gameOverScreen.addAction(moveIn);
+			gameOverScreen.addAction(fadeIn);
+			gameOverAlpha.addAction(Actions.fadeIn(1.0f));
+			gameOverScreen.addAction(sequence);
+			
+			hudStage.addActor(gameOverAlpha);
+			hudStage.addActor(gameOverScreen);
 			
 			gameOverScreen.setVisible(true);
 			

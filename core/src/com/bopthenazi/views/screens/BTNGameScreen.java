@@ -70,10 +70,16 @@ public class BTNGameScreen implements Screen{
 	
 	public static final float AD_TOP_OFFSET = 150.0f;
 	
-	public static final float TOP_BAR_HEIGHT = 284.0f;
+	public static final float BAR_HEIGHT = 3250.0f;
 	public static final float ZOMBIE_OFFSET_HORIZONTAL_MARGIN = 25.0f;
 	public static final float BAR_OFFSET_LOWER = 136.3f;
 	public static final float BAR_OFFSET_TOP = 256.0f;
+	
+	public static final float TOP_BAR_TOP = GAME_HEIGHT * 1.62f;
+	public static final float BOTTOM_BAR_BOTTOM = GAME_HEIGHT * -1.0f;
+	
+	public static final float TOP_BAR_TOGETHER = GAME_HEIGHT * 1.2925f;
+	public static final float BOTTOM_BAR_TOGETHER = GAME_HEIGHT * -0.40f;
 	
 	private float baseFrequencyContainerActivate = 0.25f;
 	
@@ -113,8 +119,14 @@ public class BTNGameScreen implements Screen{
 	private BTNActor explosionSplash;
 	private Score score;
 	private BTNActor topBar;
+	private BTNActor bottomBar;
 	private BTNActor gloveCase;
 	private LivesModule livesModule;
+	
+	private BTNActor one;
+	private BTNActor two;
+	private BTNActor three;
+	private BTNActor bop;
 	
 	private float timeElapsedSinceLastZombie;
 	
@@ -128,6 +140,8 @@ public class BTNGameScreen implements Screen{
 	private static final String SFX_PREPEND = "sfx/";
 	private static final String FONTS_PREPEND = "fonts/";
 	private static final String MUSIC_PREPEND = "music/";
+
+	private static final float NUMBER_WIDTH = 50.0f;
 	
 	public BTNGameScreen(BTNGame game){
 		
@@ -184,6 +198,7 @@ public class BTNGameScreen implements Screen{
 		loadTexture("screen-game/glove.png");
 		loadTexture("screen-game/mover.png");
 		loadTexture("screen-game/top-bar.png");
+		loadTexture("screen-game/bottom-bar.png");
 		loadTexture("screen-game/ad-placeholder.png");
 		
 		loadTexture("screen-game-over/alpha-25.png");
@@ -191,6 +206,11 @@ public class BTNGameScreen implements Screen{
 		loadTexture("screen-tutorial/instructions-screen.png");
 		loadTexture("screen-tutorial/ok-button-down-state.png");
 		loadTexture("screen-tutorial/ok-button-up-state.png");
+		
+		loadTexture("screen-game/numbers/1.png");
+		loadTexture("screen-game/numbers/2.png");
+		loadTexture("screen-game/numbers/3.png");
+		loadTexture("screen-game/numbers/bop.png");
 		
 		// Load sounds...
 		loadSFX("bunny-die.wav");
@@ -332,7 +352,7 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void show() {
 		
-		this.setPaused(false);
+		this.setPaused(true);
 		this.containers = new Array<Container>(MAX_ZOMBIE_COUNT);
 		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, (GAME_HEIGHT - Score.SCORE_HEIGHT) - AD_TOP_OFFSET);
 		
@@ -346,7 +366,22 @@ public class BTNGameScreen implements Screen{
 		bg = new BTNActor(getTexture("screen-game/background.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f) - AD_TOP_OFFSET, GAME_WIDTH, GAME_HEIGHT);
 		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
-		topBar = new BTNActor(getTexture("screen-game/top-bar.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f) - AD_TOP_OFFSET, GAME_WIDTH, TOP_BAR_HEIGHT);
+		topBar = new BTNActor(getTexture("screen-game/top-bar.png"), GAME_WIDTH / 2.0f, /*(GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f) - AD_TOP_OFFSET*/TOP_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
+		bottomBar = new BTNActor(getTexture("screen-game/bottom-bar.png"), GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
+		one = new BTNActor(getTexture("screen-game/numbers/1.png"), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
+		two = new BTNActor(getTexture("screen-game/numbers/2.png"), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
+		three = new BTNActor(getTexture("screen-game/numbers/3.png"), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
+		bop = new BTNActor(getTexture("screen-game/numbers/bop.png"), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
+		
+		one.setOrigin(one.getWidth() / 2.0f, one.getHeight() / 2.0f);
+		two.setOrigin(two.getWidth() / 2.0f, two.getHeight() / 2.0f);
+		three.setOrigin(three.getWidth() / 2.0f, three.getHeight() / 2.0f);
+		bop.setOrigin(bop.getWidth() / 2.0f, bop.getHeight() / 2.0f);
+		
+		one.getColor().a = 0.0f;
+		two.getColor().a = 0.0f;
+		three.getColor().a = 0.0f;
+		bop.getColor().a = 0.0f;
 		
 		saveManager = new SaveManager();
 		
@@ -375,15 +410,21 @@ public class BTNGameScreen implements Screen{
 		initializeLivesModule();
 		
 		explosionSplash.setVisible(false);
-		
 
 		gameStage.addActor(glove);
 		gameStage.addActor(gloveCase);
 //		gameStage.addActor(slider);
 //		gameStage.addActor(sliderButton);
 		gameStage.addActor(explosionSplash);
-		gameStage.addActor(topBar);
-		gameStage.addActor(this.score);
+		
+		hudStage.addActor(topBar);
+		hudStage.addActor(bottomBar);
+		hudStage.addActor(this.score);
+		
+		hudStage.addActor(three);
+		hudStage.addActor(two);
+		hudStage.addActor(one);
+		hudStage.addActor(bop);
 		
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(hudStage);
@@ -405,10 +446,54 @@ public class BTNGameScreen implements Screen{
 		}
 		else{
 			
-			playSound(SOUND_ID_LETS_GO);
+			begin();
 		}
 	}
 
+	private void begin(){
+		
+		topBar.addAction(Actions.moveTo(topBar.getX(), TOP_BAR_TOP, 3.0f));
+		bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BOTTOM_BAR_BOTTOM, 3.0f));
+		
+		three.addAction(Actions.sequence(Actions.alpha(1.0f), Actions.fadeOut(1.0f)));
+		three.addAction(Actions.sequence(Actions.scaleBy(4.0f, 4.0f, 1.0f), Actions.run(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				two.addAction(Actions.sequence(Actions.alpha(1.0f), Actions.fadeOut(1.0f)));
+				two.addAction(Actions.sequence(Actions.scaleBy(4.0f, 4.0f, 1.0f), Actions.run(new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						one.addAction(Actions.sequence(Actions.alpha(1.0f), Actions.fadeOut(1.0f)));
+						one.addAction(Actions.sequence(Actions.scaleBy(4.0f, 4.0f, 1.0f), Actions.run(new Runnable() {
+							
+							@Override
+							public void run() {
+								
+								bop.addAction(Actions.sequence(Actions.alpha(1.0f), Actions.fadeOut(1.0f)));
+								bop.addAction(Actions.sequence(Actions.scaleBy(4.0f, 4.0f, 1.0f), Actions.run(new Runnable() {
+									
+									@Override
+									public void run() {
+										
+										BTNGameScreen.this.setPaused(false);
+									}
+									
+								})));
+							}
+							
+						})));
+					}
+					
+				})));
+			}
+			
+		})));
+	}
+	
 	private void showTutorialScreen() {
 		
 		this.setPaused(true);
@@ -442,8 +527,8 @@ public class BTNGameScreen implements Screen{
 					public void run() {
 						
 						tutorialScreen.setVisible(false);
-						playSound(SOUND_ID_LETS_GO);
-						BTNGameScreen.this.setPaused(false);
+						
+						begin();
 					}
 				})));
 			}
@@ -783,16 +868,6 @@ public class BTNGameScreen implements Screen{
 				sequence = Actions.sequence(playGameOver);
 			}
 			
-			final RunnableAction notifyAnimationOut = Actions.run(new Runnable() {
-				
-				@Override
-				public void run() {
-					
-					BTNGameScreen.this.reset();
-					BTNGameScreen.this.showingGameOverScreen = false;
-				}
-			});
-			
 			// Clear the glove cache so that Actions cached due to rapid clicking do not get pushed to the currentAction slot.
 			this.glove.clearCache();
 			this.gameOverScreen = new Group();
@@ -834,10 +909,17 @@ public class BTNGameScreen implements Screen{
 					super.touchUp(event, x, y, pointer, button);
 					
 					gameOverAlpha.addAction(Actions.fadeOut(1.0f));
-					gameOverScreen.addAction(moveOut);
-					gameOverScreen.addAction(Actions.sequence(fadeOut, notifyAnimationOut));
+					gameOverScreen.addAction(fadeOut);
 					
-	//				BTNGameScreen.this.getGame().setScreen(new BTNLoadingScreen(BTNGameScreen.this.getGame()));
+					topBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, TOP_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
+					bottomBar.addAction(Actions.sequence(Actions.moveTo(GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.bounceOut), Actions.delay(1.0f), Actions.run(new Runnable() {
+						
+						@Override
+						public void run() {
+							
+							BTNGameScreen.this.reset();
+						}
+					})));
 				}
 			});
 			

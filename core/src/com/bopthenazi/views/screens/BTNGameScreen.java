@@ -360,6 +360,8 @@ public class BTNGameScreen implements Screen{
 		
 		this.score.getColor().a = 0.0f;
 		
+		this.setMode(MODE_STANDARD);
+		
 		timeElapsedSinceLastZombie = 0f;
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
@@ -620,65 +622,68 @@ public class BTNGameScreen implements Screen{
 				// Select a random number.
 				int index = new Random().nextInt(MAX_ZOMBIE_COUNT);
 				
-				if(!containers.get(index).getContents().isActivated()){
+				if(containers.get(index).getContents() != null){
 					
-					containers.get(index).getContents().remove();
-					
-					BTNContainedActor newActor = null;
-					
-					if(getMode() == MODE_STANDARD){
+					if(!containers.get(index).getContents().isActivated()){
 						
-						int cursor = new Random().nextInt(10);
+						containers.get(index).getContents().remove();
 						
+						BTNContainedActor newActor = null;
 						
-						// 60% chance...
-						if(cursor < 6){
+						if(getMode() == MODE_STANDARD){
 							
-							cursor = new Random().nextInt(2);
+							int cursor = new Random().nextInt(10);
 							
-							// 30% chance...
-							if(cursor == 0){
+							
+							// 60% chance...
+							if(cursor < 6){
 								
-								newActor = new Zombie(0.0f, 0.0f, this);
+								cursor = new Random().nextInt(2);
+								
+								// 30% chance...
+								if(cursor == 0){
+									
+									newActor = new Zombie(0.0f, 0.0f, this);
+								}
+								// 30% chance...
+								else{
+									
+									newActor = new ZombieBunny(0.0f, 0.0f, this);						
+								}
 							}
 							// 30% chance...
+							else if(cursor < 9){
+								
+								newActor = new Bunny(0.0f, 0.0f, this);
+							}
+							// 10% chance...
 							else{
 								
-								newActor = new ZombieBunny(0.0f, 0.0f, this);						
-							}
-						}
-						// 30% chance...
-						else if(cursor < 9){
-							
-							newActor = new Bunny(0.0f, 0.0f, this);
-						}
-						// 10% chance...
-						else{
-							
-							cursor = new Random().nextInt(2);
-							
-							// 5% chance...
-							if(cursor == 0 && this.score.getLives() < Score.DEFAULT_NUMBER_LIVES){
+								cursor = new Random().nextInt(2);
 								
-								newActor = new Heart(0.0f, 0.0f, this);
+								// 5% chance...
+								if(cursor == 0 && this.score.getLives() < Score.DEFAULT_NUMBER_LIVES){
+									
+									newActor = new Heart(0.0f, 0.0f, this);
+								}
+								// 5% chance...
+								else{
+									
+									newActor  = new Dynamite(0.0f, 0.0f, this);						
+								}
 							}
-							// 5% chance...
-							else{
-								
-								newActor  = new Dynamite(0.0f, 0.0f, this);						
-							}
+							
 						}
+						else if(getMode() == MODE_APOCALYPSE){
+							
+							newActor = new Random().nextInt(2) == 1 ? new Zombie(0.0f, 0.0f, this) : new ZombieBunny(0.0f, 0.0f, this);
+						}
+	
+						containers.get(index).setContents(newActor);
 						
+						activateContainerContents(containers.get(index));
+						break;
 					}
-					else if(getMode() == MODE_APOCALYPSE){
-						
-						newActor = new Random().nextInt(2) == 1 ? new Zombie(0.0f, 0.0f, this) : new ZombieBunny(0.0f, 0.0f, this);
-					}
-
-					containers.get(index).setContents(newActor);
-					
-					activateContainerContents(containers.get(index));
-					break;
 				}
 			}
 		}
@@ -926,14 +931,16 @@ public class BTNGameScreen implements Screen{
 				}
 			});
 			
+			gameOverScreen.getColor().a = 0.0f;
+			gameOverAlpha.getColor().a = 0.0f;
+			
+			gameOverScreen.setVisible(true);
+			
 			this.gameOverScreen.addActor(gameOverBackground);
 			this.gameOverScreen.addActor(gameOverText);
 			this.gameOverScreen.addActor(gameOverScoreLabel);
 			this.gameOverScreen.addActor(highScoreLabel);
 			this.gameOverScreen.addActor(restart);
-			
-			gameOverScreen.getColor().a = 0.0f;
-			gameOverAlpha.getColor().a = 0.0f;
 			
 			gameOverScreen.addAction(moveOutInstant);
 			gameOverScreen.addAction(moveIn);
@@ -943,8 +950,6 @@ public class BTNGameScreen implements Screen{
 			
 			hudStage.addActor(gameOverAlpha);
 			hudStage.addActor(gameOverScreen);
-			
-			gameOverScreen.setVisible(true);
 			
 			showingGameOverScreen = true;
 		}

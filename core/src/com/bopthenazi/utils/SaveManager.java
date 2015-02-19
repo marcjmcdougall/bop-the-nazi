@@ -41,11 +41,14 @@ public class SaveManager {
 	
 	public boolean isOneShot(){
 		
-		if(oneShotFile.readString() == ""){
+		if(oneShotFile.exists()){
 			
-			oneShotFile.writeString("You have accessed the application once before.", false);
-			
-			return true;
+			if(oneShotFile.readString() == ""){
+				
+				oneShotFile.writeString("You have accessed the application once before.", false);
+				
+				return true;
+			}
 		}
 		
 		return false;

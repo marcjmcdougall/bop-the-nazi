@@ -178,6 +178,12 @@ public class BTNGameScreen implements Screen{
 		loadTexture("screen-game/top-bar.png");
 		loadTexture("screen-game/ad-placeholder.png");
 		
+		loadTexture("screen-game-over/alpha-25.png");
+		
+		loadTexture("screen-tutorial/instructions-screen.png");
+		loadTexture("screen-tutorial/ok-button-down-state.png");
+		loadTexture("screen-tutorial/ok-button-up-state.png");
+		
 		// Load sounds...
 		loadSFX("bunny-die.wav");
 		loadSFX("explosion.wav");
@@ -381,14 +387,25 @@ public class BTNGameScreen implements Screen{
 		
 		activateContainerContents(containers.get(randomIndex));
 		
-		if(saveManager.isOneShot()){
+		if(/*saveManager.isOneShot()*/ true){
 			
-			// TODO: Show the tutorial image as an overlay dialog.  Then play "LETS GO!"
+			// TODO: Show the tutorial image as an overlay dialog.  Then play "LET'S GO!"
+			showTutorialScreen();
 		}
 		else{
 			
 			playSound(SOUND_ID_LETS_GO);
 		}
+	}
+
+	private void showTutorialScreen() {
+		
+		Group tutorialScreen = new Group();
+		
+		tutorialScreen.addActor(new BTNActor(getTexture("screen-game-over/alpha-25.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f));
+		tutorialScreen.addActor(new BTNActor(getTexture("screen-tutorial/instructions-screen.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f));
+		
+		gameStage.addActor(tutorialScreen);
 	}
 
 	public Texture getTexture(String textureNamePostPrepend) {

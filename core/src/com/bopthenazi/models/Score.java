@@ -41,7 +41,8 @@ public class Score extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		
-		label.draw(batch, parentAlpha);
+//		batch.setColor(this.getColor().a, this.getColor().g, this.getColor().b, this.getColor().a * parentAlpha);
+		label.draw(batch, this.getColor().a * parentAlpha);
 	}
 	
 	public void updateScore(int newScore){

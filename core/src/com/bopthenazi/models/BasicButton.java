@@ -3,6 +3,7 @@ package com.bopthenazi.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -24,6 +25,9 @@ public class BasicButton extends Actor {
 		
 		this.setWidth(width);
 		this.setHeight(height);
+		
+//		this.setX(x - this.getWidth() / 2.0f);
+//		this.setY(y - this.getHeight() / 2.0f);
 		
 		this.setX(x - this.getWidth() / 2.0f);
 		this.setY(y - this.getHeight() / 2.0f);
@@ -63,13 +67,15 @@ public class BasicButton extends Actor {
 		
 		super.draw(batch, parentAlpha);
 		
+		batch.setColor(this.getColor().a, this.getColor().g, this.getColor().b, this.getColor().a * parentAlpha);
+				
 		if(isClicked){
 		
-			batch.draw(clicked, getX(), getY(), getWidth(), getHeight());
+			batch.draw(new TextureRegion(clicked), this.getX()/* - (this.getWidth() / 2.0f)*/, (this.getY()/* - 133.5f*/)/* - (this.getHeight() / 2.0f)*/, this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
 		}
 		else{
 			
-			batch.draw(unclicked, getX(), getY(), getWidth(), getHeight());
+			batch.draw(new TextureRegion(unclicked), this.getX()/* - (this.getWidth() / 2.0f)*/, (this.getY()/* - 133.5f*/)/* - (this.getHeight() / 2.0f)*/, this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
 		}
 	}
 

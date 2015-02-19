@@ -253,7 +253,10 @@ public class BTNGameScreen implements Screen{
 	
 	public void notifyNewX(float x) {
 		
-		glove.notifyTouch(x);
+		if(!isPaused()){
+			
+			glove.notifyTouch(x);
+		}
 	}
 	
 	private void generateExplosion(float x, float y, boolean expand) {
@@ -356,6 +359,8 @@ public class BTNGameScreen implements Screen{
 		this.containers = new Array<Container>(MAX_ZOMBIE_COUNT);
 		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, (GAME_HEIGHT - Score.SCORE_HEIGHT) - AD_TOP_OFFSET);
 		
+		this.score.getColor().a = 0.0f;
+		
 		timeElapsedSinceLastZombie = 0f;
 		
 		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
@@ -404,7 +409,7 @@ public class BTNGameScreen implements Screen{
 		
 		this.backgroundMusic.setVolume(0.25f);
 		this.backgroundMusic.setLooping(true);
-//		this.backgroundMusic.play();
+		this.backgroundMusic.play();
 		
 		initializeContainers();
 		initializeLivesModule();
@@ -450,8 +455,9 @@ public class BTNGameScreen implements Screen{
 
 	private void begin(){
 		
-		topBar.addAction(Actions.moveTo(topBar.getX(), TOP_BAR_TOP, 3.0f));
-		bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BOTTOM_BAR_BOTTOM, 3.0f));
+		score.addAction(Actions.fadeIn(3.0f));
+		topBar.addAction(Actions.moveTo(topBar.getX(), TOP_BAR_TOP, 3.0f, Interpolation.pow4));
+		bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BOTTOM_BAR_BOTTOM, 3.0f, Interpolation.pow4));
 		
 		three.addAction(Actions.sequence(Actions.alpha(1.0f), Actions.fadeOut(1.0f)));
 		three.addAction(Actions.sequence(Actions.scaleBy(4.0f, 4.0f, 1.0f), Actions.run(new Runnable() {
@@ -471,6 +477,7 @@ public class BTNGameScreen implements Screen{
 							@Override
 							public void run() {
 								
+								playSound(SOUND_ID_LETS_GO);
 								bop.addAction(Actions.sequence(Actions.alpha(1.0f), Actions.fadeOut(1.0f)));
 								bop.addAction(Actions.sequence(Actions.scaleBy(4.0f, 4.0f, 1.0f), Actions.run(new Runnable() {
 									
@@ -909,6 +916,7 @@ public class BTNGameScreen implements Screen{
 					gameOverAlpha.addAction(Actions.fadeOut(1.0f));
 					gameOverScreen.addAction(fadeOut);
 					
+					BTNGameScreen.this.score.addAction(Actions.fadeOut(1.0f));
 					topBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, TOP_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
 					bottomBar.addAction(Actions.sequence(Actions.moveTo(GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.bounceOut), Actions.delay(1.0f), Actions.run(new Runnable() {
 						

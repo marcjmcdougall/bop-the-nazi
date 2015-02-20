@@ -9,9 +9,9 @@ import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Heart extends BTNContainedActor {
 	
-	public Heart(float x, float y, BTNGameScreen gameScreen){
+	public Heart(float x, float y, BTNGameScreen gameScreen, Container container){
 		
-		super(new Array<TextureRegion>(new TextureRegion[]{gameScreen.getTexture("screen-game/heart-contained/heart-contained.png")}), x, y, gameScreen);
+		super(new Array<TextureRegion>(new TextureRegion[]{gameScreen.getTexture("screen-game/heart-contained/heart-contained.png")}), x, y, gameScreen, container);
 	}
 	
 	@Override

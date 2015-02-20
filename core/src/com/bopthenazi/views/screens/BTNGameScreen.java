@@ -62,7 +62,7 @@ public class BTNGameScreen implements Screen{
 	public static final float TOP_BAR_TOGETHER = GAME_HEIGHT * 1.2925f;
 	public static final float BOTTOM_BAR_TOGETHER = GAME_HEIGHT * -0.40f;
 	
-	private float baseFrequencyContainerActivate = 1.0f;
+	private float baseFrequencyContainerActivate = 0.25f;
 	
 	private static final int MODE_STANDARD = 0;
 	public static final int MODE_APOCALYPSE = 1;
@@ -327,14 +327,14 @@ public class BTNGameScreen implements Screen{
 			if(container.getContents() != null){
 				
 				container.getContents().remove();
-				container.setContents(generateRandomContainedActor(false));
+				container.setContents(generateRandomContainedActor(false, container));
 			}
 		}
 		
 		this.begin(0.0f);
 	}
 	
-	private BTNContainedActor generateRandomContainedActor(boolean generateDynamite) {
+	private BTNContainedActor generateRandomContainedActor(boolean generateDynamite, Container c) {
 
 		BTNContainedActor newActor = null;
 		
@@ -350,18 +350,18 @@ public class BTNGameScreen implements Screen{
 				// 30% chance...
 				if(cursor == 0){
 					
-					newActor = new Zombie(0.0f, 0.0f, this);
+					newActor = new Zombie(0.0f, 0.0f, this, c);
 				}
 				// 30% chance...
 				else{
 					
-					newActor = new ZombieBunny(0.0f, 0.0f, this);						
+					newActor = new ZombieBunny(0.0f, 0.0f, this, c);						
 				}
 			}
 			// 20% chance...
 			else if(cursor < 9){
 				
-				newActor = new Bunny(0.0f, 0.0f, this);
+				newActor = new Bunny(0.0f, 0.0f, this, c);
 			}
 			// 10% chance...
 			else{
@@ -371,18 +371,18 @@ public class BTNGameScreen implements Screen{
 				// 2.5% chance...
 				if(cursor == 0 && this.score.getLives() < Score.DEFAULT_NUMBER_LIVES){
 					
-					newActor = new Heart(0.0f, 0.0f, this);
+					newActor = new Heart(0.0f, 0.0f, this, c);
 				}
 				// 2.5% chance...
 				else{
 					
 					if(generateDynamite){
 						
-						newActor  = new Dynamite(0.0f, 0.0f, this);	
+						newActor  = new Dynamite(0.0f, 0.0f, this, c);	
 					}
 					else{
 						
-						newActor = new Zombie(0.0f, 0.0f, this);
+						newActor = new Zombie(0.0f, 0.0f, this, c);
 					}
 				}
 			}
@@ -390,7 +390,7 @@ public class BTNGameScreen implements Screen{
 		}
 		else if(getMode() == MODE_APOCALYPSE){
 			
-			newActor = new Random().nextInt(2) == 1 ? new Zombie(0.0f, 0.0f, this) : new ZombieBunny(0.0f, 0.0f, this);
+			newActor = new Random().nextInt(2) == 1 ? new Zombie(0.0f, 0.0f, this, c) : new ZombieBunny(0.0f, 0.0f, this, c);
 		}
 		
 		return newActor;
@@ -596,7 +596,7 @@ public class BTNGameScreen implements Screen{
 	        if(timeElapsedSinceLastZombie >= baseFrequencyContainerActivate){
 	        	
 	        	// Activate a random Nazi that has *not yet been activated*
-	        	doActivateUniqueContainer();
+	        	doActivateUniqueContainer(null);
 	        	
 	        	timeElapsedSinceLastZombie = 0.0f;
 	        }
@@ -615,7 +615,7 @@ public class BTNGameScreen implements Screen{
 		return gamePaused;
 	}
 
-	private void doActivateUniqueContainer(){
+	private void doActivateUniqueContainer(Container containerBopped){
 		
 		// If no Nazis are already activated, then choose one at random.
 		int numContainersActivated = 0;
@@ -646,11 +646,20 @@ public class BTNGameScreen implements Screen{
 				
 				if(containers.get(index).getContents() != null){
 					
+					if(containerBopped != null){
+						
+						if(containers.get(index).equals(containerBopped)){
+							
+							// If that container is the same one that was just bopped, skip this iteration of the loop.
+							continue;
+						}
+					}
+					
 					if(!containers.get(index).getContents().isActivated()){
 						
 						containers.get(index).getContents().remove();
 						
-						containers.get(index).setContents(generateRandomContainedActor(nonDynamiteContentActive));
+						containers.get(index).setContents(generateRandomContainedActor(nonDynamiteContentActive, containers.get(index)));
 						
 						activateContainerContents(containers.get(index));
 						break;
@@ -780,8 +789,9 @@ public class BTNGameScreen implements Screen{
 		Gdx.app.log(BTNGame.TAG, output);
 	}
 
-	public void notifyDeactivate(BTNContainedActor btnContainedActor) {
+	public void notifyDeactivate(Container container) {
 		
+		BTNContainedActor btnContainedActor = container.getContents();
 		String className = btnContainedActor.getClass().getName();
 		
 		if(className.equals(Zombie.class.getName()) || className.equals(ZombieBunny.class.getName())){
@@ -821,7 +831,7 @@ public class BTNGameScreen implements Screen{
 		
 		print("Handling Zombie deactivate now");
 		
-		doActivateUniqueContainer();
+		doActivateUniqueContainer(zombie.getContainer());
 		
 		if(!(zombie.getActorState() == BTNContainedActor.STATE_HIT)){
 			
@@ -902,7 +912,7 @@ public class BTNGameScreen implements Screen{
 
 	public void generate() {
 		
-		containers.get(new Random().nextInt(MAX_ZOMBIE_COUNT)).setContents(new Dynamite(0.0f, 0.0f, this));
+//		containers.get(new Random().nextInt(MAX_ZOMBIE_COUNT)).setContents(new Dynamite(0.0f, 0.0f, this));
 	}
 
 	public void incrementScore() {

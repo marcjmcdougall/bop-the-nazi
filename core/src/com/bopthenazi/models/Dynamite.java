@@ -8,10 +8,10 @@ import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Dynamite extends BTNContainedActor {
 
-	public Dynamite(float x, float y, BTNGameScreen gameScreen){
+	public Dynamite(float x, float y, BTNGameScreen gameScreen, Container container){
 		
 		super(new Array<TextureRegion>(new TextureRegion[]{gameScreen.getTexture("screen-game/dynamite/dynamite-01.png"), gameScreen.getTexture("screen-game/dynamite/dynamite-02.png"), gameScreen.getTexture("screen-game/dynamite/dynamite-03.png"), 
-				gameScreen.getTexture("screen-game/dynamite/dynamite-04.png"), gameScreen.getTexture("screen-game/dynamite/dynamite-05.png")}), x, y, gameScreen);
+				gameScreen.getTexture("screen-game/dynamite/dynamite-04.png"), gameScreen.getTexture("screen-game/dynamite/dynamite-05.png")}), x, y, gameScreen, container);
 	}
 	
 	@Override

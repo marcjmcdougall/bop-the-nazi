@@ -10,9 +10,9 @@ public class ZombieBunny extends BTNContainedActor {
 
 	private TextureRegion onHitTexture;
 	
-	public ZombieBunny(float x, float y, BTNGameScreen gameScreen) {
+	public ZombieBunny(float x, float y, BTNGameScreen gameScreen, Container container) {
 		
-		super(gameScreen.getTexture("screen-game/zombie-bunny/zombie-bunny.png"), x, y, gameScreen);
+		super(gameScreen.getTexture("screen-game/zombie-bunny/zombie-bunny.png"), x, y, gameScreen, container);
 		
 		this.onHitTexture = gameScreen.getTexture("screen-game/zombie-bunny/zombie-bunny-hit-frame.png");
 	}

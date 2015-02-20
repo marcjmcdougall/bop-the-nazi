@@ -21,7 +21,7 @@ public class Container extends Group{
 		this.holeBack = new BTNActor(screen.getTexture("screen-game/container/tunnel-back.png").getTexture(), x, y + 256.5f, HOLE_WIDTH, HOLE_BACK_HEIGHT);
 		
 		// By default, we will place a Nazi in each container.
-		this.contents = new Zombie(x, y, screen);
+		this.contents = new Zombie(x, y, screen, this);
 		
 		initializeContents();
 		

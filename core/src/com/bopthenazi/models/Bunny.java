@@ -16,9 +16,9 @@ public class Bunny extends BTNContainedActor {
 	
 	private TextureRegion onHitTexture;
 	
-	public Bunny(float x, float y, BTNGameScreen gameScreen) {
+	public Bunny(float x, float y, BTNGameScreen gameScreen, Container container) {
 	
-		super(gameScreen.getTexture("screen-game/bunny/bunny.png"), x, y, gameScreen);
+		super(gameScreen.getTexture("screen-game/bunny/bunny.png"), x, y, gameScreen, container);
 		
 		initializeBunnyTextures();
 	}

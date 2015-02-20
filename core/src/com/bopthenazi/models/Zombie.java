@@ -23,9 +23,9 @@ public class Zombie extends BTNContainedActor {
 	
 	private TextureRegion onHitTexture;
 	
-	public Zombie(float x, float y, BTNGameScreen screen){
+	public Zombie(float x, float y, BTNGameScreen screen, Container container){
 		
-		super(new Random().nextInt(2) == 1 ? screen.getTexture("screen-game/zombie/zombie.png") : screen.getTexture("screen-game/zombie-2/zombie-2.png"), x, y, screen);
+		super(new Random().nextInt(2) == 1 ? screen.getTexture("screen-game/zombie/zombie.png") : screen.getTexture("screen-game/zombie-2/zombie-2.png"), x, y, screen, container);
 		
 		random = new Random();
 		

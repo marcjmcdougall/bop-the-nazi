@@ -26,6 +26,8 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	protected BTNGameScreen gameScreen;
 	private SequenceAction oscillateSequence;
 	
+	private Container container;
+	
 	private volatile boolean activated;
 	private float anchorY;
 	
@@ -34,21 +36,21 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		// This constructor should never be used for obvious reasons.
 		super();
 		
-		initialize(null);
+		initialize(null, null);
 	}
 	
-	public BTNContainedActor(Array<TextureRegion> textures, float x, float y, BTNGameScreen gameScreen){
+	public BTNContainedActor(Array<TextureRegion> textures, float x, float y, BTNGameScreen gameScreen, Container c){
 		
 		super(textures, x, y, CONTENT_WIDTH, CONTENT_HEIGHT, x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
 		
-		initialize(gameScreen);
+		initialize(gameScreen, c);
 	}
 	
-	public BTNContainedActor(TextureRegion texture, float x, float y, BTNGameScreen gameScreen){
+	public BTNContainedActor(TextureRegion texture, float x, float y, BTNGameScreen gameScreen, Container c){
 		
 		super(texture.getTexture(), x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
 		
-		initialize(gameScreen);
+		initialize(gameScreen, c);
 	}
 	
 	@Override
@@ -117,14 +119,20 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		
 		this.setCollide(false);
 		this.setActivated(false);
-		this.gameScreen.notifyDeactivate(this);
+		this.gameScreen.notifyDeactivate(this.getContainer());
 	}
 	
-	protected void initialize(BTNGameScreen gameScreen) {
+	public Container getContainer() {
+		
+		return this.container;
+	}
+
+	protected void initialize(BTNGameScreen gameScreen, Container c) {
 		
 		this.setActivated(false);
 		this.setActorState(STATE_HIDING);
 		
+		this.container = c;
 		this.gameScreen = gameScreen;
 	}
 	

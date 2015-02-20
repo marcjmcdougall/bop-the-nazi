@@ -27,35 +27,32 @@ public class Score extends Actor {
 		this.score = 0;
 		this.lives = DEFAULT_NUMBER_LIVES;
 		
-		LabelStyle style = new LabelStyle(FontFactory.buildFont(22), new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		LabelStyle style = new LabelStyle(FontFactory.buildFont(100), new Color(1.0f, 1.0f, 1.0f, 1.0f));
 		
 		label = new Label("Score: " + score, style);
-		label.setX(getX());
+		label.setX(getX() - label.getWidth() / 2.0f);
 		label.setY(getY());
 		label.setWidth(getWidth());
 		label.setHeight(getHeight());
-		label.setFontScale(5.0f);
 	}
 	
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		
-//		batch.setColor(this.getColor().a, this.getColor().g, this.getColor().b, this.getColor().a * parentAlpha);
 		label.draw(batch, this.getColor().a * parentAlpha);
 	}
 	
 	public void updateScore(int newScore){
 		
 		this.score = newScore;
-		
 		updateScoreText();
 	}
 
 	private void updateScoreText() {
 		
 		label.setText("Score: " + score);
-		label.setX(this.getX() - this.getWidth() / 2.0f);
+		label.setX(label.getX() - label.getWidth() / 2.0f);
 	}
 
 	public int getScore() {

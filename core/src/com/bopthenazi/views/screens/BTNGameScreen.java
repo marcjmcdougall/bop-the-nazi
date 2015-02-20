@@ -126,7 +126,8 @@ public class BTNGameScreen implements Screen{
 	
 	private float timeElapsedSinceLastZombie;
 	
-	private boolean paused;
+	private boolean gamePaused;
+	private boolean hudPaused;
 
 	private Music backgroundMusic;
 
@@ -355,7 +356,25 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void show() {
 		
-		this.setPaused(true);
+		print("SHOWING GAME SCREEN NOW");
+		
+		initialize();
+		
+		if(saveManager.isFirstShot()){
+			
+			showTutorialScreen();
+		}
+		else{
+			
+			begin();
+		}
+	}
+
+	private void initialize() {
+		
+		this.setGamePaused(true);
+		this.setHudPaused(true);
+		
 		this.containers = new Array<Container>(MAX_ZOMBIE_COUNT);
 		this.score = new Score(GAME_WIDTH / 2.0f - 220.0f, (GAME_HEIGHT - Score.SCORE_HEIGHT) - AD_TOP_OFFSET);
 		
@@ -433,18 +452,11 @@ public class BTNGameScreen implements Screen{
 		this.showingGameOverScreen = false;
 		
 		activateContainerContents(containers.get(randomIndex));
-		
-		if(saveManager.isFirstShot()){
-			
-			showTutorialScreen();
-		}
-		else{
-			
-			begin();
-		}
 	}
 
 	private void begin(){
+		
+		this.setHudPaused(false);
 		
 		score.addAction(Actions.fadeIn(3.0f));
 		topBar.addAction(Actions.moveTo(topBar.getX(), TOP_BAR_TOP, 3.0f, Interpolation.pow4));
@@ -475,7 +487,7 @@ public class BTNGameScreen implements Screen{
 									@Override
 									public void run() {
 										
-										BTNGameScreen.this.setPaused(false);
+										BTNGameScreen.this.setGamePaused(false);
 									}
 									
 								})));
@@ -492,7 +504,7 @@ public class BTNGameScreen implements Screen{
 	
 	private void showTutorialScreen() {
 		
-		this.setPaused(true);
+		this.setGamePaused(true);
 		
 		final Group tutorialScreen = new Group();
 		
@@ -564,9 +576,9 @@ public class BTNGameScreen implements Screen{
 		return assetManager.get(MUSIC_PREPEND + musicNamePostPrepend, Music.class);
 	}
 	
-	private void setPaused(boolean paused) {
+	private void setGamePaused(boolean paused) {
 		
-		this.paused = paused;
+		this.gamePaused = paused;
 	}
 
 	@Override
@@ -589,8 +601,11 @@ public class BTNGameScreen implements Screen{
 	        
 	        gameStage.act(delta);
         }
-	        
-        hudStage.act(delta);
+	    
+        if(!isHudPaused()){
+
+            hudStage.act(delta);
+        }
         
         gameStage.draw();
         hudStage.draw();
@@ -598,7 +613,7 @@ public class BTNGameScreen implements Screen{
 
 	public boolean isPaused() {
 		
-		return paused;
+		return gamePaused;
 	}
 
 	private void doActivateUniqueContainer(){
@@ -820,7 +835,7 @@ public class BTNGameScreen implements Screen{
 		}
 		
 		// Pause the game.
-		this.setPaused(true);
+		this.setGamePaused(true);
 		
 //		game.setScreen(new BTNGameOverScreen(game, score.getScore()));
 		
@@ -1142,5 +1157,13 @@ public class BTNGameScreen implements Screen{
 
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+
+	public boolean isHudPaused() {
+		return hudPaused;
+	}
+
+	public void setHudPaused(boolean hudPaused) {
+		this.hudPaused = hudPaused;
 	}
 }

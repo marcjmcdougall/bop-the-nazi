@@ -41,6 +41,8 @@ public class BTNMenuScreen implements Screen {
 	
 	private BTNProgressBar prog;
 	
+	private volatile boolean animationComplete;
+	
 	public BTNMenuScreen(BTNGame game){
 		
 		this.game = game;
@@ -53,6 +55,7 @@ public class BTNMenuScreen implements Screen {
 		FitViewport viewport = new FitViewport(MENU_WIDTH, MENU_HEIGHT);
 		menuStage = new Stage(viewport);
 		
+		this.setAnimationComplete(false);
 		this.bg = new BTNActor(new Texture(Gdx.files.internal("textures/screen-menu/orange-background.png")), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
 		this.title = new BTNActor(new Texture("textures/screen-menu/zombie-bop-menu-title.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.75f, 850.0f, 600.0f);
 		this.stripes = new BTNActor(new Texture("textures/screen-menu/yellow-stripes.png"), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
@@ -96,14 +99,7 @@ public class BTNMenuScreen implements Screen {
 					@Override
 					public void run() {
 						
-						while(true){
-							
-							if(gameScreen.getAssetManager().update()){
-								
-								game.setScreen(gameScreen);
-								break;
-							}
-						}
+						setAnimationComplete(true);
 					}
 				})));
 				
@@ -135,7 +131,10 @@ public class BTNMenuScreen implements Screen {
 		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        gameScreen.getAssetManager().update();
+        if(gameScreen.getAssetManager().update() && isAnimationComplete()){
+        	
+        	game.setScreen(gameScreen);
+        }
         	
         prog.setPercentDraw(gameScreen.getAssetManager().getProgress());
         
@@ -167,5 +166,15 @@ public class BTNMenuScreen implements Screen {
 	public void dispose() {
 		
 		menuStage.dispose();
+	}
+
+	public boolean isAnimationComplete() {
+		
+		return animationComplete;
+	}
+
+	public void setAnimationComplete(boolean animationComplete) {
+		
+		this.animationComplete = animationComplete;
 	}
 }

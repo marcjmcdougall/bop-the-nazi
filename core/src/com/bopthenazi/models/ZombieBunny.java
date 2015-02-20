@@ -3,6 +3,7 @@ package com.bopthenazi.models;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.utils.Collidable;
+import com.bopthenazi.utils.SoundManager;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class ZombieBunny extends BTNContainedActor {
@@ -21,8 +22,8 @@ public class ZombieBunny extends BTNContainedActor {
 		
 		super.onCollide(partner);
 		
-		gameScreen.playSound(BTNGameScreen.SOUND_ID_PUNCH);
-		gameScreen.playSound(BTNGameScreen.SOUND_ID_ZOMBIE_BUNNY_DEATH);
+		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_PUNCH);
+		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_ZOMBIE_BUNNY_DEATH);
 		gameScreen.incrementScore();
 		
 		this.setTextures(new Array<TextureRegion>(new TextureRegion[]{onHitTexture}));

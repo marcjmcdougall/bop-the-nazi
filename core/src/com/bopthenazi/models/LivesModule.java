@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 import com.badlogic.gdx.utils.Array;
+import com.bopthenazi.utils.SoundManager;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class LivesModule{
@@ -72,7 +73,7 @@ public class LivesModule{
 			
 			heartIndex--;
 			
-			gameScreen.playSound(BTNGameScreen.SOUND_ID_SPLAT);
+			gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_SPLAT);
 		}
 	}
 	

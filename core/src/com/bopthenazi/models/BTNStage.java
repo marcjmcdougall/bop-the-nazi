@@ -78,12 +78,6 @@ public class BTNStage extends Stage {
 		
 		screen.notifyNewX(screenCoords.x);
 		
-		if(pointer > 0){
-			
-			screen.setMode(BTNGameScreen.MODE_APOCALYPSE);
-			screen.playSound(BTNGameScreen.SOUND_ID_EXPLOSION);
-		}
-		
 		return super.touchDown(screenX, screenY, pointer, button);
 	}
 	
@@ -117,7 +111,6 @@ public class BTNStage extends Stage {
 		if(keyCode == Keys.X){
 			
 			screen.setMode(BTNGameScreen.MODE_APOCALYPSE);
-			screen.playSound(BTNGameScreen.SOUND_ID_EXPLOSION);
 		}
 		
 		return super.keyDown(keyCode);

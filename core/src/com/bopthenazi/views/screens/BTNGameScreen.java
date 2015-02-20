@@ -41,6 +41,7 @@ import com.bopthenazi.models.TutorialScreenModule;
 import com.bopthenazi.models.Zombie;
 import com.bopthenazi.models.ZombieBunny;
 import com.bopthenazi.utils.SaveManager;
+import com.bopthenazi.utils.SoundManager;
 
 public class BTNGameScreen implements Screen{
 
@@ -48,17 +49,6 @@ public class BTNGameScreen implements Screen{
 	
 	private static final float DEFAULT_VOLUME = 1.0f;
 	private static final float NUMBER_SCALE = 6.0f;
-	
-	public static final int SOUND_ID_SPLAT = 0;
-	public static final int SOUND_ID_PUNCH = 1;
-	public static final int SOUND_ID_EXPLOSION = 2;
-	public static final int SOUND_ID_GAME_OVER = 3;
-	public static final int SOUND_ID_LETS_GO = 4;
-	public static final int SOUND_ID_ZOMBIE_DEATH = 5;
-	public static final int SOUND_ID_BUNNY_DEATH = 6;
-	public static final int SOUND_ID_NEW_RECORD = 7;
-	public static final int SOUND_ID_POWERUP = 8;
-	public static final int SOUND_ID_ZOMBIE_BUNNY_DEATH = 9;
 	
 	private static final int MAX_ZOMBIE_COUNT = 5;
 	private static final int MAX_CONCURRENT_ZOMBIES = 3;
@@ -94,6 +84,7 @@ public class BTNGameScreen implements Screen{
 	private Stage hudStage;
 	
 	private SaveManager saveManager;
+	private SoundManager soundManager;
 	
 	private static final int LAYOUT_NORMAL = 0;
 	private static final int LAYOUT_U = 1;
@@ -128,7 +119,6 @@ public class BTNGameScreen implements Screen{
 	private boolean showingGameOverScreen;
 
 	private static final String TEXTURE_PREPEND = "textures/";
-	private static final String SFX_PREPEND = "sfx/";
 	private static final String FONTS_PREPEND = "fonts/";
 	private static final String MUSIC_PREPEND = "music/";
 
@@ -139,6 +129,8 @@ public class BTNGameScreen implements Screen{
 		this.game = game;
 		
 		this.assetManager = new AssetManager();
+		this.soundManager = new SoundManager(assetManager);
+		
 		beginAssetLoad();
 	}
 	
@@ -208,16 +200,7 @@ public class BTNGameScreen implements Screen{
 		loadTexture("screen-game/numbers/bop.png");
 		
 		// Load sounds...
-		loadSFX("bunny-die.wav");
-		loadSFX("explosion.wav");
-		loadSFX("game-over.wav");
-		loadSFX("lets-go.wav");
-		loadSFX("new-record.wav");
-		loadSFX("punch.wav");
-		loadSFX("splat.wav");
-		loadSFX("zombie-die-2.wav");
-		loadSFX("powerup.wav");
-		loadSFX("zombie-bunny-die.wav");
+		soundManager.beginLoadSFX();
 		
 		// Load music...
 		loadMusic("candyland.mp3");
@@ -234,11 +217,6 @@ public class BTNGameScreen implements Screen{
 	private void loadTexture(String fileNamePostPrepend){
 		
 		this.assetManager.load(TEXTURE_PREPEND + fileNamePostPrepend, Texture.class);
-	}
-	
-	private void loadSFX(String fileNamePostPrepend){
-		
-		this.assetManager.load(SFX_PREPEND + fileNamePostPrepend, Sound.class);
 	}
 	
 	private void loadMusic(String fileNamePostPrepend){
@@ -336,6 +314,7 @@ public class BTNGameScreen implements Screen{
 				// Remove all the actors.
 				gameStage.getActors().removeRange(0, gameStage.getActors().size - 1);
 				
+				// TODO: Alongside issue #33, this needs to be changed to simply rework the state variables of the game.
 				// Simply call "show" again to restart the whole game.
 				BTNGameScreen.this.show();
 			}
@@ -450,12 +429,20 @@ public class BTNGameScreen implements Screen{
 
 	public void begin(){
 		
-		score.addAction(Actions.fadeIn(1.0f));
-		topBar.addAction(Actions.moveTo(topBar.getX(), TOP_BAR_TOP, 1.0f, Interpolation.pow4));
-		bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BOTTOM_BAR_BOTTOM, 1.0f, Interpolation.pow4));
-		
-		playSound(SOUND_ID_LETS_GO);
-		BTNGameScreen.this.setGamePaused(false);
+		// We delay everything by one second to allow the slow Android OS to catch up.
+		score.addAction(Actions.sequence(Actions.delay(0.5f), Actions.run(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				score.addAction(Actions.fadeIn(1.0f));
+				topBar.addAction(Actions.moveTo(topBar.getX(), TOP_BAR_TOP, 1.0f, Interpolation.pow4));
+				bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BOTTOM_BAR_BOTTOM, 1.0f, Interpolation.pow4));
+				
+				soundManager.playSound(SoundManager.SOUND_ID_LETS_GO);
+				BTNGameScreen.this.setGamePaused(false);
+			}
+		})));
 		
 //		three.addAction(Actions.sequence(Actions.alpha(1.0f), Actions.fadeOut(1.0f)));
 //		three.addAction(Actions.sequence(Actions.scaleBy(NUMBER_SCALE, NUMBER_SCALE, 1.0f), Actions.run(new Runnable() {
@@ -510,10 +497,6 @@ public class BTNGameScreen implements Screen{
 		return new TextureRegion(assetManager.get(TEXTURE_PREPEND + textureNamePostPrepend, Texture.class));
 	}
 	
-	public Sound getSound(String soundNamePostPrepend){
-		
-		return assetManager.get(SFX_PREPEND + soundNamePostPrepend, Sound.class);
-	}
 
 	public Music getMusic(String musicNamePostPrepend){
 		
@@ -562,6 +545,8 @@ public class BTNGameScreen implements Screen{
 		// If no Nazis are already activated, then choose one at random.
 		int numContainersActivated = 0;
 		
+		boolean nonDynamiteContentActive = false;
+		
 		print("Activating new container now.");
 		
 		for(Container container : containers){
@@ -569,6 +554,11 @@ public class BTNGameScreen implements Screen{
 			if(container.getContents().isActivated()){
 			
 				numContainersActivated++;
+				
+				if(!container.getContents().getClass().getName().equals(Dynamite.class) && !nonDynamiteContentActive){
+					
+					nonDynamiteContentActive = true;
+				}
 			}
 		}
 		
@@ -625,7 +615,14 @@ public class BTNGameScreen implements Screen{
 								// 5% chance...
 								else{
 									
-									newActor  = new Dynamite(0.0f, 0.0f, this);						
+									if(nonDynamiteContentActive){
+										
+										newActor  = new Dynamite(0.0f, 0.0f, this);	
+									}
+									else{
+										
+										newActor = new Zombie(0.0f, 0.0f, this);
+									}
 								}
 							}
 							
@@ -681,90 +678,6 @@ public class BTNGameScreen implements Screen{
 		assetManager.dispose();
 	}
 
-	public void playSound(int soundID){
-		
-		if(!QUIET_MODE){
-			
-			switch(soundID){
-			
-				case SOUND_ID_PUNCH :{
-					
-//					punchSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("punch.wav").play(DEFAULT_VOLUME * 0.75f);
-					
-					break;
-				}
-				case SOUND_ID_SPLAT :{
-					
-//					splatSound.play(DEFAULT_VOLUME * 0.25f);
-					getSound("splat.wav").play(DEFAULT_VOLUME * 0.25f);
-					
-					break;
-				}
-				case SOUND_ID_EXPLOSION :{
-					
-//					explosionSound.play(DEFAULT_VOLUME * 0.15f);
-					getSound("explosion.wav").play(DEFAULT_VOLUME * 0.15f);
-					
-					break;
-				}
-				case SOUND_ID_GAME_OVER :{
-					
-//					gameOverSound.play(DEFAULT_VOLUME);
-					getSound("game-over.wav").play(DEFAULT_VOLUME);
-					
-					break;
-				}
-				case SOUND_ID_LETS_GO : {
-					
-//					letsGoSound.play(DEFAULT_VOLUME);
-					getSound("lets-go.wav").play(DEFAULT_VOLUME);
-					
-					break;
-				}
-				case SOUND_ID_BUNNY_DEATH : {
-					
-//					bunnyDeathSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("bunny-die.wav").play(DEFAULT_VOLUME * 0.75f);
-					
-					break;
-				}
-				case SOUND_ID_ZOMBIE_DEATH : {
-					
-//					zombieDeathSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("zombie-die-2.wav").play(DEFAULT_VOLUME * 0.75f);
-					
-					break;
-				}
-				case SOUND_ID_NEW_RECORD : {
-					
-//					newRecordSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("new-record.wav").play(DEFAULT_VOLUME * 0.75f);
-					
-					break;
-				}
-				case SOUND_ID_POWERUP :{
-					
-					getSound("powerup.wav").play();
-					
-					break;
-				}
-				case SOUND_ID_ZOMBIE_BUNNY_DEATH :{
-					
-//					zombieBunnyDieSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("zombie-bunny-die.wav").play(DEFAULT_VOLUME * 0.75f);
-					
-					break;
-				}
-				default :{
-					
-					// Do nothing.
-					break;
-				}
-			}
-		}
-	}
-	
 	public void doEndGame() {
 		
 		Gdx.app.log(BTNGame.TAG, "Game Over!");
@@ -777,7 +690,7 @@ public class BTNGameScreen implements Screen{
 		// Pause the game.
 		this.setGamePaused(true);
 		
-		playSound(SOUND_ID_GAME_OVER);
+		soundManager.playSound(SoundManager.SOUND_ID_GAME_OVER);
 		
 		if(score.getScore() > Integer.parseInt(saveManager.retrieveScore())){
 			
@@ -789,7 +702,7 @@ public class BTNGameScreen implements Screen{
 				@Override
 				public void run() {
 					
-					playSound(SOUND_ID_NEW_RECORD);
+					soundManager.playSound(SoundManager.SOUND_ID_NEW_RECORD);
 				}
 				
 			})));
@@ -908,14 +821,14 @@ public class BTNGameScreen implements Screen{
 	public void doExplosionSplash() {
 		
 		explosionSplash.setVisible(true);
+		explosionSplash.getColor().a = 1.0f;
+		explosionSplash.clearActions();
 		
 		AlphaAction fadein = new AlphaAction();
 		fadein.setAlpha(1.0f);
 		fadein.setDuration(3.0f);
 		
-		AlphaAction fadeout = new AlphaAction();
-		fadein.setAlpha(0.0f);
-		fadein.setDuration(2.0f);
+		AlphaAction fadeout = Actions.fadeOut(1.0f);
 		
 		RunnableAction endGame = new RunnableAction();
 		endGame.setRunnable(new Runnable() {
@@ -923,7 +836,7 @@ public class BTNGameScreen implements Screen{
 			@Override
 			public void run() {
 				
-				explosionSplash.setVisible(false);
+				explosionSplash.getColor().a = 0.0f;
 			}
 		});
 		
@@ -941,10 +854,10 @@ public class BTNGameScreen implements Screen{
 		}
 		
 		SequenceAction sequence = new SequenceAction();
-		sequence.addAction(fadein);
+//		sequence.addAction(fadein);
 		sequence.addAction(fadeout);
-		sequence.addAction(endGame);
-		sequence.addAction(fadeBackIn);
+//		sequence.addAction(endGame);
+//		sequence.addAction(fadeBackIn);
 		
 		explosionSplash.addAction(sequence);
 	}
@@ -1010,5 +923,9 @@ public class BTNGameScreen implements Screen{
 
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+
+	public SoundManager getSoundManager() {
+		return soundManager;
 	}
 }

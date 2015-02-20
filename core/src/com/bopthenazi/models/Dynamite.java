@@ -3,6 +3,7 @@ package com.bopthenazi.models;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.utils.Collidable;
+import com.bopthenazi.utils.SoundManager;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Dynamite extends BTNContainedActor {
@@ -18,7 +19,7 @@ public class Dynamite extends BTNContainedActor {
 		
 		super.onCollide(partner);
 		
-		gameScreen.playSound(BTNGameScreen.SOUND_ID_EXPLOSION);
+		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_EXPLOSION);
 		
 		gameScreen.doExplosionSplash();
 	}

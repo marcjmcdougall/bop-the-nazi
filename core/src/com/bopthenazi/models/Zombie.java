@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.utils.Collidable;
+import com.bopthenazi.utils.SoundManager;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Zombie extends BTNContainedActor {
@@ -38,8 +39,8 @@ public class Zombie extends BTNContainedActor {
 		
 		this.setTextures(new Array<TextureRegion>(new TextureRegion[]{onHitTexture}));
 		
-		gameScreen.playSound(BTNGameScreen.SOUND_ID_PUNCH);
-		gameScreen.playSound(BTNGameScreen.SOUND_ID_ZOMBIE_DEATH);
+		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_PUNCH);
+		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_ZOMBIE_DEATH);
 		gameScreen.incrementScore();
 	}
 	

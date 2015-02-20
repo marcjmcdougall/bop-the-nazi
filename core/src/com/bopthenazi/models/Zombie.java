@@ -3,6 +3,7 @@ package com.bopthenazi.models;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.utils.Collidable;
 import com.bopthenazi.views.screens.BTNGameScreen;
@@ -19,7 +20,7 @@ public class Zombie extends BTNContainedActor {
 	
 	private Random random;
 	
-	private Texture onHitTexture;
+	private TextureRegion onHitTexture;
 	
 	public Zombie(float x, float y, BTNGameScreen screen){
 		
@@ -35,7 +36,7 @@ public class Zombie extends BTNContainedActor {
 		
 		super.onCollide(partner);
 		
-		this.setTextures(new Array<Texture>(new Texture[]{onHitTexture}));
+		this.setTextures(new Array<TextureRegion>(new TextureRegion[]{onHitTexture}));
 		
 		gameScreen.playSound(BTNGameScreen.SOUND_ID_PUNCH);
 		gameScreen.playSound(BTNGameScreen.SOUND_ID_ZOMBIE_DEATH);
@@ -50,14 +51,14 @@ public class Zombie extends BTNContainedActor {
 		
 			case ZOMBIE_TYPE_OFFICE :{
 				
-				this.setTextures(new Array<Texture>(new Texture[]{getGameScreen().getTexture("screen-game/zombie-2/zombie-2.png")/*, new Texture("zombie-2.png"), new Texture("zombie-2.png"), new Texture("zombie2-hit-frame.png")*/}));
+				this.setTextures(new Array<TextureRegion>(new TextureRegion[]{getGameScreen().getTexture("screen-game/zombie-2/zombie-2.png")/*, new Texture("zombie-2.png"), new Texture("zombie-2.png"), new Texture("zombie2-hit-frame.png")*/}));
 				this.onHitTexture = getGameScreen().getTexture("screen-game/zombie-2/zombie2-hit-frame.png");
 				
 				break;
 			}
 			case ZOMBIE_TYPE_SHIRT :{
 				
-				this.setTextures(new Array<Texture>(new Texture[]{getGameScreen().getTexture("screen-game/zombie/zombie.png")/*, new Texture("zombie.png"), new Texture("zombie.png"), new Texture("zombie1-hit-frame.png")*/}));
+				this.setTextures(new Array<TextureRegion>(new TextureRegion[]{getGameScreen().getTexture("screen-game/zombie/zombie.png")/*, new Texture("zombie.png"), new Texture("zombie.png"), new Texture("zombie1-hit-frame.png")*/}));
 				this.onHitTexture = getGameScreen().getTexture("screen-game/zombie/zombie1-hit-frame.png");
 				
 				break;

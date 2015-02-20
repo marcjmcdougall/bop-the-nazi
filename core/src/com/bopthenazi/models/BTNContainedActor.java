@@ -1,6 +1,7 @@
 package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -36,16 +37,16 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		initialize(null);
 	}
 	
-	public BTNContainedActor(Array<Texture> textures, float x, float y, BTNGameScreen gameScreen){
+	public BTNContainedActor(Array<TextureRegion> textures, float x, float y, BTNGameScreen gameScreen){
 		
 		super(textures, x, y, CONTENT_WIDTH, CONTENT_HEIGHT, x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
 		
 		initialize(gameScreen);
 	}
 	
-	public BTNContainedActor(Texture texture, float x, float y, BTNGameScreen gameScreen){
+	public BTNContainedActor(TextureRegion texture, float x, float y, BTNGameScreen gameScreen){
 		
-		super(texture, x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
+		super(texture.getTexture(), x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
 		
 		initialize(gameScreen);
 	}

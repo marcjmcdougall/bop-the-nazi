@@ -1,6 +1,7 @@
 package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
@@ -23,7 +24,7 @@ public class Explosion extends BTNActor {
 	
 	public Explosion(float x, float y, boolean expand, BTNGameScreen gameScreen){
 		
-		super(new Array<Texture>(new Texture[]{gameScreen.getTexture("screen-game/explosion/explosion-01.png"), gameScreen.getTexture("screen-game/explosion/explosion-02.png"), 
+		super(new Array<TextureRegion>(new TextureRegion[]{gameScreen.getTexture("screen-game/explosion/explosion-01.png"), gameScreen.getTexture("screen-game/explosion/explosion-02.png"), 
 				gameScreen.getTexture("screen-game/explosion/explosion-03.png"), /*new Texture("explosion-04.png")*/}), 
 				x, y, EXPLOSION_WIDTH, EXPLOSION_HEIGHT, x, y, EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
 	

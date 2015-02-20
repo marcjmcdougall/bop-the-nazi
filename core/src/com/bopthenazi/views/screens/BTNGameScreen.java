@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -369,15 +370,15 @@ public class BTNGameScreen implements Screen{
 		gameStage = new BTNStage(viewport, game, this);
 		hudStage = new Stage(viewport);
 		
-		bg = new BTNActor(getTexture("screen-game/background.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f) - AD_TOP_OFFSET, GAME_WIDTH, GAME_HEIGHT);
-		gloveCase = new BTNActor(getTexture("screen-game/mover.png"), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
+		bg = new BTNActor(getTexture("screen-game/background.png").getTexture(), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f) - AD_TOP_OFFSET, GAME_WIDTH, GAME_HEIGHT);
+		gloveCase = new BTNActor(getTexture("screen-game/mover.png").getTexture(), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
-		topBar = new BTNActor(getTexture("screen-game/top-bar.png"), GAME_WIDTH / 2.0f, /*(GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f) - AD_TOP_OFFSET*/TOP_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
-		bottomBar = new BTNActor(getTexture("screen-game/bottom-bar.png"), GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
-		one = new BTNActor(getTexture("screen-game/numbers/1.png"), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
-		two = new BTNActor(getTexture("screen-game/numbers/2.png"), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
-		three = new BTNActor(getTexture("screen-game/numbers/3.png"), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
-		bop = new BTNActor(getTexture("screen-game/numbers/bop.png"), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
+		topBar = new BTNActor(getTexture("screen-game/top-bar.png").getTexture(), GAME_WIDTH / 2.0f, /*(GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f) - AD_TOP_OFFSET*/TOP_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
+		bottomBar = new BTNActor(getTexture("screen-game/bottom-bar.png").getTexture(), GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
+		one = new BTNActor(getTexture("screen-game/numbers/1.png").getTexture(), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
+		two = new BTNActor(getTexture("screen-game/numbers/2.png").getTexture(), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
+		three = new BTNActor(getTexture("screen-game/numbers/3.png").getTexture(), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
+		bop = new BTNActor(getTexture("screen-game/numbers/bop.png").getTexture(), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
 		
 		one.setOrigin(one.getWidth() / 2.0f, one.getHeight() / 2.0f);
 		two.setOrigin(two.getWidth() / 2.0f, two.getHeight() / 2.0f);
@@ -391,7 +392,7 @@ public class BTNGameScreen implements Screen{
 		
 		saveManager = new SaveManager();
 		
-		explosionSplash = new BTNActor(getTexture("screen-game/explosion-splash.png"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+		explosionSplash = new BTNActor(getTexture("screen-game/explosion-splash.png").getTexture(), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
 		
 		gameStage.addActor(bg);
 		
@@ -495,10 +496,10 @@ public class BTNGameScreen implements Screen{
 		
 		final Group tutorialScreen = new Group();
 		
-		final BTNActor alpha = new BTNActor(getTexture("screen-game-over/alpha-25.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f);
-		final BTNActor bg = new BTNActor(getTexture("screen-tutorial/instructions-screen.png"), BTNGameScreen.GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.55f);
+		final BTNActor alpha = new BTNActor(getTexture("screen-game-over/alpha-25.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f);
+		final BTNActor bg = new BTNActor(getTexture("screen-tutorial/instructions-screen.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - 200.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.55f);
 		
-		final BasicButton ok = new BasicButton(getTexture("screen-tutorial/ok-button-up-state.png"), getTexture("screen-tutorial/ok-button-down-state.png"), GAME_WIDTH * 0.72f, GAME_HEIGHT * 0.2f, 200.0f, 150.0f);
+		final BasicButton ok = new BasicButton(getTexture("screen-tutorial/ok-button-up-state.png").getTexture(), getTexture("screen-tutorial/ok-button-down-state.png").getTexture(), GAME_WIDTH * 0.72f, GAME_HEIGHT * 0.2f, 200.0f, 150.0f);
 		
 		ok.addListener(new InputListener(){
 			
@@ -548,9 +549,9 @@ public class BTNGameScreen implements Screen{
 		hudStage.addActor(tutorialScreen);
 	}
 
-	public Texture getTexture(String textureNamePostPrepend) {
+	public TextureRegion getTexture(String textureNamePostPrepend) {
 		
-		return assetManager.get(TEXTURE_PREPEND + textureNamePostPrepend, Texture.class);
+		return new TextureRegion(assetManager.get(TEXTURE_PREPEND + textureNamePostPrepend, Texture.class));
 	}
 	
 	public Sound getSound(String soundNamePostPrepend){

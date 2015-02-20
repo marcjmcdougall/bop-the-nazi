@@ -650,7 +650,6 @@ public class BTNGameScreen implements Screen{
 							
 							int cursor = new Random().nextInt(10);
 							
-							
 							// 60% chance...
 							if(cursor < 6){
 								

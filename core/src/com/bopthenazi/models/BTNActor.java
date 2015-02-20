@@ -27,7 +27,7 @@ public class BTNActor extends Actor implements Collidable{
 	private static final String DEFAULT_TEXTURE = "alpha-25.png";
 	
 	private boolean collidable;
-	private Array<Texture> textures;
+	private Array<TextureRegion> textures;
 	private Rectangle rect;
 	
 	private float fps;
@@ -51,17 +51,17 @@ public class BTNActor extends Actor implements Collidable{
 		this(texture, x, y, width, height, x, y, width, height);
 	}
 	
-	public BTNActor(Array<Texture> textures, float x, float y, float width, float height){
+	public BTNActor(Array<TextureRegion> textures, float x, float y, float width, float height){
 		
 		this(textures, x, y, width, height, x, y, width, height);
 	}
 	
 	public BTNActor(Texture texture, float x, float y, float width, float height, float xHitBox, float yHitBox, float widthHitBox, float heightHitBox) {
 		
-		this(new Array<Texture>(new Texture[]{texture}), x, y, width, height, x, y, width, height);
+		this(new Array<TextureRegion>(new TextureRegion[]{new TextureRegion(texture)}), x, y, width, height, x, y, width, height);
 	}
 	
-	public BTNActor(Array<Texture> textures, float x, float y, float width, float height, float xHitBox, float yHitBox, float widthHitBox, float heightHitBox){
+	public BTNActor(Array<TextureRegion> textures, float x, float y, float width, float height, float xHitBox, float yHitBox, float widthHitBox, float heightHitBox){
 		
 		super();
 		
@@ -116,7 +116,7 @@ public class BTNActor extends Actor implements Collidable{
 //		batch.draw(textures.get(frameIndex), this.getX() - (this.getWidth() / 2.0f), this.getY() - (this.getHeight() / 2.0f), this.getWidth() / 2.0f, this.getHeight() / 2.0f, this.getWidth(), this.getHeight(), 1.0f, 1.0f, this.getRotation(), 0, 0, Math.round(this.getWidth()), Math.round(this.getHeight()), false, false);
 	
 		batch.setColor(this.getColor().a, this.getColor().g, this.getColor().b, this.getColor().a * parentAlpha);
-		batch.draw(new TextureRegion(textures.get(frameIndex)), this.getX() - (this.getWidth() / 2.0f), (this.getY()/* - 133.5f*/) - (this.getHeight() / 2.0f), this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
+		batch.draw(textures.get(frameIndex), this.getX() - (this.getWidth() / 2.0f), (this.getY()/* - 133.5f*/) - (this.getHeight() / 2.0f), this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
 	}
 	
 	/**
@@ -251,11 +251,13 @@ public class BTNActor extends Actor implements Collidable{
 		this.fps = fps;
 	}
 
-	public Array<Texture> getTextures() {
+	public Array<TextureRegion> getTextures() {
+		
 		return textures;
 	}
 
-	public void setTextures(Array<Texture> textures) {
+	public void setTextures(Array<TextureRegion> textures) {
+		
 		this.textures = textures;
 	}
 }

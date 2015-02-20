@@ -55,17 +55,17 @@ public class GameOverModule extends Group {
 		
 		gameOverAlpha = new BTNActor(gameScreen.getTexture("screen-game-over/alpha-25.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH, BTNGameScreen.GAME_HEIGHT);
 		background = new BTNActor(gameScreen.getTexture("screen-game-over/game-over-box.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f - 200.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.6f);
-		gameOverImage = new BTNActor(gameScreen.getTexture("screen-game-over/game-over-text.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f + 25.0f, BTNGameScreen.GAME_WIDTH * 0.40f, BTNGameScreen.GAME_HEIGHT * 0.15f);
+		gameOverImage = new BTNActor(gameScreen.getTexture("screen-game-over/game-over-text.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f + 25.0f, BTNGameScreen.GAME_WIDTH * 0.6f, BTNGameScreen.GAME_HEIGHT * 0.225f);
 		
 		scoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		scoreLabel.setHeight(100.0f);
 		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getWidth() / 2.0f));
-		scoreLabel.setY((620.0f + (scoreLabel.getHeight() / 2.0f)));
+		scoreLabel.setY((590.0f + (scoreLabel.getHeight() / 2.0f)));
 		
 		highScoreLabel = new Label("High Score: " + highScore, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		highScoreLabel.setHeight(100.0f);
 		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
-		highScoreLabel.setY((520.0f + (highScoreLabel.getHeight() / 2.0f)));
+		highScoreLabel.setY((490.0f + (highScoreLabel.getHeight() / 2.0f)));
 		
 		restart = new BasicButton(new Texture("textures/screen-game-over/restart-button.png"), new Texture("textures/screen-game-over/restart-button-down-state.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f - 550.0f);
 	
@@ -141,7 +141,10 @@ public class GameOverModule extends Group {
 	private void updateLabels(){
 		
 		scoreLabel.setText(SCORE_PREPEND + score);
+		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getWidth() / 2.0f));
+		
 		highScoreLabel.setText(HIGH_SCORE_PREPEND + highScore);
+		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
 	}
 
 	public boolean isShowing() {

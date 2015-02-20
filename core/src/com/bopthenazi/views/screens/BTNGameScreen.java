@@ -111,6 +111,8 @@ public class BTNGameScreen implements Screen{
 
 	private boolean showingGameOverScreen;
 
+	private boolean tempTrue;
+
 	private static final String TEXTURE_PREPEND = "textures/";
 	private static final String FONTS_PREPEND = "fonts/";
 	private static final String MUSIC_PREPEND = "music/";
@@ -401,8 +403,11 @@ public class BTNGameScreen implements Screen{
 		
 		initialize();
 		
-		if(saveManager.isFirstShot()){
+		tempTrue = true;
+		
+		if(/*saveManager.isFirstShot()*/ tempTrue){
 			
+			tempTrue = false;
 			showTutorialScreen();
 		}
 		else{

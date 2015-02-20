@@ -7,15 +7,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -27,7 +24,6 @@ import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNContainedActor;
 import com.bopthenazi.models.BTNStage;
-import com.bopthenazi.models.BasicButton;
 import com.bopthenazi.models.Bunny;
 import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Dynamite;
@@ -45,9 +41,6 @@ import com.bopthenazi.utils.SoundManager;
 
 public class BTNGameScreen implements Screen{
 
-	private static final boolean QUIET_MODE = false;
-	
-	private static final float DEFAULT_VOLUME = 1.0f;
 	private static final float NUMBER_SCALE = 6.0f;
 	
 	private static final int MAX_ZOMBIE_COUNT = 5;
@@ -69,7 +62,7 @@ public class BTNGameScreen implements Screen{
 	public static final float TOP_BAR_TOGETHER = GAME_HEIGHT * 1.2925f;
 	public static final float BOTTOM_BAR_TOGETHER = GAME_HEIGHT * -0.40f;
 	
-	private float baseFrequencyContainerActivate = 0.25f;
+	private float baseFrequencyContainerActivate = 1.0f;
 	
 	private static final int MODE_STANDARD = 0;
 	public static final int MODE_APOCALYPSE = 1;
@@ -303,24 +296,106 @@ public class BTNGameScreen implements Screen{
 
 	public void reset(){
 		
-		this.gameOverScreen.getGameOverAlpha().addAction(Actions.fadeOut(1.0f));
-		this.gameOverScreen.addAction(Actions.fadeOut(1.0f));
-		
+//		this.gameOverScreen.getGameOverAlpha().addAction(Actions.fadeOut(1.0f));
 		gameOverScreen.addAction(Actions.sequence(Actions.fadeOut(1.0f), Actions.run(new Runnable() {
 			
 			@Override
 			public void run() {
 				
 				// Remove all the actors.
-				gameStage.getActors().removeRange(0, gameStage.getActors().size - 1);
+//				gameStage.getActors().removeRange(0, gameStage.getActors().size - 1);
 				
 				// TODO: Alongside issue #33, this needs to be changed to simply rework the state variables of the game.
 				// Simply call "show" again to restart the whole game.
-				BTNGameScreen.this.show();
+//				BTNGameScreen.this.show();
 			}
 		})));
+		
+		BTNGameScreen.this.softReset();
 	}
 	
+	private void softReset(){
+		
+		this.setMode(MODE_STANDARD);
+		this.score.updateScore(0);
+		this.score.setLives(Score.DEFAULT_NUMBER_LIVES);
+		this.livesModule.reset();
+		this.glove.setX(GAME_WIDTH / 2.0f);
+		
+		for(Container container : containers){
+			
+			if(container.getContents() != null){
+				
+				container.getContents().remove();
+				container.setContents(generateRandomContainedActor(false));
+			}
+		}
+		
+		this.begin(0.0f);
+	}
+	
+	private BTNContainedActor generateRandomContainedActor(boolean generateDynamite) {
+
+		BTNContainedActor newActor = null;
+		
+		if(getMode() == MODE_STANDARD){
+			
+			float cursor = new Random().nextInt(10);
+			
+			// 70% chance...
+			if(cursor < 7){
+				
+				cursor = new Random().nextInt(2);
+				
+				// 30% chance...
+				if(cursor == 0){
+					
+					newActor = new Zombie(0.0f, 0.0f, this);
+				}
+				// 30% chance...
+				else{
+					
+					newActor = new ZombieBunny(0.0f, 0.0f, this);						
+				}
+			}
+			// 20% chance...
+			else if(cursor < 9){
+				
+				newActor = new Bunny(0.0f, 0.0f, this);
+			}
+			// 10% chance...
+			else{
+				
+				cursor = new Random().nextInt(2);
+				
+				// 2.5% chance...
+				if(cursor == 0 && this.score.getLives() < Score.DEFAULT_NUMBER_LIVES){
+					
+					newActor = new Heart(0.0f, 0.0f, this);
+				}
+				// 2.5% chance...
+				else{
+					
+					if(generateDynamite){
+						
+						newActor  = new Dynamite(0.0f, 0.0f, this);	
+					}
+					else{
+						
+						newActor = new Zombie(0.0f, 0.0f, this);
+					}
+				}
+			}
+			
+		}
+		else if(getMode() == MODE_APOCALYPSE){
+			
+			newActor = new Random().nextInt(2) == 1 ? new Zombie(0.0f, 0.0f, this) : new ZombieBunny(0.0f, 0.0f, this);
+		}
+		
+		return newActor;
+	}
+
 	@Override
 	public void show() {
 		
@@ -332,7 +407,7 @@ public class BTNGameScreen implements Screen{
 		}
 		else{
 			
-			begin();
+			begin(0.5f);
 		}
 	}
 
@@ -427,10 +502,10 @@ public class BTNGameScreen implements Screen{
 		activateContainerContents(containers.get(randomIndex));
 	}
 
-	public void begin(){
+	public void begin(float initialDelay){
 		
 		// We delay everything by one second to allow the slow Android OS to catch up.
-		score.addAction(Actions.sequence(Actions.delay(0.5f), Actions.run(new Runnable() {
+		score.addAction(Actions.sequence(Actions.delay(initialDelay), Actions.run(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -575,64 +650,7 @@ public class BTNGameScreen implements Screen{
 						
 						containers.get(index).getContents().remove();
 						
-						BTNContainedActor newActor = null;
-						
-						if(getMode() == MODE_STANDARD){
-							
-							int cursor = new Random().nextInt(10);
-							
-							// 60% chance...
-							if(cursor < 6){
-								
-								cursor = new Random().nextInt(2);
-								
-								// 30% chance...
-								if(cursor == 0){
-									
-									newActor = new Zombie(0.0f, 0.0f, this);
-								}
-								// 30% chance...
-								else{
-									
-									newActor = new ZombieBunny(0.0f, 0.0f, this);						
-								}
-							}
-							// 30% chance...
-							else if(cursor < 9){
-								
-								newActor = new Bunny(0.0f, 0.0f, this);
-							}
-							// 10% chance...
-							else{
-								
-								cursor = new Random().nextInt(2);
-								
-								// 5% chance...
-								if(cursor == 0 && this.score.getLives() < Score.DEFAULT_NUMBER_LIVES){
-									
-									newActor = new Heart(0.0f, 0.0f, this);
-								}
-								// 5% chance...
-								else{
-									
-									if(nonDynamiteContentActive){
-										
-										newActor  = new Dynamite(0.0f, 0.0f, this);	
-									}
-									else{
-										
-										newActor = new Zombie(0.0f, 0.0f, this);
-									}
-								}
-							}
-							
-						}
-						else if(getMode() == MODE_APOCALYPSE){
-							
-							newActor = new Random().nextInt(2) == 1 ? new Zombie(0.0f, 0.0f, this) : new ZombieBunny(0.0f, 0.0f, this);
-						}
-	
-						containers.get(index).setContents(newActor);
+						containers.get(index).setContents(generateRandomContainedActor(nonDynamiteContentActive));
 						
 						activateContainerContents(containers.get(index));
 						break;
@@ -752,6 +770,7 @@ public class BTNGameScreen implements Screen{
 		print("==========================");
 		print("> Glove.getCurrentAction: " + glove.getCurrentAction());
 		print("> Glove.getCachedAction: " + glove.getCachedAction());
+		print("> GameOverScreen.isVisible: " + gameOverScreen.isVisible());
 		
 		print("==========================");
 	}

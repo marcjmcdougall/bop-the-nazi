@@ -48,7 +48,7 @@ public class TutorialScreenModule extends Group {
 				bg.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));
 				ok.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));
 				
-				gameScreen.begin();
+				gameScreen.begin(0.5f);
 				
 				TutorialScreenModule.this.addAction(Actions.sequence(Actions.alpha(0.0f, 1.0f), Actions.run(new Runnable() {
 					

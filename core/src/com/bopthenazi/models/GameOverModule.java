@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -30,6 +31,8 @@ public class GameOverModule extends Group {
 	private Label highScoreLabel;
 	
 	private BasicButton restart;
+	
+	private float hiddenY;
 	
 	private int score;
 	private int highScore;
@@ -84,14 +87,20 @@ public class GameOverModule extends Group {
 				
 				super.touchUp(event, x, y, pointer, button);
 				
-				gameOverAlpha.addAction(Actions.fadeOut(1.0f));
-				GameOverModule.this.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));
-				
 				gameScreen.reset();
+				
+				gameOverAlpha.addAction(Actions.fadeOut(1.0f));
+				GameOverModule.this.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4), Actions.run(new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						GameOverModule.this.setVisible(false);
+					}
+				})));
 				
 //				TODO: Move to BTNGameScreen#reset()
 //				BTNGameScreen.this. score.addAction(Actions.fadeOut(1.0f));
-//				
 			}
 		});
 		
@@ -103,6 +112,8 @@ public class GameOverModule extends Group {
 		this.addActor(scoreLabel);
 		this.addActor(highScoreLabel);
 		this.addActor(restart);
+		
+		this.hiddenY = getY() + 2000.0f;
 	}
 	
 	public void doAnimate(){
@@ -110,7 +121,7 @@ public class GameOverModule extends Group {
 		setShowing(true);
 		setVisible(true);
 		
-		MoveByAction moveOutInstant = Actions.moveBy(0.0f, 2000.0f);
+		MoveToAction moveOutInstant = Actions.moveTo(getX(), hiddenY);
 		MoveByAction moveIn = Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4);
 		
 		this.addAction(moveOutInstant);

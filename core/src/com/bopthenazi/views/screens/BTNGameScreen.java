@@ -140,6 +140,7 @@ public class BTNGameScreen implements Screen{
 		
 		loadTexture("screen-game/container/tunnel-back.png");
 		loadTexture("screen-game/container/tunnel-front.png");
+		loadTexture("screen-game/container/heart-minus.png");
 		
 		loadTexture("screen-game/dynamite/dynamite-01.png");
 		loadTexture("screen-game/dynamite/dynamite-02.png");
@@ -329,6 +330,7 @@ public class BTNGameScreen implements Screen{
 			if(container.getContents() != null){
 				
 				container.getContents().remove();
+				
 				container.setContents(generateRandomContainedActor(false, container));
 			}
 		}
@@ -841,6 +843,7 @@ public class BTNGameScreen implements Screen{
 		if(!(zombie.getActorState() == BTNContainedActor.STATE_HIT)){
 			
 			subtractLife();
+			zombie.getContainer().animateHeart();
 		}
 	}
 

@@ -32,6 +32,8 @@ public class Bunny extends BTNContainedActor {
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_BUNNY_DEATH);
 		gameScreen.subtractLife();
 		
+		this.getContainer().animateHeart();
+		
 		this.setTextures(new Array<TextureRegion>(new TextureRegion[]{onHitTexture}));
 	}
 	

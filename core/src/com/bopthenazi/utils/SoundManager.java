@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
 
-	private static final boolean QUIET_MODE = false;
+	private static final boolean QUIET_MODE = true;
 	
 	private static final float DEFAULT_VOLUME = 1.0f;
 	

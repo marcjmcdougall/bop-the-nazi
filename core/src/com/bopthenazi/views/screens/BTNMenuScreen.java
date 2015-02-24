@@ -64,7 +64,7 @@ public class BTNMenuScreen implements Screen {
 		this.bottomBar = new BTNActor(new Texture("textures/screen-game/bottom-bar.png"), MENU_WIDTH / 2.0f, BTNGameScreen.BOTTOM_BAR_BOTTOM + 625.0f, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
 		this.startGame = new BasicButton(new Texture("textures/screen-menu/start-button-up.png"), new Texture("textures/screen-menu/start-button-down.png"), MENU_WIDTH / 2.0f, 125.0f, MENU_WIDTH * 0.70f, 200.0f);
 		this.stripes.setOriginX(stripes.getWidth() / 2.0f);
-		this.stripes.setOriginY((stripes.getHeight() / 2.0f) - 200.0f);
+		this.stripes.setOriginY(stripes.getHeight() / 2.0f);
 		this.prog = new BTNProgressBar(new Texture("textures/screen-menu/progress-bar/pb-back.png"), new Texture("textures/screen-menu/progress-bar/pb-front.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f - 450.0f, 1000.0f, 200.0f);
 		
 		this.prog.getColor().a = 0.0f;

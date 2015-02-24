@@ -1,6 +1,5 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.utils.Action;
-import com.bopthenazi.utils.Collidable;
 import com.bopthenazi.utils.Action.ActionType;
 import com.bopthenazi.views.screens.BTNGameScreen;
 import com.bopthenazi.views.screens.BTNMenuScreen;
@@ -84,7 +82,7 @@ public class BTNStage extends Stage {
 	@Override
 	public boolean keyDown(int keyCode) {
 		
-		if(keyCode == Keys.BACKSPACE){
+		if(keyCode == Keys.BACKSPACE || keyCode == Keys.BACK){
 			
 			game.setScreen(new BTNMenuScreen(game));
 		}

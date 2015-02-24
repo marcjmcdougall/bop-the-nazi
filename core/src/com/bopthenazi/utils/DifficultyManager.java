@@ -6,6 +6,9 @@ import com.bopthenazi.game.BTNGame;
 
 public class DifficultyManager {
 	
+	// The value that we use to decrease the difficulty decrease amount by each iteration.  This prevents abuse of the difficulty mechanic.
+	private static final float DIFFICULTY_DECREASE_DELTA_MODIFIER = 0.005f;
+
 	// The absolute max number of containers allowed to be active at once.
 	public static final int MAX_CONTAINERS = 5;
 	
@@ -16,7 +19,7 @@ public class DifficultyManager {
 	private static final float DEFAULT_NEW_CONTAINER_SPAWN_RATE = 1.0f;
 	
 	// The default for the rate at which the difficulty is updated.  This should be constant for a linear difficulty progression.
-	private static final float DEFAULT_DIFFICULTY_UPDATE_RATE = 0.5f;
+	private static final float DEFAULT_DIFFICULTY_UPDATE_RATE = 2.0f;
 	
 	// The default for the amount which we increase the difficulty by at each iteration.  Additionally, this will be the amount we 
 	// will decrease the difficulty when a heart is lost.
@@ -85,13 +88,13 @@ public class DifficultyManager {
 			
 			if(timeSinceLastDifficultyUpdate >= difficultyUpdateRate){
 				
-				if(totalTimePlayed >= 30.0f){
+				increaseDifficulty();
+				
+				if(difficultyDecreaseDelta - DIFFICULTY_DECREASE_DELTA_MODIFIER >= 0){
 					
-					difficultyDecreaseDelta /= totalTimePlayed;
-//					difficultyIncreaseDelta /= totalTimePlayed;
+					this.difficultyDecreaseDelta -= DIFFICULTY_DECREASE_DELTA_MODIFIER;
 				}
 				
-				increaseDifficulty();
 				this.timeSinceLastDifficultyUpdate = 0.0f;
 			}
 			else{

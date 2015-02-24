@@ -83,7 +83,8 @@ public class BTNGameScreen implements Screen{
 	private static final int LAYOUT_U = 1;
 	private static final int CONTAINER_LAYOUT = LAYOUT_NORMAL;
 	
-	private static final float[] NORMAL_CONTAINER_COORDINATES = {137.625f, 540.0f, 942.375f, 341.3125f, 752.6875f};
+//	private static final float[] NORMAL_CONTAINER_COORDINATES = {137.625f, 540.0f, 942.375f, 341.3125f, 752.6875f};
+	private static final float[] NORMAL_CONTAINER_COORDINATES = {137.625f, 540.0f, 942.375f, 331.3125f, 742.6875f};
 
 	private Array<Container> containers;
 
@@ -274,11 +275,11 @@ public class BTNGameScreen implements Screen{
 			
 		if(i < 3){
 			
-			containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) - AD_TOP_OFFSET, this));
+			containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], (BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN)/* - AD_TOP_OFFSET*/, this));
 		}
 		else if(i >= 3){
 			
-			containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], ((BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2) - AD_TOP_OFFSET, this));
+			containers.add(new Container(NORMAL_CONTAINER_COORDINATES[i], ((BAR_OFFSET_LOWER + ZOMBIE_OFFSET_HORIZONTAL_MARGIN) * 2)/* - AD_TOP_OFFSET*/, this));
 		}
 	}
 	
@@ -439,7 +440,7 @@ public class BTNGameScreen implements Screen{
 		hudStage = new Stage(viewport);
 		
 		gameOverScreen = new GameOverModule(this);
-		bg = new BTNActor(getTexture("screen-game/background.png").getTexture(), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f) - AD_TOP_OFFSET, GAME_WIDTH, GAME_HEIGHT);
+		bg = new BTNActor(getTexture("screen-game/background.png").getTexture(), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f)/* - AD_TOP_OFFSET*/, GAME_WIDTH, GAME_HEIGHT);
 		gloveCase = new BTNActor(getTexture("screen-game/mover.png").getTexture(), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
 		topBar = new BTNActor(getTexture("screen-game/top-bar.png").getTexture(), GAME_WIDTH / 2.0f, /*(GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f) - AD_TOP_OFFSET*/TOP_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);

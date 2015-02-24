@@ -1,6 +1,5 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -8,9 +7,13 @@ import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Container extends Group{
 
-	private static final float HOLE_WIDTH = 229.5f;
-	private static final float HOLE_FRONT_HEIGHT = 575.0f;
-	private static final float HOLE_BACK_HEIGHT = 135.2f;
+//	private static final float HOLE_WIDTH = 229.5f;
+//	private static final float HOLE_FRONT_HEIGHT = 575.0f;
+//	private static final float HOLE_BACK_HEIGHT = 135.2f;
+	
+	private static final float HOLE_WIDTH = 195.0f;
+	private static final float HOLE_FRONT_HEIGHT = 452.0f;
+	private static final float HOLE_BACK_HEIGHT = 106.0f;
 	
 	private BTNContainedActor contents;
 
@@ -21,10 +24,10 @@ public class Container extends Group{
 	
 	public Container(float x, float y, BTNGameScreen screen){
 
-		this.holeFront = new BTNActor(screen.getTexture("screen-game/container/tunnel-front.png").getTexture(), x, y + 55.0f, HOLE_WIDTH, HOLE_FRONT_HEIGHT);
+		this.holeFront = new BTNActor(screen.getTexture("screen-game/container/tunnel-front.png").getTexture(), x, y + 100.0f, HOLE_WIDTH, HOLE_FRONT_HEIGHT);
 		this.holeBack = new BTNActor(screen.getTexture("screen-game/container/tunnel-back.png").getTexture(), x, y + 256.5f, HOLE_WIDTH, HOLE_BACK_HEIGHT);
 		
-		// By default, we will place a Nazi in each container.
+		// By default, we will place a Zombie in each container.
 		this.contents = new Zombie(x, y, screen, this);
 		
 		this.minusHeart = new BTNActor(screen.getTexture("screen-game/container/heart-minus.png").getTexture(), x, y + 200.0f, HOLE_WIDTH, HOLE_WIDTH * 2.0f);
@@ -55,9 +58,9 @@ public class Container extends Group{
 	private void initializeContents(){
 		
 		contents.setX(holeFront.getX());
-		contents.setY(holeFront.getY() - 55.0f);
+		contents.setY(holeFront.getY() - 100.0f);
 		
-		contents.setAnchorY(holeFront.getY() - 55.0f);
+		contents.setAnchorY(holeFront.getY() - 100.0f);
 	}
 	
 	public void animateHeart(){

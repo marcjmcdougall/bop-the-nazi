@@ -495,6 +495,7 @@ public class BTNGameScreen implements Screen{
 		multiplexer.addProcessor(gameStage);
 		
 		Gdx.input.setInputProcessor(multiplexer);
+		Gdx.input.setCatchBackKey(true);
 		
 		Random r = new Random();
 		

@@ -44,7 +44,7 @@ public class BTNGameScreen implements Screen{
 	private static final float NUMBER_SCALE = 6.0f;
 	
 	private static final int MAX_ZOMBIE_COUNT = 5;
-	private static final int MAX_CONCURRENT_ZOMBIES = 3;
+	private static final int MAX_CONCURRENT_ZOMBIES = 1;
 	
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;

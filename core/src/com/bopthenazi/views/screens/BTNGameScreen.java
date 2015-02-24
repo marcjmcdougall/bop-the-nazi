@@ -197,7 +197,7 @@ public class BTNGameScreen implements Screen{
 		soundManager.beginLoadSFX();
 		
 		// Load music...
-		loadMusic("candyland.mp3");
+		loadMusic("8-bit-dungeon-boss.mp3");
 		
 		// Load fonts...
 		// TODO: Implementation.
@@ -465,11 +465,12 @@ public class BTNGameScreen implements Screen{
 		
 		gameStage.addActor(bg);
 		
-		this.backgroundMusic = getMusic("candyland.mp3");
+		this.backgroundMusic = getMusic("8-bit-dungeon-boss.mp3");
 		
 		this.backgroundMusic.setVolume(0.25f);
 		this.backgroundMusic.setLooping(true);
-//		this.backgroundMusic.play();
+		
+		this.backgroundMusic.play();
 		
 		initializeContainers();
 		initializeLivesModule();

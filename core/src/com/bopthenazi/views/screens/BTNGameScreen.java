@@ -470,8 +470,8 @@ public class BTNGameScreen implements Screen{
 		
 		this.backgroundMusic = getMusic("candyland.mp3");
 		
-		this.backgroundMusic.setVolume(0.25f);
-		this.backgroundMusic.setLooping(true);
+//		this.backgroundMusic.setVolume(0.25f);
+//		this.backgroundMusic.setLooping(true);
 //		this.backgroundMusic.play();
 		
 		initializeContainers();

@@ -72,8 +72,8 @@ public class TutorialScreenModule extends Group {
 		this.setVisible(true);
 		
 		alpha.addAction(Actions.sequence(/*Actions.delay(1.0f),*/ Actions.fadeIn(1.0f)));
-		bg.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f)/*, Actions.delay(1.0f)*/, Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4)));
-		ok.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f)/*, Actions.delay(1.0f)*/, Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4)));
+		bg.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f), Actions.delay(1.0f), Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4)));
+		ok.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f), Actions.delay(1.0f), Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4)));
 		
 		this.addAction(Actions.fadeIn(1.0f));
 	}

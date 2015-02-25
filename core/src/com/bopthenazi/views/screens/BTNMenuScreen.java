@@ -59,7 +59,8 @@ public class BTNMenuScreen implements Screen {
 		getAssetManager().load("textures/screen-menu/orange-background.png", Texture.class);
 		getAssetManager().load("textures/screen-menu/zombie-bop-menu-title.png", Texture.class);
 		getAssetManager().load("textures/screen-menu/yellow-stripes.png", Texture.class);
-		getAssetManager().load("textures/screen-menu/happy-zombie.png", Texture.class);
+//		getAssetManager().load("textures/screen-menu/happy-zombie.png", Texture.class);
+		getAssetManager().load("textures/screen-menu/happy-zombie-with-scars-hd.png", Texture.class);
 		getAssetManager().load("textures/screen-menu/start-button-up.png", Texture.class);
 		getAssetManager().load("textures/screen-menu/start-button-down.png", Texture.class);
 		
@@ -82,7 +83,8 @@ public class BTNMenuScreen implements Screen {
 		this.bg = new BTNActor(getAssetManager().get("textures/screen-menu/orange-background.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
 		this.title = new BTNActor(getAssetManager().get("textures/screen-menu/zombie-bop-menu-title.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.75f, 850.0f, 600.0f);
 		this.stripes = new BTNActor(getAssetManager().get("textures/screen-menu/yellow-stripes.png", Texture.class), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
-		this.zombie = new BTNActor(getAssetManager().get("textures/screen-menu/happy-zombie.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
+//		this.zombie = new BTNActor(getAssetManager().get("textures/screen-menu/happy-zombie.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
+		this.zombie = new BTNActor(getAssetManager().get("textures/screen-menu/happy-zombie-with-scars-hd.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
 		this.topBar = new BTNActor(getAssetManager().get("textures/screen-game/top-bar.png", Texture.class), MENU_WIDTH / 2.0f, MENU_TOP_BAR_TOP, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
 		this.bottomBar = new BTNActor(getAssetManager().get("textures/screen-game/bottom-bar.png", Texture.class), MENU_WIDTH / 2.0f, BTNGameScreen.BOTTOM_BAR_BOTTOM + 90.0f /* + 625.0f*/, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
 		this.startGame = new BasicButton(getAssetManager().get("textures/screen-menu/start-button-up.png", Texture.class), getAssetManager().get("textures/screen-menu/start-button-down.png", Texture.class), MENU_WIDTH / 2.0f, 125.0f, MENU_WIDTH * 0.70f, 200.0f);

@@ -29,6 +29,7 @@ public class GameOverModule extends Group {
 	
 	private Label scoreLabel;
 	private Label highScoreLabel;
+	private Label copyrightLabel;
 	
 	private BasicButton restart;
 	
@@ -56,6 +57,11 @@ public class GameOverModule extends Group {
 		gameOverAlpha = new BTNActor(gameScreen.getTexture("screen-game-over/alpha-25.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH, BTNGameScreen.GAME_HEIGHT);
 		background = new BTNActor(gameScreen.getTexture("screen-game-over/game-over-box.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f - 200.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.6f);
 		gameOverImage = new BTNActor(gameScreen.getTexture("screen-game-over/game-over-text.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f + 25.0f, BTNGameScreen.GAME_WIDTH * 0.6f, BTNGameScreen.GAME_HEIGHT * 0.225f);
+		
+		copyrightLabel = new Label("Copyright 2015 Kilobyte Games", new LabelStyle(FontFactory.buildFont(50), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+		copyrightLabel.setHeight(100.0f);
+		copyrightLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (copyrightLabel.getWidth() / 2.0f));
+		copyrightLabel.setY((10.0f + (copyrightLabel.getHeight() / 2.0f)));
 		
 		scoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		scoreLabel.setHeight(100.0f);
@@ -89,7 +95,9 @@ public class GameOverModule extends Group {
 				
 				gameScreen.reset();
 				
+				copyrightLabel.addAction(Actions.fadeOut(0.5f));
 				gameOverAlpha.addAction(Actions.fadeOut(1.0f));
+				
 				GameOverModule.this.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4), Actions.run(new Runnable() {
 					
 					@Override
@@ -98,20 +106,20 @@ public class GameOverModule extends Group {
 						GameOverModule.this.setVisible(false);
 					}
 				})));
-				
-//				TODO: Move to BTNGameScreen#reset()
-//				BTNGameScreen.this. score.addAction(Actions.fadeOut(1.0f));
 			}
 		});
 		
 		this.getColor().a = 0.0f;
 		gameOverAlpha.getColor().a = 0.0f;
+		copyrightLabel.getColor().a = 0.0f;
 		
 		this.addActor(background);
 		this.addActor(gameOverImage);
 		this.addActor(scoreLabel);
 		this.addActor(highScoreLabel);
 		this.addActor(restart);
+		
+		this.addActor(copyrightLabel);
 		
 		this.hiddenY = getY() + 2000.0f;
 	}
@@ -127,7 +135,14 @@ public class GameOverModule extends Group {
 		this.addAction(moveOutInstant);
 		this.addAction(moveIn);
 		this.addAction(Actions.fadeIn(1.0f));
-		gameOverAlpha.addAction(Actions.fadeIn(1.0f));
+		gameOverAlpha.addAction(Actions.sequence(Actions.fadeIn(1.0f), Actions.run(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				copyrightLabel.addAction(Actions.fadeIn(1.0f));
+			}
+		})));
 	}
 	
 	public void setScores(int score, int highScore){
@@ -160,5 +175,10 @@ public class GameOverModule extends Group {
 	public BTNActor getGameOverAlpha() {
 		
 		return gameOverAlpha;
+	}
+	
+	public Label getCopyrightLabel() {
+		
+		return copyrightLabel;
 	}
 }

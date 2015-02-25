@@ -507,6 +507,7 @@ public class BTNGameScreen implements Screen{
 		this.showingGameOverScreen = false;
 		
 		hudStage.addActor(gameOverScreen.getGameOverAlpha());
+		hudStage.addActor(gameOverScreen.getCopyrightLabel());
 		hudStage.addActor(gameOverScreen);
 		
 		hudStage.addActor(tutorialScreen);

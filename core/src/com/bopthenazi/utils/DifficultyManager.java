@@ -26,7 +26,7 @@ public class DifficultyManager {
 	private static final float DEFAULT_DIFFICULTY_INCREASE_DELTA = 0.05f;
 	
 	// The default for the amount which we decrease the difficulty.
-	private static final float DEFAULT_DIFFICULTY_DECREASE_DELTA = 0.25f;
+	private static final float DEFAULT_DIFFICULTY_DECREASE_DELTA = 0.20f;
 	
 	// The default for the rate at which the difficulty update rate accelerates.  Note that this will be 1.0 for now as the rate is contant.
 	private static final float DEFAULT_DIFFICULTY_UPDATE_RATE_ACCELERATION = 1.0f;

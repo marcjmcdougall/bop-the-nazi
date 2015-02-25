@@ -35,13 +35,15 @@ public class SoundManager {
 		loadSFX("bunny-die.wav");
 		loadSFX("explosion.wav");
 		loadSFX("game-over.wav");
+		loadSFX("game-over-cackle.mp3");
 		loadSFX("lets-go.wav");
 		loadSFX("new-record.wav");
 		loadSFX("punch.wav");
 		loadSFX("splat.wav");
-		loadSFX("zombie-die-2.wav");
+		loadSFX("zombie-hit.mp3");
 		loadSFX("powerup.wav");
 		loadSFX("zombie-bunny-die.wav");
+		loadSFX("lose-heart.mp3");
 	}
 	
 	private void loadSFX(String fileNamePostPrepend){
@@ -65,7 +67,8 @@ public class SoundManager {
 				case SOUND_ID_SPLAT :{
 					
 //					splatSound.play(DEFAULT_VOLUME * 0.25f);
-					getSound("splat.wav").play(DEFAULT_VOLUME * 0.25f);
+//					getSound("splat.wav").play(DEFAULT_VOLUME * 0.25f);
+					getSound("lose-heart.mp3").play(DEFAULT_VOLUME * 0.5f);
 					
 					break;
 				}
@@ -79,7 +82,8 @@ public class SoundManager {
 				case SOUND_ID_GAME_OVER :{
 					
 //					gameOverSound.play(DEFAULT_VOLUME);
-					getSound("game-over.wav").play(DEFAULT_VOLUME);
+//					getSound("game-over.wav").play(DEFAULT_VOLUME);
+					getSound("game-over-cackle.mp3").play(DEFAULT_VOLUME * 0.5f);
 					
 					break;
 				}
@@ -100,7 +104,7 @@ public class SoundManager {
 				case SOUND_ID_ZOMBIE_DEATH : {
 					
 //					zombieDeathSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("zombie-die-2.wav").play(DEFAULT_VOLUME * 0.75f);
+					getSound("zombie-hit.mp3").play(DEFAULT_VOLUME * 0.15f);
 					
 					break;
 				}

@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -184,6 +185,7 @@ public class BTNGameScreen implements Screen{
 		loadTexture("screen-game-over/game-over-text.png");
 		loadTexture("screen-game-over/restart-button.png");
 		loadTexture("screen-game-over/restart-button-down-state.png");
+		loadTexture("screen-game-over/pencil.png");
 		
 		loadTexture("screen-tutorial/instructions-screen.png");
 		loadTexture("screen-tutorial/ok-button-down-state.png");
@@ -508,6 +510,8 @@ public class BTNGameScreen implements Screen{
 		
 		hudStage.addActor(gameOverScreen.getGameOverAlpha());
 		hudStage.addActor(gameOverScreen.getCopyrightLabel());
+		hudStage.addActor(gameOverScreen.getPencil());
+		hudStage.addActor(gameOverScreen.getReviewLabel());
 		hudStage.addActor(gameOverScreen);
 		
 		hudStage.addActor(tutorialScreen);
@@ -967,5 +971,15 @@ public class BTNGameScreen implements Screen{
 	public SoundManager getSoundManager() {
 		
 		return soundManager;
+	}
+
+	public void onButtonClickUp() {
+		
+		soundManager.playSound(SoundManager.SOUND_ID_CLICK_UP);
+	}
+
+	public void onButtonClickDown() {
+		
+		soundManager.playSound(SoundManager.SOUND_ID_CLICK_DOWN);
 	}
 }

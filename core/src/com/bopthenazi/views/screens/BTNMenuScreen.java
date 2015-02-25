@@ -3,6 +3,7 @@ package com.bopthenazi.views.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
@@ -16,6 +17,8 @@ import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNProgressBar;
 import com.bopthenazi.models.BasicButton;
+import com.bopthenazi.utils.SoundManager;
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class BTNMenuScreen implements Screen {
 
@@ -26,6 +29,7 @@ public class BTNMenuScreen implements Screen {
 	private static final float MENU_HEIGHT = 1920.0f;
 	
 	private AssetManager assetManager;
+	private SoundManager soundManager;
 	
 	private BTNGame game;
 	private BTNGameScreen gameScreen;
@@ -51,6 +55,7 @@ public class BTNMenuScreen implements Screen {
 		this.gameScreen = new BTNGameScreen(game);
 		
 		this.assetManager = new AssetManager();
+		this.soundManager = new SoundManager(assetManager);
 		
 		beginAssetLoad();
 	}
@@ -71,6 +76,9 @@ public class BTNMenuScreen implements Screen {
 		
 		getAssetManager().load("textures/screen-game/top-bar.png", Texture.class);
 		getAssetManager().load("textures/screen-game/bottom-bar.png", Texture.class);
+		
+		getAssetManager().load("sfx/click-down.wav", Sound.class);
+		getAssetManager().load("sfx/click-up.wav", Sound.class);
 	}
 	
 	@Override
@@ -115,6 +123,8 @@ public class BTNMenuScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				
+				onButtonDownClick();
+				
 				return true;
 			}
 			
@@ -122,6 +132,8 @@ public class BTNMenuScreen implements Screen {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				
 				super.touchUp(event, x, y, pointer, button);
+				
+				onButtonUpClick();
 				
 				Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
 				
@@ -164,6 +176,16 @@ public class BTNMenuScreen implements Screen {
 		menuStage.addActor(startGame);
 		
 		Gdx.input.setInputProcessor(menuStage);
+	}
+	
+	public void onButtonDownClick(){
+		
+		soundManager.playSound(SoundManager.SOUND_ID_CLICK_DOWN);
+	}
+	
+	public void onButtonUpClick(){
+		
+		soundManager.playSound(SoundManager.SOUND_ID_CLICK_UP);
 	}
 
 	@Override

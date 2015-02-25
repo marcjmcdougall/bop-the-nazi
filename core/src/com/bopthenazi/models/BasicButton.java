@@ -54,6 +54,8 @@ public class BasicButton extends Actor {
 				
 				Gdx.app.log(BTNGame.TAG, "Touch down received on " + BasicButton.class);
 				
+				
+				
 //				downClick.play(0.25f);
 				
 				return true;

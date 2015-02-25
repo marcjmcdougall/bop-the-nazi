@@ -21,6 +21,8 @@ public class SoundManager {
 	public static final int SOUND_ID_NEW_RECORD = 7;
 	public static final int SOUND_ID_POWERUP = 8;
 	public static final int SOUND_ID_ZOMBIE_BUNNY_DEATH = 9;
+	public static final int SOUND_ID_CLICK_UP = 10;
+	public static final int SOUND_ID_CLICK_DOWN = 11;
 	
 	private AssetManager assets;
 	
@@ -44,6 +46,8 @@ public class SoundManager {
 		loadSFX("powerup.wav");
 		loadSFX("zombie-bunny-die.wav");
 		loadSFX("lose-heart.mp3");
+		loadSFX("click-down.wav");
+		loadSFX("click-up.wav");
 	}
 	
 	private void loadSFX(String fileNamePostPrepend){
@@ -125,6 +129,18 @@ public class SoundManager {
 					
 //					zombieBunnyDieSound.play(DEFAULT_VOLUME * 0.75f);
 					getSound("zombie-bunny-die.wav").play(DEFAULT_VOLUME * 0.75f);
+					
+					break;
+				}
+				case SOUND_ID_CLICK_DOWN :{
+					
+					getSound("click-down.wav").play(DEFAULT_VOLUME * 0.5f);
+					
+					break;
+				}
+				case SOUND_ID_CLICK_UP :{
+					
+					getSound("click-up.wav").play(DEFAULT_VOLUME * 0.5f);
 					
 					break;
 				}

@@ -35,6 +35,8 @@ public class TutorialScreenModule extends Group {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				
+				gameScreen.onButtonClickDown();
+				
 				return true;
 			}
 			
@@ -42,6 +44,8 @@ public class TutorialScreenModule extends Group {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				
 				super.touchUp(event, x, y, pointer, button);
+				
+				gameScreen.onButtonClickUp();
 				
 				bg.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));
 				ok.addAction(Actions.moveBy(0.0f, 2000.0f, 1.0f, Interpolation.pow4));

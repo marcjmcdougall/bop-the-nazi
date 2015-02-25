@@ -36,15 +36,13 @@ import com.bopthenazi.models.Score;
 import com.bopthenazi.models.TutorialScreenModule;
 import com.bopthenazi.models.Zombie;
 import com.bopthenazi.models.ZombieBunny;
+import com.bopthenazi.utils.DifficultyManager;
 import com.bopthenazi.utils.SaveManager;
 import com.bopthenazi.utils.SoundManager;
 
 public class BTNGameScreen implements Screen{
 
 	private static final float NUMBER_SCALE = 6.0f;
-	
-	private static final int MAX_ZOMBIE_COUNT = 5;
-	private static final int MAX_CONCURRENT_ZOMBIES = 3;
 	
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
@@ -62,12 +60,12 @@ public class BTNGameScreen implements Screen{
 	public static final float TOP_BAR_TOGETHER = GAME_HEIGHT * 1.2925f;
 	public static final float BOTTOM_BAR_TOGETHER = GAME_HEIGHT * -0.40f;
 	
-	private float baseFrequencyContainerActivate = 0.25f;
-	
 	private static final int MODE_STANDARD = 0;
 	public static final int MODE_APOCALYPSE = 1;
 	
 	private int mode = MODE_STANDARD;
+	
+	private DifficultyManager difficultyManager;
 	
 	private AssetManager assetManager;
 	
@@ -200,7 +198,7 @@ public class BTNGameScreen implements Screen{
 		soundManager.beginLoadSFX();
 		
 		// Load music...
-		loadMusic("candyland.mp3");
+		loadMusic("8-bit-dungeon-boss.mp3");
 		
 		// Load fonts...
 		// TODO: Implementation.
@@ -250,12 +248,12 @@ public class BTNGameScreen implements Screen{
 		Group background = new Group();
 		Group foreground = new Group();
 		
-		for(int i = 0; i < MAX_ZOMBIE_COUNT; i++){
+		for(int i = 0; i < DifficultyManager.MAX_CONTAINERS; i++){
 			
 			initializeContainer(i);
 		}
 		
-		for(int i = 0; i < MAX_ZOMBIE_COUNT; i++){
+		for(int i = 0; i < DifficultyManager.MAX_CONTAINERS; i++){
 			
 			if(i < 3){
 				
@@ -325,6 +323,7 @@ public class BTNGameScreen implements Screen{
 		this.score.setLives(Score.DEFAULT_NUMBER_LIVES);
 		this.livesModule.reset();
 		this.glove.setX(GAME_WIDTH / 2.0f);
+		this.difficultyManager.reset();
 		
 		for(Container container : containers){
 			
@@ -424,10 +423,11 @@ public class BTNGameScreen implements Screen{
 	private void initialize() {
 		
 		tutorialScreen = new TutorialScreenModule(this);
+		difficultyManager = new DifficultyManager();
 		
 		this.setGamePaused(true);
 		
-		this.containers = new Array<Container>(MAX_ZOMBIE_COUNT);
+		this.containers = new Array<Container>(DifficultyManager.MAX_CONTAINERS);
 		this.score = new Score(GAME_WIDTH / 2.0f, (GAME_HEIGHT - Score.SCORE_HEIGHT) - AD_TOP_OFFSET);
 		
 		this.score.getColor().a = 0.0f;
@@ -468,10 +468,11 @@ public class BTNGameScreen implements Screen{
 		
 		gameStage.addActor(bg);
 		
-		this.backgroundMusic = getMusic("candyland.mp3");
+		this.backgroundMusic = getMusic("8-bit-dungeon-boss.mp3");
 		
 //		this.backgroundMusic.setVolume(0.25f);
 //		this.backgroundMusic.setLooping(true);
+		
 //		this.backgroundMusic.play();
 		
 		initializeContainers();
@@ -501,7 +502,7 @@ public class BTNGameScreen implements Screen{
 		
 		Random r = new Random();
 		
-		int randomIndex = r.nextInt(MAX_ZOMBIE_COUNT);
+		int randomIndex = r.nextInt(DifficultyManager.MAX_CONTAINERS);
 		
 		this.showingGameOverScreen = false;
 		
@@ -604,7 +605,7 @@ public class BTNGameScreen implements Screen{
         	
 	        timeElapsedSinceLastZombie += delta;
 	        
-	        if(timeElapsedSinceLastZombie >= baseFrequencyContainerActivate){
+	        if(timeElapsedSinceLastZombie >= difficultyManager.getNewContainerSpawnRate()){
 	        	
 	        	// Activate a random Nazi that has *not yet been activated*
 	        	doActivateUniqueContainer(null);
@@ -612,6 +613,7 @@ public class BTNGameScreen implements Screen{
 	        	timeElapsedSinceLastZombie = 0.0f;
 	        }
 	        
+	        difficultyManager.updateDifficulty(delta);
 	        gameStage.act(delta);
         }
 	    
@@ -633,8 +635,6 @@ public class BTNGameScreen implements Screen{
 		
 		boolean nonDynamiteContentActive = false;
 		
-		print("Activating new container now.");
-		
 		for(Container container : containers){
 		
 			if(container.getContents().isActivated()){
@@ -648,12 +648,12 @@ public class BTNGameScreen implements Screen{
 			}
 		}
 		
-		if(numContainersActivated < MAX_CONCURRENT_ZOMBIES){
+		if(numContainersActivated < difficultyManager.getMaxConcurrentContainers()){
 			
-			for(int i = 0; i < MAX_CONCURRENT_ZOMBIES; i++){
+			for(int i = 0; i < DifficultyManager.MAX_CONTAINERS; i++){
 				
 				// Select a random number.
-				int index = new Random().nextInt(MAX_ZOMBIE_COUNT);
+				int index = new Random().nextInt(DifficultyManager.MAX_CONTAINERS);
 				
 				if(containers.get(index).getContents() != null){
 					
@@ -716,7 +716,8 @@ public class BTNGameScreen implements Screen{
 	}
 
 	public void doEndGame() {
-		
+	
+		// TODO: Removed for now!
 		Gdx.app.log(BTNGame.TAG, "Game Over!");
 		
 		for(Container container : getContainers()){
@@ -734,7 +735,7 @@ public class BTNGameScreen implements Screen{
 			saveManager.saveScore(score.getScore());
 			showGameOverScreen(score.getScore(), true);
 			
-			topBar.addAction(Actions.sequence(Actions.delay(1.25f), Actions.run(new Runnable() {
+			topBar.addAction(Actions.sequence(Actions.delay(1.5f), Actions.run(new Runnable() {
 				
 				@Override
 				public void run() {
@@ -825,23 +826,17 @@ public class BTNGameScreen implements Screen{
 
 	private void handleBunnyDeactivate(Bunny btnContainedActor) {
 		
-		print("Handling Bunny deactivate now");
-		
 		// Do nothing.
 	}
 
 	private void handleDynamiteDeactivate(Dynamite btnContainedActor) {
-		
-		print("Handling Dynamite deactivate now");
 		
 		// Do nothing.
 	}
 
 	private void handleZombieDeactivate(BTNContainedActor zombie) {
 		
-		print("Handling Zombie deactivate now");
-		
-		doActivateUniqueContainer(zombie.getContainer());
+//		doActivateUniqueContainer(zombie.getContainer());
 		
 		if(!(zombie.getActorState() == BTNContainedActor.STATE_HIT)){
 			
@@ -906,6 +901,7 @@ public class BTNGameScreen implements Screen{
 		
 		score.setLives(score.getLives() - 1);
 		livesModule.popHeart();
+		difficultyManager.onHeartLoss();
 		
 		if(score.getLives() <= 0){
 			
@@ -958,14 +954,17 @@ public class BTNGameScreen implements Screen{
 	}
 
 	public int getMode() {
+		
 		return mode;
 	}
 
 	public void setMode(int mode) {
+		
 		this.mode = mode;
 	}
 
 	public SoundManager getSoundManager() {
+		
 		return soundManager;
 	}
 }

@@ -2,6 +2,7 @@ package com.bopthenazi.models;
 
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -31,6 +32,8 @@ public class Bunny extends BTNContainedActor {
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_PUNCH);
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_BUNNY_DEATH);
 		gameScreen.subtractLife();
+		
+		Gdx.input.vibrate(500);
 		
 		this.getContainer().animateHeart();
 		

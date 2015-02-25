@@ -59,8 +59,6 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	@Override
 	public void activate() {
 		
-		System.out.println("BANANA" + gameScreen.isPaused());
-		
 		this.setActivated(true);
 		
 		this.prepare();

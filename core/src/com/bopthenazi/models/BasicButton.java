@@ -1,6 +1,7 @@
 package com.bopthenazi.models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,6 +16,9 @@ public class BasicButton extends Actor {
 	private Texture clicked;
 	
 	private boolean isClicked;
+	
+	private Sound downClick;
+	private Sound upClick;
 	
 	public BasicButton(Texture unclicked, Texture clicked, float x, float y){
 		
@@ -37,6 +41,9 @@ public class BasicButton extends Actor {
 		this.unclicked = unclicked;
 		this.clicked = clicked;
 		
+//		this.downClick = Gdx.audio.newSound(Gdx.files.internal("sfx/click-down.wav"));
+//		this.upClick = 	Gdx.audio.newSound(Gdx.files.internal("sfx/click-up.wav"));
+		
 		this.addListener(new InputListener(){
 
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -47,6 +54,8 @@ public class BasicButton extends Actor {
 				
 				Gdx.app.log(BTNGame.TAG, "Touch down received on " + BasicButton.class);
 				
+//				downClick.play(0.25f);
+				
 				return true;
 			}
 			
@@ -56,6 +65,8 @@ public class BasicButton extends Actor {
 				super.touchUp(event, x, y, pointer, button);
 				
 				BasicButton.this.setClicked(false);
+				
+//				upClick.play(0.25f);
 				
 				Gdx.app.log(BTNGame.TAG, "Touch up received on " + BasicButton.class);
 			}

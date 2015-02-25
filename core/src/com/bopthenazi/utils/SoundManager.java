@@ -111,7 +111,7 @@ public class SoundManager {
 				case SOUND_ID_NEW_RECORD : {
 					
 //					newRecordSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("new-record.wav").play(DEFAULT_VOLUME * 0.75f);
+					getSound("new-record.wav").play(DEFAULT_VOLUME * 1.0f);
 					
 					break;
 				}

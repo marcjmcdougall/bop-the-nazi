@@ -473,7 +473,7 @@ public class BTNGameScreen implements Screen{
 		this.backgroundMusic.setVolume(0.25f);
 		this.backgroundMusic.setLooping(true);
 		
-		this.backgroundMusic.play();
+//		this.backgroundMusic.play();
 		
 		initializeContainers();
 		initializeLivesModule();
@@ -735,7 +735,7 @@ public class BTNGameScreen implements Screen{
 			saveManager.saveScore(score.getScore());
 			showGameOverScreen(score.getScore(), true);
 			
-			topBar.addAction(Actions.sequence(Actions.delay(1.25f), Actions.run(new Runnable() {
+			topBar.addAction(Actions.sequence(Actions.delay(1.5f), Actions.run(new Runnable() {
 				
 				@Override
 				public void run() {

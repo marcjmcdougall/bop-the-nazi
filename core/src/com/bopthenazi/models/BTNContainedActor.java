@@ -1,6 +1,5 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
@@ -20,8 +19,12 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	public static final int STATE_VISIBLE = 2;
 	public static final int STATE_HIT = 3;
 	
-	private static final float CONTENT_WIDTH = 200.0f;
-	private static final float CONTENT_HEIGHT = 388.8f;
+//	private static final float CONTENT_WIDTH = 200.0f;
+//	private static final float CONTENT_HEIGHT = 388.8f;
+
+	private static final float CONTENT_WIDTH = 180.0f;
+	private static final float CONTENT_HEIGHT = 349.0f;
+	
 	
 	protected BTNGameScreen gameScreen;
 	private SequenceAction oscillateSequence;

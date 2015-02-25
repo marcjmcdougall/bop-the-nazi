@@ -57,7 +57,7 @@ public class BTNGameScreen implements Screen{
 	public static final float BAR_OFFSET_TOP = 256.0f;
 	
 	public static final float TOP_BAR_TOP = GAME_HEIGHT * 1.62f;
-	public static final float BOTTOM_BAR_BOTTOM = GAME_HEIGHT * -1.0f;
+	public static final float BOTTOM_BAR_BOTTOM = GAME_HEIGHT * -0.72f;
 	
 	public static final float TOP_BAR_TOGETHER = GAME_HEIGHT * 1.2925f;
 	public static final float BOTTOM_BAR_TOGETHER = GAME_HEIGHT * -0.40f;
@@ -404,6 +404,8 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void show() {
 		
+		assetManager.finishLoading();
+		
 		initialize();
 		
 		tempTrue = true;
@@ -702,7 +704,7 @@ public class BTNGameScreen implements Screen{
 	public void hide() {
 
 		// TODO Auto-generated method stub
-		dispose();
+//		dispose();
 	}
 
 	@Override
@@ -710,7 +712,6 @@ public class BTNGameScreen implements Screen{
 		
 		// TODO Auto-generated method stub
 		gameStage.dispose();
-		
 		assetManager.dispose();
 	}
 

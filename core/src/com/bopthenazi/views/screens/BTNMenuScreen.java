@@ -2,7 +2,6 @@ package com.bopthenazi.views.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
@@ -11,17 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNProgressBar;
-import com.bopthenazi.models.BTNStage;
 import com.bopthenazi.models.BasicButton;
 
 public class BTNMenuScreen implements Screen {
 
-	private static final float MENU_TOP_BAR_TOP = BTNGameScreen.TOP_BAR_TOP + 275.0f;
+//	private static final float MENU_TOP_BAR_TOP = BTNGameScreen.TOP_BAR_TOP/ + 275.0f;
+	private static final float MENU_TOP_BAR_TOP = BTNGameScreen.TOP_BAR_TOP + 150.0f;
 	
 	private static final float MENU_WIDTH = 1080.0f;
 	private static final float MENU_HEIGHT = 1920.0f;
@@ -61,13 +59,15 @@ public class BTNMenuScreen implements Screen {
 		this.stripes = new BTNActor(new Texture("textures/screen-menu/yellow-stripes.png"), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
 		this.zombie = new BTNActor(new Texture("textures/screen-menu/happy-zombie.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
 		this.topBar = new BTNActor(new Texture("textures/screen-game/top-bar.png"), MENU_WIDTH / 2.0f, MENU_TOP_BAR_TOP, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
-		this.bottomBar = new BTNActor(new Texture("textures/screen-game/bottom-bar.png"), MENU_WIDTH / 2.0f, BTNGameScreen.BOTTOM_BAR_BOTTOM + 625.0f, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
+		this.bottomBar = new BTNActor(new Texture("textures/screen-game/bottom-bar.png"), MENU_WIDTH / 2.0f, BTNGameScreen.BOTTOM_BAR_BOTTOM + 90.0f /* + 625.0f*/, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
 		this.startGame = new BasicButton(new Texture("textures/screen-menu/start-button-up.png"), new Texture("textures/screen-menu/start-button-down.png"), MENU_WIDTH / 2.0f, 125.0f, MENU_WIDTH * 0.70f, 200.0f);
 		this.stripes.setOriginX(stripes.getWidth() / 2.0f);
 		this.stripes.setOriginY(stripes.getHeight() / 2.0f);
-		this.prog = new BTNProgressBar(new Texture("textures/screen-menu/progress-bar/pb-back.png"), new Texture("textures/screen-menu/progress-bar/pb-front.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f - 450.0f, 1000.0f, 200.0f);
+		this.prog = new BTNProgressBar(new Texture("textures/screen-menu/progress-bar/pb-back.png"), new Texture("textures/screen-menu/progress-bar/pb-front.png"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f - 450.0f, MENU_WIDTH, 200.0f);
 		
-		this.prog.getColor().a = 0.0f;
+		
+		this.prog.setX(MENU_WIDTH / 2.0f - (prog.getWidth() / 2.0f));
+		this.prog.setY(BTNGameScreen.BOTTOM_BAR_BOTTOM + 1100.0f);
 		
 		RotateByAction rotate = new RotateByAction();
 		rotate.setAmount(360.0f);
@@ -91,8 +91,9 @@ public class BTNMenuScreen implements Screen {
 //				BTNMenuScreen.this.game.setScreen(new BTNGameScreen(BTNMenuScreen.this.game));
 //				BTNMenuScreen.this.game.setScreen(new BTNLoadingScreen(game));
 				
-				bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BTNGameScreen.BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
-				topBar.addAction(Actions.moveTo(topBar.getX(), BTNGameScreen.TOP_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
+				bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BTNGameScreen.BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.pow4));
+				topBar.addAction(Actions.moveTo(topBar.getX(), BTNGameScreen.TOP_BAR_TOGETHER, 1.0f, Interpolation.pow4));
+				prog.addAction(Actions.moveTo(prog.getX(), BTNGameScreen.BOTTOM_BAR_TOGETHER + 1100.0f, 1.0f, Interpolation.pow4));
 				
 				prog.addAction(Actions.sequence(Actions.delay(1.0f), Actions.fadeIn(1.0f), Actions.run(new Runnable() {
 					
@@ -103,7 +104,7 @@ public class BTNMenuScreen implements Screen {
 					}
 				})));
 				
-				startGame.addAction(Actions.fadeOut(1.0f));
+				startGame.addAction(Actions.moveBy(0.0f, -500.0f, 1.0f, Interpolation.pow4));
 			}
 		});
 		
@@ -115,12 +116,13 @@ public class BTNMenuScreen implements Screen {
 		
 		menuStage.addActor(bg);
 		menuStage.addActor(stripes);
-		menuStage.addActor(title);
+
 		menuStage.addActor(zombie);
 		menuStage.addActor(topBar);
 		menuStage.addActor(bottomBar);
-		menuStage.addActor(startGame);
+		menuStage.addActor(title);
 		menuStage.addActor(prog);
+		menuStage.addActor(startGame);
 		
 		Gdx.input.setInputProcessor(menuStage);
 	}
@@ -133,10 +135,22 @@ public class BTNMenuScreen implements Screen {
 
         if(gameScreen.getAssetManager().update() && isAnimationComplete()){
         	
-        	game.setScreen(gameScreen);
+        	gameScreen.getAssetManager().finishLoading();
+        	
+        	title.addAction(Actions.moveBy(0.0f, 500.0f, 1.0f, Interpolation.pow4));
+        	prog.addAction(Actions.sequence(Actions.moveBy(0.0f, -500.0f, 1.0f, Interpolation.pow4), Actions.run(new Runnable() {
+				
+				@Override
+				public void run() {
+					
+					game.setScreen(gameScreen);
+				}
+			})));
         }
         	
         prog.setPercentDraw(gameScreen.getAssetManager().getProgress());
+        
+//        prog.setValue(0.5f);
         
         menuStage.act(delta);
         menuStage.draw();

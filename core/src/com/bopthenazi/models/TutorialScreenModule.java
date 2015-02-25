@@ -1,12 +1,10 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class TutorialScreenModule extends Group {
@@ -73,9 +71,9 @@ public class TutorialScreenModule extends Group {
 		
 		this.setVisible(true);
 		
-		alpha.addAction(Actions.sequence(Actions.delay(1.0f), Actions.fadeIn(1.0f)));
-		bg.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f), Actions.delay(1.0f), Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4)));
-		ok.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f), Actions.delay(1.0f), Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4)));
+		alpha.addAction(Actions.sequence(/*Actions.delay(1.0f),*/ Actions.fadeIn(1.0f)));
+		bg.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f)/*, Actions.delay(1.0f)*/, Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4)));
+		ok.addAction(Actions.sequence(Actions.moveBy(0.0f, 2000.0f)/*, Actions.delay(1.0f)*/, Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4)));
 		
 		this.addAction(Actions.fadeIn(1.0f));
 	}

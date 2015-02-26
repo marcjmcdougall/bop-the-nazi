@@ -191,12 +191,12 @@ public class BTNMenuScreen implements Screen {
 	
 	public void onButtonDownClick(){
 		
-		soundManager.playSound(SoundManager.SOUND_ID_CLICK_DOWN);
+//		soundManager.playSound(SoundManager.SOUND_ID_CLICK_DOWN);
 	}
 	
 	public void onButtonUpClick(){
 		
-		soundManager.playSound(SoundManager.SOUND_ID_CLICK_UP);
+//		soundManager.playSound(SoundManager.SOUND_ID_CLICK_UP);
 	}
 
 	@Override

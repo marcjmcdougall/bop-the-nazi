@@ -24,8 +24,8 @@ public class Explosion extends BTNActor {
 	
 	public Explosion(float x, float y, boolean expand, BTNGameScreen gameScreen){
 		
-		super(new Array<TextureRegion>(new TextureRegion[]{gameScreen.getTexture("screen-game/explosion/explosion-01.png"), gameScreen.getTexture("screen-game/explosion/explosion-02.png"), 
-				gameScreen.getTexture("screen-game/explosion/explosion-03.png"), /*new Texture("explosion-04.png")*/}), 
+		super(new Array<TextureRegion>(new TextureRegion[]{gameScreen.getTexture("explosion-01"), gameScreen.getTexture("explosion-02"), 
+				gameScreen.getTexture("explosion-03"), /*new Texture("explosion-04.png")*/}), 
 				x, y, EXPLOSION_WIDTH, EXPLOSION_HEIGHT, x, y, EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
 	
 		this.aliveDuration = (1 / EXPLOSION_FPS) * EXPLOSION_FRAME_COUNT - .05f;

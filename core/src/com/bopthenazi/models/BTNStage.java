@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.utils.Action;
@@ -70,10 +69,6 @@ public class BTNStage extends Stage {
 		Vector2 coords = new Vector2(screenX, screenY);
 		
 		Vector2 screenCoords = screenToStageCoordinates(coords);
-		
-		Action a = new Action(screenCoords.x, screenCoords.y, ActionType.TOUCH_DOWN);
-		
-//		screen.addActionToHandlerQueue(a);
 		
 		screen.notifyNewX(screenCoords.x);
 		

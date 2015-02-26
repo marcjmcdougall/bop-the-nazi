@@ -1,6 +1,5 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -20,7 +19,6 @@ public class Glove extends BTNActor {
 	private static final int STATE_STATIC = 1;
 	private static final int STATE_MOVING_DOWN = 2;
 	private static final int STATE_MOVING_UP = 3;
-	
 	
 	private float velocityX;
 	private float velocityY;
@@ -62,7 +60,7 @@ public class Glove extends BTNActor {
 	
 	public Glove(float x, float y, float width, float height, BTNGameScreen game, BTNActor gloveCase) {
 		
-		super(game.getTexture("screen-game/glove.png").getTexture(), x, y, width, height);
+		super(game.getTexture("glove"), x, y, width, height);
 		
 		// Velocity is measured in game-pixels / second.
 		this.velocityX = GLOVE_VELOCTY_X;

@@ -12,26 +12,23 @@ import com.bopthenazi.game.BTNGame;
 
 public class BasicButton extends Actor {
 
-	private Texture unclicked;
-	private Texture clicked;
+	private TextureRegion unclicked;
+	private TextureRegion clicked;
 	
 	private boolean isClicked;
 	
 	private Sound downClick;
 	private Sound upClick;
 	
-	public BasicButton(Texture unclicked, Texture clicked, float x, float y){
+	public BasicButton(TextureRegion unclicked, TextureRegion clicked, float x, float y){
 		
-		this(unclicked, clicked, x, y, unclicked.getWidth(), unclicked.getHeight());
+		this(unclicked, clicked, x, y, unclicked.getRegionWidth(), unclicked.getRegionHeight());
 	}
 	
-	public BasicButton(Texture unclicked, Texture clicked, float x, float y, float width, float height){
+	public BasicButton(TextureRegion unclicked, TextureRegion clicked, float x, float y, float width, float height){
 		
 		this.setWidth(width);
 		this.setHeight(height);
-		
-//		this.setX(x - this.getWidth() / 2.0f);
-//		this.setY(y - this.getHeight() / 2.0f);
 		
 		this.setX(x - this.getWidth() / 2.0f);
 		this.setY(y - this.getHeight() / 2.0f);
@@ -41,9 +38,6 @@ public class BasicButton extends Actor {
 		this.unclicked = unclicked;
 		this.clicked = clicked;
 		
-//		this.downClick = Gdx.audio.newSound(Gdx.files.internal("sfx/click-down.wav"));
-//		this.upClick = 	Gdx.audio.newSound(Gdx.files.internal("sfx/click-up.wav"));
-		
 		this.addListener(new InputListener(){
 
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -51,12 +45,6 @@ public class BasicButton extends Actor {
 				super.touchDown(event, x, y, pointer, button);
 				
 				BasicButton.this.setClicked(true);
-				
-				Gdx.app.log(BTNGame.TAG, "Touch down received on " + BasicButton.class);
-				
-				
-				
-//				downClick.play(0.25f);
 				
 				return true;
 			}
@@ -67,10 +55,6 @@ public class BasicButton extends Actor {
 				super.touchUp(event, x, y, pointer, button);
 				
 				BasicButton.this.setClicked(false);
-				
-//				upClick.play(0.25f);
-				
-				Gdx.app.log(BTNGame.TAG, "Touch up received on " + BasicButton.class);
 			}
 		});
 	}
@@ -84,11 +68,11 @@ public class BasicButton extends Actor {
 				
 		if(isClicked){
 		
-			batch.draw(new TextureRegion(clicked), this.getX()/* - (this.getWidth() / 2.0f)*/, (this.getY()/* - 133.5f*/)/* - (this.getHeight() / 2.0f)*/, this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
+			batch.draw(clicked, this.getX()/* - (this.getWidth() / 2.0f)*/, (this.getY()/* - 133.5f*/)/* - (this.getHeight() / 2.0f)*/, this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
 		}
 		else{
 			
-			batch.draw(new TextureRegion(unclicked), this.getX()/* - (this.getWidth() / 2.0f)*/, (this.getY()/* - 133.5f*/)/* - (this.getHeight() / 2.0f)*/, this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
+			batch.draw(unclicked, this.getX()/* - (this.getWidth() / 2.0f)*/, (this.getY()/* - 133.5f*/)/* - (this.getHeight() / 2.0f)*/, this.getOriginX(), this.getOriginY(), this.getWidth(), this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation());
 		}
 	}
 

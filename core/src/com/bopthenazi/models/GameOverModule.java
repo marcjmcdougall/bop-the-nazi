@@ -3,6 +3,7 @@ package com.bopthenazi.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -55,12 +56,17 @@ public class GameOverModule extends Group {
 
 	private void initialize() {
 		
+		long count = System.currentTimeMillis();
+		
 		this.setShowing(false);
 		this.setVisible(false);
 		
-		gameOverAlpha = new BTNActor(gameScreen.getTexture("screen-game-over/alpha-25.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH, BTNGameScreen.GAME_HEIGHT);
-		background = new BTNActor(gameScreen.getTexture("screen-game-over/game-over-box.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.6f);
-		gameOverImage = new BTNActor(gameScreen.getTexture("screen-game-over/game-over-text.png").getTexture(), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f + HEIGHT_OFFSET, BTNGameScreen.GAME_WIDTH * 0.6f, BTNGameScreen.GAME_HEIGHT * 0.225f);
+		// TODO: Next steps include fixing the font generator.  Specifically, you should generate the generator, 
+		// then use that over and over until closing it.  Perhaps it's because the fonts have to be loaded in real time?
+		
+		gameOverAlpha = new BTNActor(gameScreen.getTexture("alpha-25"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH, BTNGameScreen.GAME_HEIGHT);
+		background = new BTNActor(gameScreen.getTexture("game-over-box"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.6f);
+		gameOverImage = new BTNActor(gameScreen.getTexture("game-over-text"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f + HEIGHT_OFFSET, BTNGameScreen.GAME_WIDTH * 0.6f, BTNGameScreen.GAME_HEIGHT * 0.225f);
 		
 		copyrightLabel = new Label("Copyright 2015 Kilobyte Games", new LabelStyle(FontFactory.buildFont(40), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		copyrightLabel.setHeight(100.0f);
@@ -92,7 +98,7 @@ public class GameOverModule extends Group {
 			}
 		});
 		
-		pencil = new Image(gameScreen.getTexture("screen-game-over/pencil.png"));
+		pencil = new Image(gameScreen.getTexture("pencil"));
 		pencil.setSize(100.0f, 90.0f);
 		
 		pencil.setPosition(BTNGameScreen.GAME_WIDTH / 2.0f - (pencil.getWidth() / 2.0f) + 440.0f, 170.0f);
@@ -107,12 +113,13 @@ public class GameOverModule extends Group {
 		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
 		highScoreLabel.setY((490.0f + (highScoreLabel.getHeight() / 2.0f)) + HEIGHT_OFFSET);
 		
-		restart = new BasicButton(new Texture("textures/screen-game-over/restart-button.png"), new Texture("textures/screen-game-over/restart-button-down-state.png"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f - 550.0f);
+		restart = new BasicButton(gameScreen.getTexture("restart-button"), gameScreen.getTexture("restart-button-down-state"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f - 550.0f);
 	
 		restart.setHeight(BTNGameScreen.GAME_HEIGHT * 0.1f); 
 		restart.setWidth(BTNGameScreen.GAME_WIDTH * 0.45f);
 		restart.setX((BTNGameScreen.GAME_WIDTH / 2.0f) - (restart.getWidth() / 2.0f));
 		restart.setY(restart.getY() - restart.getHeight() / 2.0f + HEIGHT_OFFSET);
+		
 		
 		restart.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener(){
 			

@@ -2,7 +2,6 @@ package com.bopthenazi.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.bopthenazi.views.screens.BTNMenuScreen;
 import com.bopthenazi.views.screens.SplashScreen;
 
 public class BTNGame extends Game {

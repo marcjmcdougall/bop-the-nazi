@@ -9,20 +9,20 @@ public class BTNProgressBar extends Actor {
 
 	private static final float PROGRESS_WIDTH = 400.0f;
 	
-	private Texture backgroundTexture;
-	private Texture backgroundTextureDone;
-	private Texture dashes;
-	private Texture progressTexture;
+	private TextureRegion backgroundTexture;
+	private TextureRegion backgroundTextureDone;
+	private TextureRegion dashes;
+	private TextureRegion progressTexture;
 	
 	private float percentDraw;
 	private float effectiveWidth;
 	
-	public BTNProgressBar(Texture bgTexture, Texture progressTexture, float x, float y, float width, float height){
+	public BTNProgressBar(TextureRegion bgTexture, TextureRegion progressTexture, TextureRegion backgroundTextureDone, TextureRegion dashes, float x, float y, float width, float height){
 		
 		this.setBackGroundTexture(bgTexture);
 		this.setProgressTexture(progressTexture);
-		this.backgroundTextureDone = new Texture("textures/screen-menu/progress-bar/pb-done.png"); 
-		this.dashes = new Texture("textures/screen-menu/progress-bar/pb-dashes.png");
+		this.backgroundTextureDone = backgroundTextureDone; 
+		this.dashes = dashes;
 		
 		this.setWidth(width);
 		this.setHeight(height);
@@ -54,12 +54,12 @@ public class BTNProgressBar extends Actor {
 //		batch.draw(progressTexture, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 0.0f, 1.0f, this.getPercentDraw(), 0.0f);
 	}	
 	
-	public Texture getBackgroundTexture() {
+	public TextureRegion getBackgroundTexture() {
 		
 		return backgroundTexture;
 	}
 
-	public void setBackGroundTexture(Texture backGroundTexture) {
+	public void setBackGroundTexture(TextureRegion backGroundTexture) {
 		
 		this.backgroundTexture = backGroundTexture;
 	}
@@ -75,14 +75,14 @@ public class BTNProgressBar extends Actor {
 		this.setEffectiveWidth(PROGRESS_WIDTH * percentDraw);
 	}
 	
-	public Texture getProgressTexture(){
+	public TextureRegion getProgressTexture(){
 		
 		return progressTexture;
 	}
 	
-	public void setProgressTexture(Texture progressTexture) {
+	public void setProgressTexture(TextureRegion progressTexture2) {
 		
-		this.progressTexture = progressTexture;
+		this.progressTexture = progressTexture2;
 	}
 
 	public float getEffectiveWidth() {

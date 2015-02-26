@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -113,8 +114,6 @@ public class BTNGameScreen implements Screen{
 
 	private Music backgroundMusic;
 
-	private boolean showingGameOverScreen;
-
 	private boolean tempTrue;
 
 	private static final String TEXTURE_PREPEND = "textures/";
@@ -137,70 +136,73 @@ public class BTNGameScreen implements Screen{
 	
 	public void beginAssetLoad(){
 		
+		// Load texture atlas...
+		getAssetManager().load("textures/textures-packed/game.atlas", TextureAtlas.class);
+		
 		// Load textures...
-		loadTexture("screen-game/bunny/bunny-hit-frame.png");
-		loadTexture("screen-game/bunny/bunny.png");
-		
-		loadTexture("screen-game/bunny-2/bunny-2.png");
-		loadTexture("screen-game/bunny-2/bunny2-hit-frame.png");
-		
-		loadTexture("screen-game/container/tunnel-back.png");
-		loadTexture("screen-game/container/tunnel-front.png");
-		loadTexture("screen-game/container/heart-minus.png");
-		
-		loadTexture("screen-game/dynamite/dynamite-01.png");
-		loadTexture("screen-game/dynamite/dynamite-02.png");
-		loadTexture("screen-game/dynamite/dynamite-03.png");
-		loadTexture("screen-game/dynamite/dynamite-04.png");
-		loadTexture("screen-game/dynamite/dynamite-05.png");
-		
-		loadTexture("screen-game/explosion/explosion-01.png");
-		loadTexture("screen-game/explosion/explosion-02.png");
-		loadTexture("screen-game/explosion/explosion-03.png");
-		loadTexture("screen-game/explosion/explosion-04.png");
-		
-		loadTexture("screen-game/heart/heart-empty-v2.png");
-		loadTexture("screen-game/heart/heart.png");
-		
-		loadTexture("screen-game/heart-contained/heart-contained.png");
-		loadTexture("screen-game/heart-contained/heart-contained-01.png");
-		loadTexture("screen-game/heart-contained/heart-contained-02.png");
-		loadTexture("screen-game/heart-contained/heart-contained-03.png");
-		loadTexture("screen-game/heart-contained/heart-contained-04.png");
-		loadTexture("screen-game/heart-contained/heart-contained-05.png");
-		
-		loadTexture("screen-game/zombie/zombie.png");
-		loadTexture("screen-game/zombie/zombie1-hit-frame.png");
-		
-		loadTexture("screen-game/zombie-2/zombie-2.png");
-		loadTexture("screen-game/zombie-2/zombie2-hit-frame.png");
-
-		loadTexture("screen-game/zombie-bunny/zombie-bunny.png");
-		loadTexture("screen-game/zombie-bunny/zombie-bunny-hit-frame.png");
-		
-		loadTexture("screen-game/background.png");
-		loadTexture("screen-game/explosion-splash.png");
-		loadTexture("screen-game/glove.png");
-		loadTexture("screen-game/mover.png");
-		loadTexture("screen-game/top-bar.png");
-		loadTexture("screen-game/bottom-bar.png");
-		loadTexture("screen-game/ad-placeholder.png");
-		
-		loadTexture("screen-game-over/alpha-25.png");
-		loadTexture("screen-game-over/game-over-box.png");
-		loadTexture("screen-game-over/game-over-text.png");
-		loadTexture("screen-game-over/restart-button.png");
-		loadTexture("screen-game-over/restart-button-down-state.png");
-		loadTexture("screen-game-over/pencil.png");
-		
-		loadTexture("screen-tutorial/instructions-screen.png");
-		loadTexture("screen-tutorial/ok-button-down-state.png");
-		loadTexture("screen-tutorial/ok-button-up-state.png");
-		
-		loadTexture("screen-game/numbers/1.png");
-		loadTexture("screen-game/numbers/2.png");
-		loadTexture("screen-game/numbers/3.png");
-		loadTexture("screen-game/numbers/bop.png");
+//		loadTexture("screen-game/bunny/bunny-hit-frame.png");
+//		loadTexture("screen-game/bunny/bunny.png");
+//		
+//		loadTexture("screen-game/bunny-2/bunny-2.png");
+//		loadTexture("screen-game/bunny-2/bunny2-hit-frame.png");
+//		
+//		loadTexture("screen-game/container/tunnel-back.png");
+//		loadTexture("screen-game/container/tunnel-front.png");
+//		loadTexture("screen-game/container/heart-minus.png");
+//		
+//		loadTexture("screen-game/dynamite/dynamite-01.png");
+//		loadTexture("screen-game/dynamite/dynamite-02.png");
+//		loadTexture("screen-game/dynamite/dynamite-03.png");
+//		loadTexture("screen-game/dynamite/dynamite-04.png");
+//		loadTexture("screen-game/dynamite/dynamite-05.png");
+//		
+//		loadTexture("screen-game/explosion/explosion-01.png");
+//		loadTexture("screen-game/explosion/explosion-02.png");
+//		loadTexture("screen-game/explosion/explosion-03.png");
+//		loadTexture("screen-game/explosion/explosion-04.png");
+//		
+//		loadTexture("screen-game/heart/heart-empty-v2.png");
+//		loadTexture("screen-game/heart/heart.png");
+//		
+//		loadTexture("screen-game/heart-contained/heart-contained.png");
+//		loadTexture("screen-game/heart-contained/heart-contained-01.png");
+//		loadTexture("screen-game/heart-contained/heart-contained-02.png");
+//		loadTexture("screen-game/heart-contained/heart-contained-03.png");
+//		loadTexture("screen-game/heart-contained/heart-contained-04.png");
+//		loadTexture("screen-game/heart-contained/heart-contained-05.png");
+//		
+//		loadTexture("screen-game/zombie/zombie.png");
+//		loadTexture("screen-game/zombie/zombie1-hit-frame.png");
+//		
+//		loadTexture("screen-game/zombie-2/zombie-2.png");
+//		loadTexture("screen-game/zombie-2/zombie2-hit-frame.png");
+//
+//		loadTexture("screen-game/zombie-bunny/zombie-bunny.png");
+//		loadTexture("screen-game/zombie-bunny/zombie-bunny-hit-frame.png");
+//		
+//		loadTexture("screen-game/background.png");
+//		loadTexture("screen-game/explosion-splash.png");
+//		loadTexture("screen-game/glove.png");
+//		loadTexture("screen-game/mover.png");
+//		loadTexture("screen-game/top-bar.png");
+//		loadTexture("screen-game/bottom-bar.png");
+//		loadTexture("screen-game/ad-placeholder.png");
+//		
+//		loadTexture("screen-game-over/alpha-25.png");
+//		loadTexture("screen-game-over/game-over-box.png");
+//		loadTexture("screen-game-over/game-over-text.png");
+//		loadTexture("screen-game-over/restart-button.png");
+//		loadTexture("screen-game-over/restart-button-down-state.png");
+//		loadTexture("screen-game-over/pencil.png");
+//		
+//		loadTexture("screen-tutorial/instructions-screen.png");
+//		loadTexture("screen-tutorial/ok-button-down-state.png");
+//		loadTexture("screen-tutorial/ok-button-up-state.png");
+//		
+//		loadTexture("screen-game/numbers/1.png");
+//		loadTexture("screen-game/numbers/2.png");
+//		loadTexture("screen-game/numbers/3.png");
+//		loadTexture("screen-game/numbers/bop.png");
 		
 		// Load sounds...
 		soundManager.beginLoadSFX();
@@ -414,31 +416,25 @@ public class BTNGameScreen implements Screen{
 		assetManager.finishLoading();
 		
 		initialize();
-		
-		tempTrue = true;
-		
-		if(/*saveManager.isFirstShot()*/ tempTrue){
-			
-			tempTrue = false;
-			showTutorialScreen();
-		}
-		else{
-			
-			begin(0.5f);
-		}
 	}
 
 	private void initialize() {
 		
-		counter.start();
+		// TODO: This method takes 1 second to complete.  This is causing a ton of issues.
+		
 		
 		tutorialScreen = new TutorialScreenModule(this);
+		
+		// The game over screen is providing the MOST amount of latency here.
+		gameOverScreen = new GameOverModule(this);
 		difficultyManager = new DifficultyManager();
 		
 		this.setGamePaused(true);
 		
+		// This seems to cause quite a bit of lag...V
 		this.containers = new Array<Container>(DifficultyManager.MAX_CONTAINERS);
 		this.score = new Score(GAME_WIDTH / 2.0f, (GAME_HEIGHT - Score.SCORE_HEIGHT) - AD_TOP_OFFSET);
+		//..........................................A
 		
 		this.score.getColor().a = 0.0f;
 		
@@ -451,44 +447,26 @@ public class BTNGameScreen implements Screen{
 		StretchViewport viewport = new StretchViewport(GAME_WIDTH, GAME_HEIGHT);
 		
 		gameStage = new BTNStage(viewport, game, this);
-		hudStage = new Stage(viewport);
+//		hudStage = new Stage(viewport);
 		
-		gameOverScreen = new GameOverModule(this);
-		bg = new BTNActor(getTexture("screen-game/background.png").getTexture(), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f)/* - AD_TOP_OFFSET*/, GAME_WIDTH, GAME_HEIGHT);
-		gloveCase = new BTNActor(getTexture("screen-game/mover.png").getTexture(), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
+		// Reuse the batch for efficiency-reasons.
+		hudStage = new Stage(viewport, gameStage.getBatch());
+		
+		bg = new BTNActor(getTexture("background"), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f)/* - AD_TOP_OFFSET*/, GAME_WIDTH, GAME_HEIGHT);
+		gloveCase = new BTNActor(getTexture("mover"), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
-		topBar = new BTNActor(getTexture("screen-game/top-bar.png").getTexture(), GAME_WIDTH / 2.0f, /*(GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f) - AD_TOP_OFFSET*/TOP_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
-		bottomBar = new BTNActor(getTexture("screen-game/bottom-bar.png").getTexture(), GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
-		one = new BTNActor(getTexture("screen-game/numbers/1.png").getTexture(), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
-		two = new BTNActor(getTexture("screen-game/numbers/2.png").getTexture(), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
-		three = new BTNActor(getTexture("screen-game/numbers/3.png").getTexture(), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
-		bop = new BTNActor(getTexture("screen-game/numbers/bop.png").getTexture(), GAME_WIDTH / 2.0f - NUMBER_WIDTH / 2.0f, GAME_HEIGHT / 2.0f - NUMBER_WIDTH / 2.0f);
-		
-		one.setOrigin(one.getWidth() / 2.0f, one.getHeight() / 2.0f);
-		two.setOrigin(two.getWidth() / 2.0f, two.getHeight() / 2.0f);
-		three.setOrigin(three.getWidth() / 2.0f, three.getHeight() / 2.0f);
-		bop.setOrigin(bop.getWidth() / 2.0f, bop.getHeight() / 2.0f);
-		
-		one.getColor().a = 0.0f;
-		two.getColor().a = 0.0f;
-		three.getColor().a = 0.0f;
-		bop.getColor().a = 0.0f;
+		topBar = new BTNActor(getTexture("top-bar"), GAME_WIDTH / 2.0f, /*(GAME_HEIGHT - TOP_BAR_HEIGHT / 2.0f) - AD_TOP_OFFSET*/TOP_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
+		bottomBar = new BTNActor(getTexture("bottom-bar"), GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, GAME_WIDTH, BAR_HEIGHT);
 		
 		saveManager = new SaveManager();
 		
-		explosionSplash = new BTNActor(getTexture("screen-game/explosion-splash.png").getTexture(), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
+		explosionSplash = new BTNActor(getTexture("explosion-splash"), GAME_WIDTH / 2.0f, GAME_HEIGHT / 2.0f, GAME_WIDTH, GAME_HEIGHT);
 		
 		gameStage.addActor(bg);
 		
-		this.backgroundMusic = getMusic("8-bit-dungeon-boss.mp3");
-		
-//		this.backgroundMusic.setVolume(0.25f);
-//		this.backgroundMusic.setLooping(true);
-		
-//		this.backgroundMusic.play();
-		
 		initializeContainers();
 		initializeLivesModule();
+		
 		
 		explosionSplash.setVisible(false);
 
@@ -499,11 +477,6 @@ public class BTNGameScreen implements Screen{
 		hudStage.addActor(topBar);
 		hudStage.addActor(bottomBar);
 		hudStage.addActor(this.score);
-		
-		hudStage.addActor(three);
-		hudStage.addActor(two);
-		hudStage.addActor(one);
-		hudStage.addActor(bop);
 		
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(hudStage);
@@ -516,19 +489,15 @@ public class BTNGameScreen implements Screen{
 		
 		int randomIndex = r.nextInt(DifficultyManager.MAX_CONTAINERS);
 		
-		this.showingGameOverScreen = false;
-		
-		hudStage.addActor(gameOverScreen.getGameOverAlpha());
-		hudStage.addActor(gameOverScreen.getCopyrightLabel());
-		hudStage.addActor(gameOverScreen.getPencil());
-		hudStage.addActor(gameOverScreen.getReviewLabel());
-		hudStage.addActor(gameOverScreen);
+//		hudStage.addActor(gameOverScreen.getGameOverAlpha());
+//		hudStage.addActor(gameOverScreen.getCopyrightLabel());
+//		hudStage.addActor(gameOverScreen.getPencil());
+//		hudStage.addActor(gameOverScreen.getReviewLabel());
+//		hudStage.addActor(gameOverScreen);
 		
 		hudStage.addActor(tutorialScreen);
 		
 		activateContainerContents(containers.get(randomIndex));
-		
-		counter.stop();
 	}
 
 	public void begin(float initialDelay){
@@ -593,16 +562,13 @@ public class BTNGameScreen implements Screen{
 		
 		this.setGamePaused(true);
 		
-		counter.start();
-		
 		tutorialScreen.doAnimate();
 		
-		counter.stop();
 	}
 
 	public TextureRegion getTexture(String textureNamePostPrepend) {
 		
-		return new TextureRegion(assetManager.get(TEXTURE_PREPEND + textureNamePostPrepend, Texture.class));
+		return assetManager.get("textures/textures-packed/game.atlas", TextureAtlas.class).findRegion(textureNamePostPrepend);
 	}
 	
 
@@ -621,8 +587,6 @@ public class BTNGameScreen implements Screen{
 	
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
-        logger.log();
         
         if(!this.isPaused()){
         	
@@ -707,8 +671,18 @@ public class BTNGameScreen implements Screen{
 
 	@Override
 	public void resize(int width, int height) {
+
+		tempTrue = true;
 		
-		// TODO Auto-generated method stub
+		if(/*saveManager.isFirstShot()*/ tempTrue){
+			
+			tempTrue = false;
+			showTutorialScreen();
+		}
+		else{
+			
+			begin(0.5f);
+		}
 	}
 
 	@Override

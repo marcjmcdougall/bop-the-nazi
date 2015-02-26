@@ -6,6 +6,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -61,21 +63,23 @@ public class BTNMenuScreen implements Screen {
 	
 	private void beginAssetLoad(){
 		
-		getAssetManager().load("textures/screen-menu/orange-background.png", Texture.class);
-		getAssetManager().load("textures/screen-menu/zombie-bop-menu-title.png", Texture.class);
-		getAssetManager().load("textures/screen-menu/yellow-stripes.png", Texture.class);
-//		getAssetManager().load("textures/screen-menu/happy-zombie.png", Texture.class);
-		getAssetManager().load("textures/screen-menu/happy-zombie-with-scars-hd.png", Texture.class);
-		getAssetManager().load("textures/screen-menu/start-button-up.png", Texture.class);
-		getAssetManager().load("textures/screen-menu/start-button-down.png", Texture.class);
-		getAssetManager().load("textures/screen-menu/beta.png", Texture.class);
+		getAssetManager().load("textures/textures-packed/menu.atlas", TextureAtlas.class);
 		
-		getAssetManager().load("textures/screen-menu/progress-bar/pb-back.png", Texture.class);
-		getAssetManager().load("textures/screen-menu/progress-bar/pb-front.png", Texture.class);
-		
-		getAssetManager().load("textures/screen-game/top-bar.png", Texture.class);
-		getAssetManager().load("textures/screen-game/bottom-bar.png", Texture.class);
-		
+//		getAssetManager().load("textures/screen-menu/orange-background.png", Texture.class);
+//		getAssetManager().load("textures/screen-menu/zombie-bop-menu-title.png", Texture.class);
+//		getAssetManager().load("textures/screen-menu/yellow-stripes.png", Texture.class);
+////		getAssetManager().load("textures/screen-menu/happy-zombie.png", Texture.class);
+//		getAssetManager().load("textures/screen-menu/happy-zombie-with-scars-hd.png", Texture.class);
+//		getAssetManager().load("textures/screen-menu/start-button-up.png", Texture.class);
+//		getAssetManager().load("textures/screen-menu/start-button-down.png", Texture.class);
+//		getAssetManager().load("textures/screen-menu/beta.png", Texture.class);
+//		
+//		getAssetManager().load("textures/screen-menu/progress-bar/pb-back.png", Texture.class);
+//		getAssetManager().load("textures/screen-menu/progress-bar/pb-front.png", Texture.class);
+//		
+//		getAssetManager().load("textures/screen-game/top-bar.png", Texture.class);
+//		getAssetManager().load("textures/screen-game/bottom-bar.png", Texture.class);
+//		
 		getAssetManager().load("sfx/click-down.wav", Sound.class);
 		getAssetManager().load("sfx/click-up.wav", Sound.class);
 	}
@@ -86,6 +90,11 @@ public class BTNMenuScreen implements Screen {
 		getAssetManager().finishLoading();
 	}
 	
+	public TextureRegion getTexture(String textureName){
+		
+		return assetManager.get("textures/textures-packed/menu.atlas", TextureAtlas.class).findRegion(textureName);
+	}
+	
 	private void initialize(){
 		
 //		FitViewport viewport = new FitViewport(MENU_WIDTH, MENU_HEIGHT);
@@ -93,18 +102,20 @@ public class BTNMenuScreen implements Screen {
 		menuStage = new Stage(viewport);
 		
 		this.setAnimationComplete(false);
-		this.bg = new BTNActor(getAssetManager().get("textures/screen-menu/orange-background.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
-		this.beta = new BTNActor(getAssetManager().get("textures/screen-menu/beta.png", Texture.class), MENU_WIDTH * 0.75f, 0.85f);
-		this.title = new BTNActor(getAssetManager().get("textures/screen-menu/zombie-bop-menu-title.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.75f, 850.0f, 600.0f);
-		this.stripes = new BTNActor(getAssetManager().get("textures/screen-menu/yellow-stripes.png", Texture.class), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
+		this.bg = new BTNActor(getTexture("orange-background"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f, MENU_WIDTH, MENU_HEIGHT);
+		this.beta = new BTNActor(getTexture("beta"), MENU_WIDTH * 0.75f, 0.85f);
+		this.title = new BTNActor(getTexture("zombie-bop-menu-title"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.75f, 850.0f, 600.0f);
+		this.stripes = new BTNActor(getTexture("yellow-stripes"), MENU_WIDTH / 2.0f, (MENU_HEIGHT / 2.0f));
 //		this.zombie = new BTNActor(getAssetManager().get("textures/screen-menu/happy-zombie.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
-		this.zombie = new BTNActor(getAssetManager().get("textures/screen-menu/happy-zombie-with-scars-hd.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
-		this.topBar = new BTNActor(getAssetManager().get("textures/screen-game/top-bar.png", Texture.class), MENU_WIDTH / 2.0f, MENU_TOP_BAR_TOP, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
-		this.bottomBar = new BTNActor(getAssetManager().get("textures/screen-game/bottom-bar.png", Texture.class), MENU_WIDTH / 2.0f, BTNGameScreen.BOTTOM_BAR_BOTTOM + 90.0f /* + 625.0f*/, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
-		this.startGame = new BasicButton(getAssetManager().get("textures/screen-menu/start-button-up.png", Texture.class), getAssetManager().get("textures/screen-menu/start-button-down.png", Texture.class), MENU_WIDTH / 2.0f, 125.0f, MENU_WIDTH * 0.70f, 200.0f);
+		this.zombie = new BTNActor(getTexture("happy-zombie-with-scars-hd"), MENU_WIDTH / 2.0f, MENU_HEIGHT * 0.32f, MENU_WIDTH, MENU_HEIGHT * 0.6f);
+		this.topBar = new BTNActor(getTexture("top-bar"), MENU_WIDTH / 2.0f, MENU_TOP_BAR_TOP, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
+		this.bottomBar = new BTNActor(getTexture("bottom-bar"), MENU_WIDTH / 2.0f, BTNGameScreen.BOTTOM_BAR_BOTTOM + 90.0f /* + 625.0f*/, MENU_WIDTH, BTNGameScreen.BAR_HEIGHT);
+		this.startGame = new BasicButton(getTexture("start-button-up"), getTexture("start-button-down"), MENU_WIDTH / 2.0f, 125.0f, MENU_WIDTH * 0.70f, 200.0f);
 		this.stripes.setOriginX(stripes.getWidth() / 2.0f);
 		this.stripes.setOriginY(stripes.getHeight() / 2.0f);
-		this.prog = new BTNProgressBar(getAssetManager().get("textures/screen-menu/progress-bar/pb-back.png", Texture.class), getAssetManager().get("textures/screen-menu/progress-bar/pb-front.png", Texture.class), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f - 450.0f, MENU_WIDTH, 200.0f);
+		this.stripes.setScale(2.0f);
+		
+		this.prog = new BTNProgressBar(getTexture("pb-back"), getTexture("pb-front"), getTexture("pb-done"), getTexture("pb-dashes"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f - 450.0f, MENU_WIDTH, 200.0f);
 		
 //		this.beta.setRotation(10.0f);
 		this.beta.setWidth(400.0f);
@@ -126,7 +137,7 @@ public class BTNMenuScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				
-				onButtonDownClick();
+//				onButtonDownClick();
 				
 				return true;
 			}
@@ -136,7 +147,7 @@ public class BTNMenuScreen implements Screen {
 				
 				super.touchUp(event, x, y, pointer, button);
 				
-				onButtonUpClick();
+//				onButtonUpClick();
 				
 				Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
 				

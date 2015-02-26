@@ -51,7 +51,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	
 	public BTNContainedActor(TextureRegion texture, float x, float y, BTNGameScreen gameScreen, Container c){
 		
-		super(texture.getTexture(), x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
+		super(texture, x, y, CONTENT_WIDTH, CONTENT_HEIGHT);
 		
 		initialize(gameScreen, c);
 	}

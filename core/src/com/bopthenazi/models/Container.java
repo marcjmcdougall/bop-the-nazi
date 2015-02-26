@@ -24,13 +24,14 @@ public class Container extends Group{
 	
 	public Container(float x, float y, BTNGameScreen screen){
 
-		this.holeFront = new BTNActor(screen.getTexture("screen-game/container/tunnel-front.png").getTexture(), x, y + 100.0f, HOLE_WIDTH, HOLE_FRONT_HEIGHT);
-		this.holeBack = new BTNActor(screen.getTexture("screen-game/container/tunnel-back.png").getTexture(), x, y + 256.5f, HOLE_WIDTH, HOLE_BACK_HEIGHT);
+		this.holeFront = new BTNActor(screen.getTexture("tunnel-front"), x, y + 100.0f, HOLE_WIDTH, HOLE_FRONT_HEIGHT);
+		this.holeBack = new BTNActor(screen.getTexture("tunnel-back"), x, y + 256.5f, HOLE_WIDTH, HOLE_BACK_HEIGHT);
 		
+		// TODO: This is inneficient.
 		// By default, we will place a Zombie in each container.
-		this.contents = new Zombie(x, y, screen, this);
+		this.contents = new Zombie(0.0f, 0.0f, screen, null);
 		
-		this.minusHeart = new BTNActor(screen.getTexture("screen-game/container/heart-minus.png").getTexture(), x, y + 200.0f, HOLE_WIDTH, HOLE_WIDTH * 2.0f);
+		this.minusHeart = new BTNActor(screen.getTexture("heart-minus"), x, y + 200.0f, HOLE_WIDTH, HOLE_WIDTH * 2.0f);
 		
 		initializeContents();
 		

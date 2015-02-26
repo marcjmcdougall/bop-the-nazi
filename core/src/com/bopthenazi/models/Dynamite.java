@@ -10,8 +10,8 @@ public class Dynamite extends BTNContainedActor {
 
 	public Dynamite(float x, float y, BTNGameScreen gameScreen, Container container){
 		
-		super(new Array<TextureRegion>(new TextureRegion[]{gameScreen.getTexture("screen-game/dynamite/dynamite-01.png"), gameScreen.getTexture("screen-game/dynamite/dynamite-02.png"), gameScreen.getTexture("screen-game/dynamite/dynamite-03.png"), 
-				gameScreen.getTexture("screen-game/dynamite/dynamite-04.png"), gameScreen.getTexture("screen-game/dynamite/dynamite-05.png")}), x, y, gameScreen, container);
+		super(new Array<TextureRegion>(new TextureRegion[]{gameScreen.getTexture("dynamite-01"), gameScreen.getTexture("dynamite-02"), gameScreen.getTexture("dynamite-03"), 
+				gameScreen.getTexture("dynamite-04"), gameScreen.getTexture("dynamite-05")}), x, y, gameScreen, container);
 	}
 	
 	@Override

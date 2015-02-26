@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -32,7 +33,9 @@ public class SplashScreen implements Screen {
 		FitViewport viewport = new FitViewport(1080.0f, 1920.0f);
 		splashStage = new Stage(viewport);
 		
-		Image logo = new Image(new Texture("textures/logo.png"));
+		TextureAtlas textureAtlas = new TextureAtlas("textures/textures-packed/general.atlas");
+		
+		Image logo = new Image(textureAtlas.findRegion("logo"));
 		logo.setWidth(300.0f);
 		logo.setHeight(345.15f);
 		

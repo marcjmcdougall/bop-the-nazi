@@ -2,10 +2,12 @@ package com.bopthenazi.models;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.bopthenazi.utils.FontFactory;
+import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Score extends Actor {
 
@@ -19,7 +21,7 @@ public class Score extends Actor {
 	
 	private Label label;
 	
-	public Score(float x, float y){
+	public Score(float x, float y, BTNGameScreen gameScreen){
 		
 		this.setX(x);
 		this.setY(y);
@@ -27,7 +29,7 @@ public class Score extends Actor {
 		this.score = 0;
 		this.lives = DEFAULT_NUMBER_LIVES;
 		
-		LabelStyle style = new LabelStyle(FontFactory.buildFont(100), new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		LabelStyle style = new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-80.otf", BitmapFont.class), new Color(1.0f, 1.0f, 1.0f, 1.0f));
 		
 		label = new Label("Score: " + score, style);
 		label.setX(getX() - label.getWidth() / 2.0f);

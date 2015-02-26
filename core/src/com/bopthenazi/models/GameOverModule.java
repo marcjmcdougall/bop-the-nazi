@@ -3,6 +3,7 @@ package com.bopthenazi.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -68,12 +69,12 @@ public class GameOverModule extends Group {
 		background = new BTNActor(gameScreen.getTexture("game-over-box"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.6f);
 		gameOverImage = new BTNActor(gameScreen.getTexture("game-over-text"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f + HEIGHT_OFFSET, BTNGameScreen.GAME_WIDTH * 0.6f, BTNGameScreen.GAME_HEIGHT * 0.225f);
 		
-		copyrightLabel = new Label("Copyright 2015 Kilobyte Games", new LabelStyle(FontFactory.buildFont(40), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+		copyrightLabel = new Label("Copyright 2015 Kilobyte Games", new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-40.otf", BitmapFont.class), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		copyrightLabel.setHeight(100.0f);
 		copyrightLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (copyrightLabel.getWidth() / 2.0f));
 		copyrightLabel.setY(0.0f);
 		
-		reviewLabel = new Label("Got feedback? Click here!", new LabelStyle(FontFactory.buildFont(70), new Color(1.0f, 1.0f, 1.0f, 1.0f)));
+		reviewLabel = new Label("Got feedback? Click here!", new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-70.otf", BitmapFont.class), new Color(1.0f, 1.0f, 1.0f, 1.0f)));
 		reviewLabel.setHeight(100.0f);
 		reviewLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (reviewLabel.getWidth() / 2.0f) - 50.0f);
 		reviewLabel.setY(150.0f);
@@ -103,12 +104,12 @@ public class GameOverModule extends Group {
 		
 		pencil.setPosition(BTNGameScreen.GAME_WIDTH / 2.0f - (pencil.getWidth() / 2.0f) + 440.0f, 170.0f);
 		
-		scoreLabel = new Label("Score: " + score, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+		scoreLabel = new Label("Score: " + score, new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-80.otf", BitmapFont.class), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		scoreLabel.setHeight(100.0f);
 		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getWidth() / 2.0f));
 		scoreLabel.setY((590.0f + (scoreLabel.getHeight() / 2.0f)) + HEIGHT_OFFSET);
 		
-		highScoreLabel = new Label("High Score: " + highScore, new LabelStyle(FontFactory.buildFont(80), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+		highScoreLabel = new Label("High Score: " + highScore, new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-80.otf", BitmapFont.class), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		highScoreLabel.setHeight(100.0f);
 		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
 		highScoreLabel.setY((490.0f + (highScoreLabel.getHeight() / 2.0f)) + HEIGHT_OFFSET);

@@ -34,20 +34,18 @@ public class SoundManager {
 	public void beginLoadSFX(){
 		
 		// Load sounds...
-		loadSFX("bunny-die.wav");
-		loadSFX("explosion.wav");
-		loadSFX("game-over.wav");
-		loadSFX("game-over-cackle.mp3");
-		loadSFX("lets-go.wav");
-		loadSFX("new-record.wav");
-		loadSFX("punch.wav");
-		loadSFX("splat.wav");
-		loadSFX("zombie-hit.mp3");
-		loadSFX("powerup.wav");
-		loadSFX("zombie-bunny-die.wav");
-		loadSFX("lose-heart.mp3");
-		loadSFX("click-down.wav");
-		loadSFX("click-up.wav");
+		loadSFX("bunny-die.ogg");
+		loadSFX("explosion.ogg");
+		loadSFX("game-over-cackle.ogg");
+		loadSFX("lets-go.ogg");
+		loadSFX("new-record.ogg");
+		loadSFX("punch.ogg");
+		loadSFX("zombie-hit.ogg");
+		loadSFX("powerup.ogg");
+		loadSFX("zombie-bunny-die.ogg");
+		loadSFX("lose-heart.ogg");
+		loadSFX("click-down.ogg");
+		loadSFX("click-up.ogg");
 	}
 	
 	private void loadSFX(String fileNamePostPrepend){
@@ -64,7 +62,7 @@ public class SoundManager {
 				case SOUND_ID_PUNCH :{
 					
 //					punchSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("punch.wav").play(DEFAULT_VOLUME * 0.75f);
+					getSound("punch.ogg").play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}
@@ -72,14 +70,14 @@ public class SoundManager {
 					
 //					splatSound.play(DEFAULT_VOLUME * 0.25f);
 //					getSound("splat.wav").play(DEFAULT_VOLUME * 0.25f);
-					getSound("lose-heart.mp3").play(DEFAULT_VOLUME * 0.5f);
+					getSound("lose-heart.ogg").play(DEFAULT_VOLUME * 0.5f);
 					
 					break;
 				}
 				case SOUND_ID_EXPLOSION :{
 					
 //					explosionSound.play(DEFAULT_VOLUME * 0.15f);
-					getSound("explosion.wav").play(DEFAULT_VOLUME * 0.15f);
+					getSound("explosion.ogg").play(DEFAULT_VOLUME * 0.15f);
 					
 					break;
 				}
@@ -87,60 +85,60 @@ public class SoundManager {
 					
 //					gameOverSound.play(DEFAULT_VOLUME);
 //					getSound("game-over.wav").play(DEFAULT_VOLUME);
-					getSound("game-over-cackle.mp3").play(DEFAULT_VOLUME * 0.5f);
+					getSound("game-over-cackle.ogg").play(DEFAULT_VOLUME * 0.5f);
 					
 					break;
 				}
 				case SOUND_ID_LETS_GO : {
 					
 //					letsGoSound.play(DEFAULT_VOLUME);
-					getSound("lets-go.wav").play(DEFAULT_VOLUME);
+					getSound("lets-go.ogg").play(DEFAULT_VOLUME);
 					
 					break;
 				}
 				case SOUND_ID_BUNNY_DEATH : {
 					
 //					bunnyDeathSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("bunny-die.wav").play(DEFAULT_VOLUME * 0.75f);
+					getSound("bunny-die.ogg").play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}
 				case SOUND_ID_ZOMBIE_DEATH : {
 					
 //					zombieDeathSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("zombie-hit.mp3").play(DEFAULT_VOLUME * 0.15f);
+					getSound("zombie-hit.ogg").play(DEFAULT_VOLUME * 0.15f);
 					
 					break;
 				}
 				case SOUND_ID_NEW_RECORD : {
 					
 //					newRecordSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("new-record.wav").play(DEFAULT_VOLUME * 1.0f);
+					getSound("new-record.ogg").play(DEFAULT_VOLUME * 1.0f);
 					
 					break;
 				}
 				case SOUND_ID_POWERUP :{
 					
-					getSound("powerup.wav").play();
+					getSound("powerup.ogg").play();
 					
 					break;
 				}
 				case SOUND_ID_ZOMBIE_BUNNY_DEATH :{
 					
 //					zombieBunnyDieSound.play(DEFAULT_VOLUME * 0.75f);
-					getSound("zombie-bunny-die.wav").play(DEFAULT_VOLUME * 0.75f);
+					getSound("zombie-bunny-die.ogg").play(DEFAULT_VOLUME * 0.75f);
 					
 					break;
 				}
 				case SOUND_ID_CLICK_DOWN :{
 					
-					getSound("click-down.wav").play(DEFAULT_VOLUME * 0.5f);
+					getSound("click-down.ogg").play(DEFAULT_VOLUME * 0.5f);
 					
 					break;
 				}
 				case SOUND_ID_CLICK_UP :{
 					
-					getSound("click-up.wav").play(DEFAULT_VOLUME * 0.5f);
+					getSound("click-up.ogg").play(DEFAULT_VOLUME * 0.5f);
 					
 					break;
 				}

@@ -65,6 +65,8 @@ public class BTNMenuScreen implements Screen {
 		
 		getAssetManager().load("textures/textures-packed/menu.atlas", TextureAtlas.class);
 		
+//		soundManager.beginLoadSFX();
+		
 //		getAssetManager().load("textures/screen-menu/orange-background.png", Texture.class);
 //		getAssetManager().load("textures/screen-menu/zombie-bop-menu-title.png", Texture.class);
 //		getAssetManager().load("textures/screen-menu/yellow-stripes.png", Texture.class);
@@ -80,8 +82,8 @@ public class BTNMenuScreen implements Screen {
 //		getAssetManager().load("textures/screen-game/top-bar.png", Texture.class);
 //		getAssetManager().load("textures/screen-game/bottom-bar.png", Texture.class);
 //		
-		getAssetManager().load("sfx/click-down.wav", Sound.class);
-		getAssetManager().load("sfx/click-up.wav", Sound.class);
+		getAssetManager().load("sfx/click-down.ogg", Sound.class);
+		getAssetManager().load("sfx/click-up.ogg", Sound.class);
 	}
 	
 	@Override
@@ -97,7 +99,6 @@ public class BTNMenuScreen implements Screen {
 	
 	private void initialize(){
 		
-//		FitViewport viewport = new FitViewport(MENU_WIDTH, MENU_HEIGHT);
 		StretchViewport viewport = new StretchViewport(MENU_WIDTH, MENU_HEIGHT);
 		menuStage = new Stage(viewport);
 		
@@ -117,7 +118,6 @@ public class BTNMenuScreen implements Screen {
 		
 		this.prog = new BTNProgressBar(getTexture("pb-back"), getTexture("pb-front"), getTexture("pb-done"), getTexture("pb-dashes"), MENU_WIDTH / 2.0f, MENU_HEIGHT / 2.0f - 450.0f, MENU_WIDTH, 200.0f);
 		
-//		this.beta.setRotation(10.0f);
 		this.beta.setWidth(400.0f);
 		this.beta.setHeight(264.0f);
 		this.beta.setScale(0.8f);
@@ -137,7 +137,7 @@ public class BTNMenuScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				
-//				onButtonDownClick();
+				onButtonDownClick();
 				
 				return true;
 			}
@@ -147,12 +147,9 @@ public class BTNMenuScreen implements Screen {
 				
 				super.touchUp(event, x, y, pointer, button);
 				
-//				onButtonUpClick();
+				onButtonUpClick();
 				
 				Gdx.app.log(BTNGame.TAG, "TOUCHUP Received");
-				
-//				BTNMenuScreen.this.game.setScreen(new BTNGameScreen(BTNMenuScreen.this.game));
-//				BTNMenuScreen.this.game.setScreen(new BTNLoadingScreen(game));
 				
 				bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BTNGameScreen.BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.pow4));
 				topBar.addAction(Actions.moveTo(topBar.getX(), BTNGameScreen.TOP_BAR_TOGETHER, 1.0f, Interpolation.pow4));

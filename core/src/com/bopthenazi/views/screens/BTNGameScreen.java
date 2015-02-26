@@ -72,10 +72,10 @@ public class BTNGameScreen implements Screen{
 	private static final int MODE_STANDARD = 0;
 	public static final int MODE_APOCALYPSE = 1;
 
+	private int mode;
+	
 	private FPSLogger logger;
 	private PerformanceCounter counter;
-
-	private int mode = MODE_STANDARD;
 
 	private DifficultyManager difficultyManager;
 
@@ -139,36 +139,52 @@ public class BTNGameScreen implements Screen{
 	}
 
 	public void beginAssetLoad(){
-
+		
 		// Load the fonts...
 		FileHandleResolver resolver = new InternalFileHandleResolver();
 		getAssetManager().setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
 		getAssetManager().setLoader(BitmapFont.class, ".otf", new FreetypeFontLoader(resolver));
 
+		counter.start();
+		
 		FreeTypeFontLoaderParameter size40Params = new FreeTypeFontLoaderParameter();
 		size40Params.fontFileName = "fonts/masaaki-regular.otf";
 		size40Params.fontParameters.size = 40;
 		getAssetManager().load("masaaki-regular-40.otf", BitmapFont.class, size40Params);
 
+		counter.stop();
+		counter.start();
+		
 		FreeTypeFontLoaderParameter size70Params = new FreeTypeFontLoaderParameter();
 		size70Params.fontFileName = "fonts/masaaki-regular.otf";
 		size70Params.fontParameters.size = 70;
 		getAssetManager().load("masaaki-regular-70.otf", BitmapFont.class, size70Params);
 
+		counter.stop();
+		counter.start();
+		
 		FreeTypeFontLoaderParameter size80Params = new FreeTypeFontLoaderParameter();
 		size80Params.fontFileName = "fonts/masaaki-regular.otf";
 		size80Params.fontParameters.size = 80;
 		getAssetManager().load("masaaki-regular-80.otf", BitmapFont.class, size80Params);
 		
+		counter.stop();
+		counter.start();
 		// Load texture atlas...
 		getAssetManager().load("textures/textures-packed/game.atlas", TextureAtlas.class);
 
+		counter.stop();
+		counter.start();
+		
 		// Load sounds...
 		soundManager.beginLoadSFX();
 
+		counter.stop();
 		// Load music...
 //		loadMusic("8-bit-dungeon-boss.mp3");
 
+		System.out.println(counter.toString());
+		
 		// Load fonts...
 		// TODO: Implementation.
 	}
@@ -557,6 +573,8 @@ public class BTNGameScreen implements Screen{
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		counter.tick(delta);
+		
 		if(!this.isPaused()){
 
 			timeElapsedSinceLastZombie += delta;

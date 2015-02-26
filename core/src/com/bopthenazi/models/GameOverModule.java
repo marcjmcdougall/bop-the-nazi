@@ -95,7 +95,7 @@ public class GameOverModule extends Group {
 				
 				super.touchUp(event, x, y, pointer, button);
 				
-				Gdx.net.openURI("https://play.google.com/store/apps/details?id=com.rovio.angrybirds");
+				Gdx.net.openURI("https://play.google.com/store/apps/details?id=com.kilobytegames.zombiebop");
 			}
 		});
 		

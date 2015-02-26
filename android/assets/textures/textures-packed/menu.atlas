@@ -1,0 +1,135 @@
+
+menu.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+yellow-stripes
+  rotate: false
+  xy: 2, 2
+  size: 1020, 1020
+  orig: 1020, 1020
+  offset: 0, 0
+  index: -1
+
+menu2.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+happy-zombie
+  rotate: false
+  xy: 2, 217
+  size: 640, 747
+  orig: 640, 747
+  offset: 0, 0
+  index: -1
+menu-screen-example
+  rotate: false
+  xy: 644, 396
+  size: 320, 568
+  orig: 320, 568
+  offset: 0, 0
+  index: -1
+pb-back
+  rotate: false
+  xy: 2, 2
+  size: 1020, 213
+  orig: 1020, 213
+  offset: 0, 0
+  index: -1
+zombie-bop-menu-title
+  rotate: false
+  xy: 644, 228
+  size: 256, 166
+  orig: 256, 166
+  offset: 0, 0
+  index: -1
+
+menu3.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bottom-bar
+  rotate: false
+  xy: 644, 2
+  size: 320, 1000
+  orig: 320, 1000
+  offset: 0, 0
+  index: -1
+happy-zombie-with-scars-hd
+  rotate: false
+  xy: 2, 255
+  size: 640, 747
+  orig: 640, 747
+  offset: 0, 0
+  index: -1
+pb-front
+  rotate: false
+  xy: 2, 27
+  size: 396, 226
+  orig: 396, 226
+  offset: 0, 0
+  index: -1
+start-button-down
+  rotate: false
+  xy: 400, 192
+  size: 188, 61
+  orig: 188, 61
+  offset: 0, 0
+  index: -1
+start-button-up
+  rotate: false
+  xy: 400, 129
+  size: 188, 61
+  orig: 188, 61
+  offset: 0, 0
+  index: -1
+
+menu4.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+beta
+  rotate: false
+  xy: 2, 2
+  size: 768, 506
+  orig: 768, 506
+  offset: 0, 0
+  index: -1
+pb-dashes
+  rotate: false
+  xy: 2, 725
+  size: 1020, 213
+  orig: 1020, 213
+  offset: 0, 0
+  index: -1
+pb-done
+  rotate: false
+  xy: 2, 510
+  size: 1020, 213
+  orig: 1020, 213
+  offset: 0, 0
+  index: -1
+
+menu5.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+orange-background
+  rotate: false
+  xy: 324, 434
+  size: 320, 568
+  orig: 320, 568
+  offset: 0, 0
+  index: -1
+top-bar
+  rotate: false
+  xy: 2, 2
+  size: 320, 1000
+  orig: 320, 1000
+  offset: 0, 0
+  index: -1

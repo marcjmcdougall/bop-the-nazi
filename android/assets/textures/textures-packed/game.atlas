@@ -1,0 +1,339 @@
+
+game.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+alpha-25
+  rotate: false
+  xy: 2, 53
+  size: 540, 960
+  orig: 540, 960
+  offset: 0, 0
+  index: -1
+bottom-bar
+  rotate: false
+  xy: 544, 13
+  size: 320, 1000
+  orig: 320, 1000
+  offset: 0, 0
+  index: -1
+glove
+  rotate: false
+  xy: 866, 13
+  size: 156, 1000
+  orig: 156, 1000
+  offset: 0, 0
+  index: -1
+heart
+  rotate: false
+  xy: 245, 35
+  size: 19, 16
+  orig: 19, 16
+  offset: 0, 0
+  index: -1
+heart-empty-v2
+  rotate: false
+  xy: 245, 17
+  size: 19, 16
+  orig: 19, 16
+  offset: 0, 0
+  index: -1
+mover
+  rotate: false
+  xy: 198, 10
+  size: 45, 41
+  orig: 45, 41
+  offset: 0, 0
+  index: -1
+ok-button-down-state
+  rotate: false
+  xy: 72, 2
+  size: 61, 49
+  orig: 61, 49
+  offset: 0, 0
+  index: -1
+ok-button-up-state
+  rotate: false
+  xy: 135, 2
+  size: 61, 49
+  orig: 61, 49
+  offset: 0, 0
+  index: -1
+tunnel-back
+  rotate: false
+  xy: 2, 4
+  size: 68, 47
+  orig: 68, 47
+  offset: 0, 0
+  index: -1
+
+game2.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bunny
+  rotate: false
+  xy: 866, 591
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+bunny-2
+  rotate: false
+  xy: 936, 763
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+bunny-hit-frame
+  rotate: false
+  xy: 866, 444
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+bunny2-hit-frame
+  rotate: false
+  xy: 866, 297
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-01
+  rotate: false
+  xy: 866, 150
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-02
+  rotate: false
+  xy: 866, 3
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-03
+  rotate: false
+  xy: 934, 591
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-04
+  rotate: false
+  xy: 934, 444
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-05
+  rotate: false
+  xy: 934, 297
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+explosion-splash
+  rotate: false
+  xy: 2, 42
+  size: 540, 960
+  orig: 540, 960
+  offset: 0, 0
+  index: -1
+game-over-text
+  rotate: false
+  xy: 866, 910
+  size: 147, 92
+  orig: 147, 92
+  offset: 0, 0
+  index: -1
+heart-contained
+  rotate: false
+  xy: 934, 150
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+heart-minus
+  rotate: false
+  xy: 934, 3
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+top-bar
+  rotate: false
+  xy: 544, 2
+  size: 320, 1000
+  orig: 320, 1000
+  offset: 0, 0
+  index: -1
+tunnel-front
+  rotate: false
+  xy: 866, 738
+  size: 68, 170
+  orig: 68, 170
+  offset: 0, 0
+  index: -1
+
+game3.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background
+  rotate: false
+  xy: 424, 448
+  size: 320, 568
+  orig: 320, 568
+  offset: 0, 0
+  index: -1
+explosion-01
+  rotate: false
+  xy: 746, 481
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+explosion-02
+  rotate: false
+  xy: 206, 47
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+explosion-03
+  rotate: false
+  xy: 882, 628
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+explosion-04
+  rotate: false
+  xy: 399, 283
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+game-over-box
+  rotate: false
+  xy: 746, 730
+  size: 210, 286
+  orig: 210, 286
+  offset: 0, 0
+  index: -1
+heart-plus
+  rotate: false
+  xy: 2, 2
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+instructions-screen
+  rotate: false
+  xy: 2, 444
+  size: 420, 572
+  orig: 420, 572
+  offset: 0, 0
+  index: -1
+pencil
+  rotate: false
+  xy: 2, 149
+  size: 327, 293
+  orig: 327, 293
+  offset: 0, 0
+  index: -1
+restart-button
+  rotate: false
+  xy: 424, 385
+  size: 147, 61
+  orig: 147, 61
+  offset: 0, 0
+  index: -1
+restart-button-down-state
+  rotate: false
+  xy: 573, 385
+  size: 147, 61
+  orig: 147, 61
+  offset: 0, 0
+  index: -1
+zombie
+  rotate: false
+  xy: 331, 297
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+zombie-2
+  rotate: false
+  xy: 746, 583
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+zombie-bunny
+  rotate: false
+  xy: 70, 2
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+zombie-bunny-hit-frame
+  rotate: false
+  xy: 331, 150
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+zombie1-hit-frame
+  rotate: false
+  xy: 814, 583
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+zombie2-hit-frame
+  rotate: false
+  xy: 138, 2
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+
+game4.png
+size: 256,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+numbers/1
+  rotate: false
+  xy: 106, 3
+  size: 36, 47
+  orig: 36, 47
+  offset: 0, 0
+  index: -1
+numbers/2
+  rotate: false
+  xy: 144, 3
+  size: 36, 47
+  orig: 36, 47
+  offset: 0, 0
+  index: -1
+numbers/3
+  rotate: false
+  xy: 182, 3
+  size: 36, 47
+  orig: 36, 47
+  offset: 0, 0
+  index: -1
+numbers/bop
+  rotate: false
+  xy: 2, 2
+  size: 102, 48
+  orig: 102, 48
+  offset: 0, 0
+  index: -1

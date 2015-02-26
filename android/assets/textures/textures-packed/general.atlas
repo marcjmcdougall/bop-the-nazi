@@ -1,0 +1,27 @@
+
+general.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+icon
+  rotate: false
+  xy: 2, 2
+  size: 280, 280
+  orig: 280, 280
+  offset: 0, 0
+  index: -1
+icon-small
+  rotate: false
+  xy: 516, 841
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 2, 284
+  size: 512, 589
+  orig: 512, 589
+  offset: 0, 0
+  index: -1

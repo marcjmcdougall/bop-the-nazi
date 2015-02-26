@@ -7,7 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,7 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.PerformanceCounter;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNContainedActor;
@@ -63,6 +64,9 @@ public class BTNGameScreen implements Screen{
 	
 	private static final int MODE_STANDARD = 0;
 	public static final int MODE_APOCALYPSE = 1;
+	
+	private FPSLogger logger;
+	private PerformanceCounter counter;
 	
 	private int mode = MODE_STANDARD;
 	
@@ -122,6 +126,8 @@ public class BTNGameScreen implements Screen{
 	public BTNGameScreen(BTNGame game){
 		
 		this.game = game;
+		this.counter = new PerformanceCounter("Main");
+		this.logger = new FPSLogger();
 		
 		this.assetManager = new AssetManager();
 		this.soundManager = new SoundManager(assetManager);
@@ -424,6 +430,8 @@ public class BTNGameScreen implements Screen{
 
 	private void initialize() {
 		
+		counter.start();
+		
 		tutorialScreen = new TutorialScreenModule(this);
 		difficultyManager = new DifficultyManager();
 		
@@ -438,7 +446,9 @@ public class BTNGameScreen implements Screen{
 		
 		timeElapsedSinceLastZombie = 0f;
 		
-		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
+//		FitViewport viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT);
+//		FillViewport viewport = new FillViewport(GAME_WIDTH, GAME_HEIGHT);
+		StretchViewport viewport = new StretchViewport(GAME_WIDTH, GAME_HEIGHT);
 		
 		gameStage = new BTNStage(viewport, game, this);
 		hudStage = new Stage(viewport);
@@ -517,6 +527,8 @@ public class BTNGameScreen implements Screen{
 		hudStage.addActor(tutorialScreen);
 		
 		activateContainerContents(containers.get(randomIndex));
+		
+		counter.stop();
 	}
 
 	public void begin(float initialDelay){
@@ -581,7 +593,11 @@ public class BTNGameScreen implements Screen{
 		
 		this.setGamePaused(true);
 		
+		counter.start();
+		
 		tutorialScreen.doAnimate();
+		
+		counter.stop();
 	}
 
 	public TextureRegion getTexture(String textureNamePostPrepend) {
@@ -603,8 +619,10 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void render(float delta) {
 	
-		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
+        logger.log();
         
         if(!this.isPaused()){
         	
@@ -796,7 +814,7 @@ public class BTNGameScreen implements Screen{
 		print("> Glove.getCurrentAction: " + glove.getCurrentAction());
 		print("> Glove.getCachedAction: " + glove.getCachedAction());
 		print("> GameOverScreen.isVisible: " + gameOverScreen.isVisible());
-		
+		print("> Performance Counter: " + counter.toString());
 		print("==========================");
 	}
 	

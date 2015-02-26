@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.utils.Action;
 import com.bopthenazi.utils.Action.ActionType;
@@ -24,7 +25,7 @@ public class BTNStage extends Stage {
 		this.game = game;
 	}
 	
-	public BTNStage(FitViewport viewport, BTNGame game, BTNGameScreen screen) {
+	public BTNStage(Viewport viewport, BTNGame game, BTNGameScreen screen) {
 	
 		super(viewport);
 		

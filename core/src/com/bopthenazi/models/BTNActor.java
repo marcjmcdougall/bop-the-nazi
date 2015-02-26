@@ -38,7 +38,7 @@ public class BTNActor extends Actor implements Collidable{
 	
 	public BTNActor(){
 		
-		this(new Texture(DEFAULT_TEXTURE), DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+//		this(new Texture(DEFAULT_TEXTURE), DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 	
 	public BTNActor(Texture texture, float x, float y){

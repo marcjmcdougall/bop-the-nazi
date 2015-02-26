@@ -12,13 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNProgressBar;
 import com.bopthenazi.models.BasicButton;
 import com.bopthenazi.utils.SoundManager;
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class BTNMenuScreen implements Screen {
 
@@ -85,8 +84,12 @@ public class BTNMenuScreen implements Screen {
 	public void show() {
 		
 		getAssetManager().finishLoading();
+	}
+	
+	private void initialize(){
 		
-		FitViewport viewport = new FitViewport(MENU_WIDTH, MENU_HEIGHT);
+//		FitViewport viewport = new FitViewport(MENU_WIDTH, MENU_HEIGHT);
+		StretchViewport viewport = new StretchViewport(MENU_WIDTH, MENU_HEIGHT);
 		menuStage = new Stage(viewport);
 		
 		this.setAnimationComplete(false);
@@ -191,7 +194,7 @@ public class BTNMenuScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		
-		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if(gameScreen.getAssetManager().update() && isAnimationComplete()){
@@ -219,7 +222,8 @@ public class BTNMenuScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+	
+		initialize();
 	}
 
 	@Override

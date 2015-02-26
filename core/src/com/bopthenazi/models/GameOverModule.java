@@ -8,15 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.utils.FontFactory;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
@@ -75,6 +71,8 @@ public class GameOverModule extends Group {
 		reviewLabel.setHeight(100.0f);
 		reviewLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (reviewLabel.getWidth() / 2.0f) - 50.0f);
 		reviewLabel.setY(150.0f);
+		
+		reviewLabel.setY(reviewLabel.getY() - 1000.0f);
 		
 		reviewLabel.addListener(new InputListener(){
 			
@@ -150,6 +148,9 @@ public class GameOverModule extends Group {
 						
 						GameOverModule.this.setVisible(false);
 						
+						reviewLabel.setVisible(false);
+						reviewLabel.setY(reviewLabel.getY() - 1000.0f);
+						
 						copyrightLabel.getColor().a = 0.0f;
 						gameOverAlpha.getColor().a = 0.0f;
 						pencil.getColor().a = 0.0f;
@@ -182,6 +183,9 @@ public class GameOverModule extends Group {
 		
 		setShowing(true);
 		setVisible(true);
+		reviewLabel.setVisible(true);
+		
+		reviewLabel.setY(reviewLabel.getY() + 1000.0f);
 		
 		MoveToAction moveOutInstant = Actions.moveTo(getX(), hiddenY);
 		MoveByAction moveIn = Actions.moveBy(0.0f, -2000.0f, 1.0f, Interpolation.pow4);

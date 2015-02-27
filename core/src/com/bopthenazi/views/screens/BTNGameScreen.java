@@ -394,7 +394,7 @@ public class BTNGameScreen implements Screen{
 		
 		tempTrue = true;
 
-		if(/*saveManager.isFirstShot()*/ tempTrue){
+		if(saveManager.isFirstShot()){
 
 			tempTrue = false;
 			showTutorialScreen();

@@ -77,10 +77,10 @@ public class AndroidLauncher extends AndroidApplication {
 
 	  public void startAdvertising(AdView adView) {
 	   
-//			AdRequest adRequest = new AdRequest.Builder().build();
-		  	AdRequest request = new AdRequest.Builder().addTestDevice("B791A64DEE8D9C6CECF0940D5A78F774").build();
+			AdRequest adRequest = new AdRequest.Builder().build();
+//		  	AdRequest request = new AdRequest.Builder().addTestDevice("B791A64DEE8D9C6CECF0940D5A78F774").build();
 		  
-		  	adView.loadAd(request);
+		  	adView.loadAd(adRequest);
 	  }
 	  
 	  @Override

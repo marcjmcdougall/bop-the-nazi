@@ -74,9 +74,6 @@ public class BTNGameScreen implements Screen{
 
 	private int mode;
 	
-	private FPSLogger logger;
-	private PerformanceCounter counter;
-
 	private DifficultyManager difficultyManager;
 
 	private AssetManager assetManager;
@@ -129,8 +126,6 @@ public class BTNGameScreen implements Screen{
 	public BTNGameScreen(BTNGame game){
 
 		this.game = game;
-		this.counter = new PerformanceCounter("Main");
-		this.logger = new FPSLogger();
 
 		this.assetManager = new AssetManager();
 		this.soundManager = new SoundManager(assetManager);
@@ -145,46 +140,29 @@ public class BTNGameScreen implements Screen{
 		getAssetManager().setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
 		getAssetManager().setLoader(BitmapFont.class, ".otf", new FreetypeFontLoader(resolver));
 
-		counter.start();
-		
 		FreeTypeFontLoaderParameter size40Params = new FreeTypeFontLoaderParameter();
 		size40Params.fontFileName = "fonts/masaaki-regular.otf";
 		size40Params.fontParameters.size = 40;
 		getAssetManager().load("masaaki-regular-40.otf", BitmapFont.class, size40Params);
 
-		counter.stop();
-		counter.start();
-		
 		FreeTypeFontLoaderParameter size70Params = new FreeTypeFontLoaderParameter();
 		size70Params.fontFileName = "fonts/masaaki-regular.otf";
 		size70Params.fontParameters.size = 70;
 		getAssetManager().load("masaaki-regular-70.otf", BitmapFont.class, size70Params);
 
-		counter.stop();
-		counter.start();
-		
 		FreeTypeFontLoaderParameter size80Params = new FreeTypeFontLoaderParameter();
 		size80Params.fontFileName = "fonts/masaaki-regular.otf";
 		size80Params.fontParameters.size = 80;
 		getAssetManager().load("masaaki-regular-80.otf", BitmapFont.class, size80Params);
 		
-		counter.stop();
-		counter.start();
-		// Load texture atlas...
 		getAssetManager().load("textures/textures-packed/game.atlas", TextureAtlas.class);
 
-		counter.stop();
-		counter.start();
-		
 		// Load sounds...
 		soundManager.beginLoadSFX();
 
-		counter.stop();
 		// Load music...
 //		loadMusic("8-bit-dungeon-boss.mp3");
 
-		System.out.println(counter.toString());
-		
 		// Load fonts...
 		// TODO: Implementation.
 	}
@@ -573,8 +551,6 @@ public class BTNGameScreen implements Screen{
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		counter.tick(delta);
-		
 		if(!this.isPaused()){
 
 			timeElapsedSinceLastZombie += delta;
@@ -764,7 +740,6 @@ public class BTNGameScreen implements Screen{
 		print("> Glove.getCurrentAction: " + glove.getCurrentAction());
 		print("> Glove.getCachedAction: " + glove.getCachedAction());
 		print("> GameOverScreen.isVisible: " + gameOverScreen.isVisible());
-		print("> Performance Counter: " + counter.toString());
 		print("==========================");
 	}
 

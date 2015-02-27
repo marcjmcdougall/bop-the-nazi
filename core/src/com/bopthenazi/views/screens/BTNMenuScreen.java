@@ -253,6 +253,7 @@ public class BTNMenuScreen implements Screen {
 	public void dispose() {
 		
 		menuStage.dispose();
+		assetManager.dispose();
 	}
 
 	public boolean isAnimationComplete() {

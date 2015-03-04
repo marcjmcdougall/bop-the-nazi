@@ -171,8 +171,8 @@ public class SoundManager {
 		
 		if(isMuted()){
 			
-			playSound(SOUND_ID_CLICK_UP);
 			setMuted(false);
+			playSound(SOUND_ID_CLICK_UP);
 		}
 		else{
 			

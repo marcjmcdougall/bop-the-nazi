@@ -418,9 +418,9 @@ public class BTNGameScreen implements Screen{
 		hudStage = new Stage(viewport, gameStage.getBatch());
 
 		soundControl = new Image(getTexture("audioOn"));
+		soundControl.setSize(125.0f, 125.0f);
 		soundControl.setX(50.0f);
-		soundControl.setY(GAME_HEIGHT * 0.70f);
-		soundControl.setSize(100.0f, 100.0f);
+		soundControl.setY(LivesModule.HEART_Y - soundControl.getHeight() / 2.0f);
 		
 		soundControl.addListener(new InputListener(){
 			

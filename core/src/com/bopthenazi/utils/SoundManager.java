@@ -5,8 +5,6 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
 
-	private static final boolean QUIET_MODE = false;
-	
 	private static final float DEFAULT_VOLUME = 1.0f;
 	
 	private static final String SFX_PREPEND = "sfx/";
@@ -26,9 +24,12 @@ public class SoundManager {
 	
 	private AssetManager assets;
 	
+	private boolean muted;
+	
 	public SoundManager(AssetManager assetManager){
 		
 		assets = assetManager;
+		this.setMuted(false);
 	}
 	
 	public void beginLoadSFX(){
@@ -55,7 +56,7 @@ public class SoundManager {
 	
 	public void playSound(int soundID){
 		
-		if(!QUIET_MODE){
+		if(!isMuted()){
 			
 			switch(soundID){
 			
@@ -154,5 +155,28 @@ public class SoundManager {
 	public Sound getSound(String soundNamePostPrepend){
 		
 		return assets.get(SFX_PREPEND + soundNamePostPrepend, Sound.class);
+	}
+
+	public boolean isMuted() {
+		
+		return muted;
+	}
+
+	private void setMuted(boolean muted) {
+		
+		this.muted = muted;
+	}
+	
+	public void toggleSound(){
+		
+		if(isMuted()){
+			
+			playSound(SOUND_ID_CLICK_UP);
+			setMuted(false);
+		}
+		else{
+			
+			setMuted(true);
+		}
 	}
 }

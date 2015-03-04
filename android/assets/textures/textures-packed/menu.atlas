@@ -24,7 +24,7 @@ happy-zombie
   orig: 640, 747
   offset: 0, 0
   index: -1
-menu-screen-example
+orange-background
   rotate: false
   xy: 644, 396
   size: 320, 568
@@ -115,17 +115,10 @@ pb-done
   index: -1
 
 menu5.png
-size: 1024,1024
+size: 512,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-orange-background
-  rotate: false
-  xy: 324, 434
-  size: 320, 568
-  orig: 320, 568
-  offset: 0, 0
-  index: -1
 top-bar
   rotate: false
   xy: 2, 2

@@ -294,7 +294,7 @@ public class BTNGameScreen implements Screen{
 		this.score.setLives(Score.DEFAULT_NUMBER_LIVES);
 		this.livesModule.reset();
 		this.glove.setX(GAME_WIDTH / 2.0f);
-		this.difficultyManager.reset();
+		this.getDifficultyManager().reset();
 
 		for(Container container : containers){
 
@@ -400,7 +400,7 @@ public class BTNGameScreen implements Screen{
 
 		// The game over screen is providing the MOST amount of latency here.
 		gameOverScreen = new GameOverModule(this);
-		difficultyManager = new DifficultyManager();
+		this.difficultyManager = new DifficultyManager();
 
 		this.setGamePaused(true);
 
@@ -640,7 +640,7 @@ public class BTNGameScreen implements Screen{
 
 			timeElapsedSinceLastZombie += delta;
 
-			if(timeElapsedSinceLastZombie >= difficultyManager.getNewContainerSpawnRate()){
+			if(timeElapsedSinceLastZombie >= getDifficultyManager().getNewContainerSpawnRate()){
 
 				// Activate a random Nazi that has *not yet been activated*
 				doActivateUniqueContainer(null);
@@ -648,7 +648,7 @@ public class BTNGameScreen implements Screen{
 				timeElapsedSinceLastZombie = 0.0f;
 			}
 
-			difficultyManager.updateDifficulty(delta);
+			getDifficultyManager().updateDifficulty(delta);
 			gameStage.act(delta);
 		}
 
@@ -683,7 +683,7 @@ public class BTNGameScreen implements Screen{
 			}
 		}
 
-		if(numContainersActivated < difficultyManager.getMaxConcurrentContainers()){
+		if(numContainersActivated < getDifficultyManager().getMaxConcurrentContainers()){
 
 			for(int i = 0; i < DifficultyManager.MAX_CONTAINERS; i++){
 
@@ -917,7 +917,7 @@ public class BTNGameScreen implements Screen{
 
 			BTNContainedActor contents = getContainers().get(i).getContents();
 
-			if(!(contents instanceof Dynamite) && contents.canCollide()){
+			if(!(contents instanceof Dynamite) && contents.getActorState() == BTNContainedActor.STATE_VISIBLE){
 
 				contents.onCollide(null);
 			}
@@ -936,7 +936,7 @@ public class BTNGameScreen implements Screen{
 
 		score.setLives(score.getLives() - 1);
 		livesModule.popHeart();
-		difficultyManager.onHeartLoss();
+		getDifficultyManager().onHeartLoss();
 
 		if(score.getLives() <= 0){
 
@@ -1011,5 +1011,10 @@ public class BTNGameScreen implements Screen{
 	public void onButtonClickDown() {
 
 		soundManager.playSound(SoundManager.SOUND_ID_CLICK_DOWN);
+	}
+
+	public DifficultyManager getDifficultyManager() {
+		
+		return difficultyManager;
 	}
 }

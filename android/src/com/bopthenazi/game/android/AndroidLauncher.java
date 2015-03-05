@@ -30,7 +30,7 @@ public class AndroidLauncher extends AndroidApplication {
 		    AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
 		    cfg.useAccelerometer = false;
 		    cfg.useCompass = false;
-		    cfg.useImmersiveMode = true;
+//		    cfg.useImmersiveMode = true;
 	
 		    // Do the stuff that initialize() would do for you
 		    requestWindowFeature(Window.FEATURE_NO_TITLE);

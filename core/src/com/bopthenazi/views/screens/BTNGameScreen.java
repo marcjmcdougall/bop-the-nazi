@@ -725,7 +725,10 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void pause() {
 
-		showPauseScreen();
+		if(!(gameOverScreen.isVisible() || tutorialScreen.isVisible())){
+			
+			showPauseScreen();
+		}
 	}
 
 	@Override
@@ -736,8 +739,6 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void hide() {
 
-		// TODO Auto-generated method stub
-		//		dispose();
 	}
 
 	@Override

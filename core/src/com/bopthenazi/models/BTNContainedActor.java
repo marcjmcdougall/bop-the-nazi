@@ -182,7 +182,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		MoveToAction moveDown = new MoveToAction();
 		
 		moveDown.setPosition(getX(), getY() - getHeight());
-		moveDown.setDuration(gameScreen.getDifficultyManager().getLaunchSpeed());
+		moveDown.setDuration(gameScreen.getDifficultyManager().getLaunchSpeed() / 2.0f);
 		moveDown.setInterpolation(Interpolation.linear);
 		
 		this.addAction(moveDown);

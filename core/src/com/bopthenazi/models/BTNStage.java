@@ -80,7 +80,7 @@ public class BTNStage extends Stage {
 			
 			game.setScreen(new BTNMenuScreen(game));
 		}
-		if(keyCode == Keys.P){
+		if(keyCode == Keys.P || keyCode == Keys.ESCAPE){
 			
 			screen.showPauseScreen();
 		}

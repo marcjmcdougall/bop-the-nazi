@@ -918,8 +918,15 @@ public class BTNGameScreen implements Screen{
 			BTNContainedActor contents = getContainers().get(i).getContents();
 
 			if(!(contents instanceof Dynamite) && contents.getActorState() == BTNContainedActor.STATE_VISIBLE){
-
-				contents.onCollide(null);
+				
+				if(contents instanceof Bunny && contents.canCollide()){
+					
+					contents.onCollide(null);
+				}
+				else{
+					
+					contents.onCollide(null);
+				}
 			}
 		}
 

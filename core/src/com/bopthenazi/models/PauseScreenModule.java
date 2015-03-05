@@ -64,7 +64,7 @@ public class PauseScreenModule extends Group{
 				
 				super.touchUp(event, x, y, pointer, button);
 				
-				if(y >= 250.0f){
+				if(y >= 300.0f){
 					
 					gameScreen.hidePauseScreen();
 				}

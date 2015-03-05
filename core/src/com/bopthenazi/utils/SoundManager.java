@@ -176,6 +176,7 @@ public class SoundManager {
 		}
 		else{
 			
+			playSound(SOUND_ID_CLICK_DOWN);
 			setMuted(true);
 		}
 	}

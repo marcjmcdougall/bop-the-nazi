@@ -57,13 +57,8 @@ public class GameOverModule extends Group {
 
 	private void initialize() {
 		
-		long count = System.currentTimeMillis();
-		
 		this.setShowing(false);
 		this.setVisible(false);
-		
-		// TODO: Next steps include fixing the font generator.  Specifically, you should generate the generator, 
-		// then use that over and over until closing it.  Perhaps it's because the fonts have to be loaded in real time?
 		
 		gameOverAlpha = new BTNActor(gameScreen.getTexture("alpha-25"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH, BTNGameScreen.GAME_HEIGHT);
 		background = new BTNActor(gameScreen.getTexture("game-over-box"), BTNGameScreen.GAME_WIDTH / 2.0f, BTNGameScreen.GAME_HEIGHT / 2.0f, BTNGameScreen.GAME_WIDTH * 0.75f, BTNGameScreen.GAME_HEIGHT * 0.6f);

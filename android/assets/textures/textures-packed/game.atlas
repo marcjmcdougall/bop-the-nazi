@@ -41,21 +41,21 @@ glove
   index: -1
 heart
   rotate: false
-  xy: 349, 36
+  xy: 401, 36
   size: 19, 16
   orig: 19, 16
   offset: 0, 0
   index: -1
 heart-empty-v2
   rotate: false
-  xy: 349, 18
+  xy: 401, 18
   size: 19, 16
   orig: 19, 16
   offset: 0, 0
   index: -1
 mover
   rotate: false
-  xy: 302, 11
+  xy: 354, 11
   size: 45, 41
   orig: 45, 41
   offset: 0, 0
@@ -72,6 +72,13 @@ ok-button-up-state
   xy: 135, 3
   size: 61, 49
   orig: 61, 49
+  offset: 0, 0
+  index: -1
+pause
+  rotate: false
+  xy: 302, 2
+  size: 50, 50
+  orig: 50, 50
   offset: 0, 0
   index: -1
 tunnel-back

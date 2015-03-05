@@ -7,8 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bopthenazi.game.BTNGame;
-import com.bopthenazi.utils.Action;
-import com.bopthenazi.utils.Action.ActionType;
 import com.bopthenazi.views.screens.BTNGameScreen;
 import com.bopthenazi.views.screens.BTNMenuScreen;
 
@@ -84,7 +82,7 @@ public class BTNStage extends Stage {
 		}
 		if(keyCode == Keys.P){
 			
-			screen.printDebug();
+			screen.showPauseScreen();
 		}
 		if(keyCode == Keys.G){
 			

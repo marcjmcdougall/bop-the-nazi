@@ -11,6 +11,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -44,6 +45,7 @@ import com.bopthenazi.models.GameOverModule;
 import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.Heart;
 import com.bopthenazi.models.LivesModule;
+import com.bopthenazi.models.PauseScreenModule;
 import com.bopthenazi.models.Score;
 import com.bopthenazi.models.TutorialScreenModule;
 import com.bopthenazi.models.Zombie;
@@ -98,7 +100,9 @@ public class BTNGameScreen implements Screen{
 
 	private GameOverModule gameOverScreen;
 	private TutorialScreenModule tutorialScreen;
+	private PauseScreenModule pauseScreen;
 	private Image soundControl;
+	private Image pauseControl;
 	private Glove glove;
 	private BTNActor bg;
 	private BTNActor explosionSplash;
@@ -107,7 +111,7 @@ public class BTNGameScreen implements Screen{
 	private BTNActor bottomBar;
 	private BTNActor gloveCase;
 	private LivesModule livesModule;
-
+	
 	private BTNActor one;
 	private BTNActor two;
 	private BTNActor three;
@@ -284,6 +288,8 @@ public class BTNGameScreen implements Screen{
 	private void softReset(){
 
 		this.setMode(MODE_STANDARD);
+		this.soundControl.setY(soundControl.getY() - 1000.0f);
+		this.pauseControl.setY(pauseControl.getY() - 1000.0f);
 		this.score.updateScore(0);
 		this.score.setLives(Score.DEFAULT_NUMBER_LIVES);
 		this.livesModule.reset();
@@ -389,6 +395,8 @@ public class BTNGameScreen implements Screen{
 
 		// TODO: This method takes 1 second to complete.  This is causing a ton of issues.
 		tutorialScreen = new TutorialScreenModule(this);
+		
+		pauseScreen = new PauseScreenModule(this);
 
 		// The game over screen is providing the MOST amount of latency here.
 		gameOverScreen = new GameOverModule(this);
@@ -417,10 +425,37 @@ public class BTNGameScreen implements Screen{
 		// Reuse the batch for efficiency-reasons.
 		hudStage = new Stage(viewport, gameStage.getBatch());
 
+		pauseControl = new Image(getTexture("pause"));
+		pauseControl.setSize(125.0f, 125.0f);
+		pauseControl.setX(140.0f);
+		pauseControl.setY(LivesModule.HEART_Y - pauseControl.getHeight() / 2.0f - 5.0f + 15.0f);
+		
+		pauseControl.addListener(new InputListener(){
+			
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				
+				super.touchDown(event, x, y, pointer, button);
+				
+				soundManager.playSound(SoundManager.SOUND_ID_CLICK_DOWN);
+				
+				showPauseScreen();
+				
+				return true;
+			}
+			
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				
+				soundManager.playSound(SoundManager.SOUND_ID_CLICK_UP);
+				
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		
 		soundControl = new Image(getTexture("audioOn"));
 		soundControl.setSize(125.0f, 125.0f);
-		soundControl.setX(50.0f);
-		soundControl.setY(LivesModule.HEART_Y - soundControl.getHeight() / 2.0f);
+		soundControl.setX(25.0f);
+		soundControl.setY(LivesModule.HEART_Y - soundControl.getHeight() / 2.0f + 15.0f);
 		
 		soundControl.addListener(new InputListener(){
 			
@@ -471,6 +506,7 @@ public class BTNGameScreen implements Screen{
 		gameStage.addActor(explosionSplash);
 
 		hudStage.addActor(soundControl);
+		hudStage.addActor(pauseControl);
 		initializeLivesModule();
 		hudStage.addActor(topBar);
 		hudStage.addActor(bottomBar);
@@ -491,6 +527,8 @@ public class BTNGameScreen implements Screen{
 		hudStage.addActor(gameOverScreen.getPencil());
 		hudStage.addActor(gameOverScreen.getReviewLabel());
 		hudStage.addActor(gameOverScreen);
+		
+		hudStage.addActor(pauseScreen);
 
 		hudStage.addActor(tutorialScreen);
 
@@ -561,6 +599,19 @@ public class BTNGameScreen implements Screen{
 
 		tutorialScreen.doAnimate();
 
+	}
+	
+	public void showPauseScreen(){
+
+		this.setGamePaused(true);
+		pauseScreen.setVisible(true);
+	}
+	
+	public void hidePauseScreen(){
+		
+		soundManager.playSound(SoundManager.SOUND_ID_LETS_GO);
+		pauseScreen.setVisible(false);
+		this.setGamePaused(false);
 	}
 
 	public TextureRegion getTexture(String textureNamePostPrepend) {
@@ -674,13 +725,12 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void pause() {
 
-		// TODO Auto-generated method stub
+		showPauseScreen();
 	}
 
 	@Override
 	public void resume() {
 
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -744,7 +794,9 @@ public class BTNGameScreen implements Screen{
 			topBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, TOP_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
 			bottomBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
 			this.score.addAction(Actions.fadeOut(1.0f));
-
+			this.soundControl.addAction(Actions.moveBy(0.0f, 1000.0f));
+			this.pauseControl.addAction(Actions.moveBy(0.0f, 1000.0f));
+			
 			if(isHighScore){
 
 				gameOverScreen.setScores(score, score);

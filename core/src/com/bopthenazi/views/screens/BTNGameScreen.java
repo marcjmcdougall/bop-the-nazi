@@ -431,9 +431,9 @@ public class BTNGameScreen implements Screen{
 		hudStage = new Stage(viewport, gameStage.getBatch());
 
 		pauseControl = new Image(getTexture("pause"));
-		pauseControl.setSize(125.0f, 125.0f);
-		pauseControl.setX(140.0f);
-		pauseControl.setY(LivesModule.HEART_Y - pauseControl.getHeight() / 2.0f - 5.0f + 15.0f);
+		pauseControl.setSize(65.0f, 70.0f);
+		pauseControl.setX(150.0f);
+		pauseControl.setY(LivesModule.HEART_Y - pauseControl.getHeight() / 2.0f - 5.0f + 18.0f);
 		
 		pauseControl.addListener(new InputListener(){
 			
@@ -457,8 +457,8 @@ public class BTNGameScreen implements Screen{
 			}
 		});
 		
-		soundControl = new Image(getTexture("audioOn"));
-		soundControl.setSize(125.0f, 125.0f);
+		soundControl = new Image(getTexture("mute-off"));
+		soundControl.setSize(100.0f, 81.0f);
 		soundControl.setX(25.0f);
 		soundControl.setY(LivesModule.HEART_Y - soundControl.getHeight() / 2.0f + 15.0f);
 		
@@ -472,11 +472,11 @@ public class BTNGameScreen implements Screen{
 				
 				if(soundManager.isMuted()){
 					
-					soundControl.setDrawable(new TextureRegionDrawable(getTexture("audioOff")));
+					soundControl.setDrawable(new TextureRegionDrawable(getTexture("mute-on")));
 				}
 				else{
 					
-					soundControl.setDrawable(new TextureRegionDrawable(getTexture("audioOn")));
+					soundControl.setDrawable(new TextureRegionDrawable(getTexture("mute-off")));
 				}
 				
 				return true;

@@ -161,6 +161,11 @@ public class BTNGameScreen implements Screen{
 		size80Params.fontParameters.size = 80;
 		getAssetManager().load("masaaki-regular-80.otf", BitmapFont.class, size80Params);
 		
+		FreeTypeFontLoaderParameter size120Params = new FreeTypeFontLoaderParameter();
+		size120Params.fontFileName = "fonts/masaaki-regular.otf";
+		size120Params.fontParameters.size = 120;
+		getAssetManager().load("masaaki-regular-120.otf", BitmapFont.class, size120Params);	
+		
 		getAssetManager().load("textures/textures-packed/game.atlas", TextureAtlas.class);
 
 		// Load sounds...

@@ -6,84 +6,84 @@ filter: Nearest,Nearest
 repeat: none
 alpha-25
   rotate: false
-  xy: 2, 54
+  xy: 2, 62
   size: 540, 960
   orig: 540, 960
   offset: 0, 0
   index: -1
-audioOff
-  rotate: false
-  xy: 198, 2
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
-audioOn
-  rotate: false
-  xy: 250, 2
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
 bottom-bar
   rotate: false
-  xy: 544, 14
+  xy: 544, 22
   size: 320, 1000
   orig: 320, 1000
   offset: 0, 0
   index: -1
 glove
   rotate: false
-  xy: 866, 14
+  xy: 866, 22
   size: 156, 1000
   orig: 156, 1000
   offset: 0, 0
   index: -1
 heart
   rotate: false
-  xy: 401, 36
+  xy: 268, 44
   size: 19, 16
   orig: 19, 16
   offset: 0, 0
   index: -1
 heart-empty-v2
   rotate: false
-  xy: 401, 18
+  xy: 268, 26
   size: 19, 16
   orig: 19, 16
   offset: 0, 0
   index: -1
 mover
   rotate: false
-  xy: 354, 11
+  xy: 198, 19
   size: 45, 41
   orig: 45, 41
   offset: 0, 0
   index: -1
+mute-off
+  rotate: false
+  xy: 245, 43
+  size: 21, 17
+  orig: 21, 17
+  offset: 0, 0
+  index: -1
+mute-on
+  rotate: false
+  xy: 245, 24
+  size: 21, 17
+  orig: 21, 17
+  offset: 0, 0
+  index: -1
 ok-button-down-state
   rotate: false
-  xy: 72, 3
+  xy: 72, 11
   size: 61, 49
   orig: 61, 49
   offset: 0, 0
   index: -1
 ok-button-up-state
   rotate: false
-  xy: 135, 3
+  xy: 135, 11
   size: 61, 49
   orig: 61, 49
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 302, 2
-  size: 50, 50
-  orig: 50, 50
+  xy: 198, 2
+  size: 14, 15
+  orig: 14, 15
   offset: 0, 0
   index: -1
 tunnel-back
   rotate: false
-  xy: 2, 5
+  xy: 2, 13
   size: 68, 47
   orig: 68, 47
   offset: 0, 0

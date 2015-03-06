@@ -1,7 +1,5 @@
 package com.bopthenazi.models;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
@@ -11,7 +9,7 @@ import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class LivesModule{
 
-	private static final float HEART_Y = 1520.0f - BTNGameScreen.AD_TOP_OFFSET; 
+	public static final float HEART_Y = 1520.0f - BTNGameScreen.AD_TOP_OFFSET; 
 	
 	private static final float HEART_X_OFFSET = 40.0f; 
 	

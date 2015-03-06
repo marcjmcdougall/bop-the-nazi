@@ -67,9 +67,20 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 	
 	private void prepare() {
 		
+		RunnableAction notifyVisible = new RunnableAction();
+		
+		notifyVisible.setRunnable(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				BTNContainedActor.this.setActorState(STATE_VISIBLE);
+			}
+		});
+		
 		MoveToAction moveUp = new MoveToAction();
 		moveUp.setPosition(this.getX(), this.getAnchorY() + OSCILLATION_DELTA);
-		moveUp.setDuration(0.5f);
+		moveUp.setDuration(gameScreen.getDifficultyManager().getLaunchSpeed());
 		moveUp.setInterpolation(Interpolation.exp5);
 
 		RunnableAction notifyUp = new RunnableAction();
@@ -79,7 +90,6 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 			@Override
 			public void run() {
 				
-				BTNContainedActor.this.setActorState(STATE_VISIBLE);
 				BTNContainedActor.this.setCollide(true);
 			}
 		});
@@ -88,7 +98,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 
 		MoveToAction moveDown = new MoveToAction();
 		moveDown.setPosition(this.getX(), this.getAnchorY());
-		moveDown.setDuration(0.5f);
+		moveDown.setDuration(gameScreen.getDifficultyManager().getLaunchSpeed());
 		moveDown.setInterpolation(Interpolation.linear);
 		
 		RunnableAction notifyDown = new RunnableAction();
@@ -102,17 +112,15 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 			}
 		});
 		
-		DelayAction delay2 = new DelayAction(2.0f);
-		
 		oscillateSequence = new SequenceAction();
 		
 //		oscillateSequence.addAction(initialDelay);
+		oscillateSequence.addAction(notifyVisible);
 		oscillateSequence.addAction(moveUp);
 		oscillateSequence.addAction(notifyUp);
 		oscillateSequence.addAction(delay);
 		oscillateSequence.addAction(moveDown);
 		oscillateSequence.addAction(notifyDown);
-		oscillateSequence.addAction(delay2);
 	}
 	
 	@Override
@@ -174,7 +182,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 		MoveToAction moveDown = new MoveToAction();
 		
 		moveDown.setPosition(getX(), getY() - getHeight());
-		moveDown.setDuration(0.25f);
+		moveDown.setDuration(gameScreen.getDifficultyManager().getLaunchSpeed() / 2.0f);
 		moveDown.setInterpolation(Interpolation.linear);
 		
 		this.addAction(moveDown);

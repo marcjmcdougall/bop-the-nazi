@@ -29,7 +29,7 @@ public class Score extends Actor {
 		this.score = 0;
 		this.lives = DEFAULT_NUMBER_LIVES;
 		
-		LabelStyle style = new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-80.otf", BitmapFont.class), new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		LabelStyle style = new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-120.otf", BitmapFont.class), new Color(1.0f, 1.0f, 1.0f, 1.0f));
 		
 		label = new Label("Score: " + score, style);
 		label.setX(getX() - label.getWidth() / 2.0f);

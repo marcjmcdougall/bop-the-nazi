@@ -9,9 +9,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,18 +21,22 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.PerformanceCounter;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNContainedActor;
 import com.bopthenazi.models.BTNStage;
+import com.bopthenazi.models.BasicButton;
 import com.bopthenazi.models.Bunny;
 import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Dynamite;
@@ -41,6 +45,7 @@ import com.bopthenazi.models.GameOverModule;
 import com.bopthenazi.models.Glove;
 import com.bopthenazi.models.Heart;
 import com.bopthenazi.models.LivesModule;
+import com.bopthenazi.models.PauseScreenModule;
 import com.bopthenazi.models.Score;
 import com.bopthenazi.models.TutorialScreenModule;
 import com.bopthenazi.models.Zombie;
@@ -50,8 +55,6 @@ import com.bopthenazi.utils.SaveManager;
 import com.bopthenazi.utils.SoundManager;
 
 public class BTNGameScreen implements Screen{
-
-	private static final float NUMBER_SCALE = 6.0f;
 
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
@@ -97,6 +100,9 @@ public class BTNGameScreen implements Screen{
 
 	private GameOverModule gameOverScreen;
 	private TutorialScreenModule tutorialScreen;
+	private PauseScreenModule pauseScreen;
+	private Image soundControl;
+	private Image pauseControl;
 	private Glove glove;
 	private BTNActor bg;
 	private BTNActor explosionSplash;
@@ -105,7 +111,7 @@ public class BTNGameScreen implements Screen{
 	private BTNActor bottomBar;
 	private BTNActor gloveCase;
 	private LivesModule livesModule;
-
+	
 	private BTNActor one;
 	private BTNActor two;
 	private BTNActor three;
@@ -154,6 +160,11 @@ public class BTNGameScreen implements Screen{
 		size80Params.fontFileName = "fonts/masaaki-regular.otf";
 		size80Params.fontParameters.size = 80;
 		getAssetManager().load("masaaki-regular-80.otf", BitmapFont.class, size80Params);
+		
+		FreeTypeFontLoaderParameter size120Params = new FreeTypeFontLoaderParameter();
+		size120Params.fontFileName = "fonts/masaaki-regular.otf";
+		size120Params.fontParameters.size = 120;
+		getAssetManager().load("masaaki-regular-120.otf", BitmapFont.class, size120Params);	
 		
 		getAssetManager().load("textures/textures-packed/game.atlas", TextureAtlas.class);
 
@@ -250,12 +261,12 @@ public class BTNGameScreen implements Screen{
 
 		for(BTNActor heartOutline : livesModule.getHeartOutlines()){
 
-			gameStage.addActor(heartOutline);
+			hudStage.addActor(heartOutline);
 		}
 
 		for(BTNActor heart : livesModule.getHearts()){
 
-			gameStage.addActor(heart);
+			hudStage.addActor(heart);
 		}
 	}
 
@@ -282,11 +293,13 @@ public class BTNGameScreen implements Screen{
 	private void softReset(){
 
 		this.setMode(MODE_STANDARD);
+		this.soundControl.setY(soundControl.getY() - 1000.0f);
+		this.pauseControl.setY(pauseControl.getY() - 1000.0f);
 		this.score.updateScore(0);
 		this.score.setLives(Score.DEFAULT_NUMBER_LIVES);
 		this.livesModule.reset();
 		this.glove.setX(GAME_WIDTH / 2.0f);
-		this.difficultyManager.reset();
+		this.getDifficultyManager().reset();
 
 		for(Container container : containers){
 
@@ -387,10 +400,12 @@ public class BTNGameScreen implements Screen{
 
 		// TODO: This method takes 1 second to complete.  This is causing a ton of issues.
 		tutorialScreen = new TutorialScreenModule(this);
+		
+		pauseScreen = new PauseScreenModule(this);
 
 		// The game over screen is providing the MOST amount of latency here.
 		gameOverScreen = new GameOverModule(this);
-		difficultyManager = new DifficultyManager();
+		this.difficultyManager = new DifficultyManager();
 
 		this.setGamePaused(true);
 
@@ -415,6 +430,66 @@ public class BTNGameScreen implements Screen{
 		// Reuse the batch for efficiency-reasons.
 		hudStage = new Stage(viewport, gameStage.getBatch());
 
+		pauseControl = new Image(getTexture("pause"));
+		pauseControl.setSize(65.0f, 70.0f);
+		pauseControl.setX(150.0f);
+		pauseControl.setY(LivesModule.HEART_Y - pauseControl.getHeight() / 2.0f - 5.0f + 18.0f);
+		
+		pauseControl.addListener(new InputListener(){
+			
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				
+				super.touchDown(event, x, y, pointer, button);
+				
+				soundManager.playSound(SoundManager.SOUND_ID_CLICK_DOWN);
+				
+				showPauseScreen();
+				
+				return true;
+			}
+			
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				
+				soundManager.playSound(SoundManager.SOUND_ID_CLICK_UP);
+				
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		
+		soundControl = new Image(getTexture("mute-off"));
+		soundControl.setSize(100.0f, 81.0f);
+		soundControl.setX(25.0f);
+		soundControl.setY(LivesModule.HEART_Y - soundControl.getHeight() / 2.0f + 15.0f);
+		
+		soundControl.addListener(new InputListener(){
+			
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				
+				super.touchDown(event, x, y, pointer, button);
+				
+				soundManager.toggleSound();
+				
+				if(soundManager.isMuted()){
+					
+					soundControl.setDrawable(new TextureRegionDrawable(getTexture("mute-on")));
+				}
+				else{
+					
+					soundControl.setDrawable(new TextureRegionDrawable(getTexture("mute-off")));
+				}
+				
+				return true;
+			}
+			
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				
+				super.touchUp(event, x, y, pointer, button);
+				
+			}
+		});
+		
 		bg = new BTNActor(getTexture("background"), GAME_WIDTH / 2.0f, (GAME_HEIGHT / 2.0f)/* - AD_TOP_OFFSET*/, GAME_WIDTH, GAME_HEIGHT);
 		gloveCase = new BTNActor(getTexture("mover"), GAME_WIDTH / 2.0f, (GAME_HEIGHT - 350.0f) - AD_TOP_OFFSET, 162.0f, 138.6f);
 		glove = new Glove(GAME_WIDTH / 2.0f, Glove.GLOVE_UNLOCK_BARRIER, Glove.GLOVE_WIDTH, Glove.GLOVE_HEIGHT, this, gloveCase);
@@ -428,8 +503,6 @@ public class BTNGameScreen implements Screen{
 		gameStage.addActor(bg);
 
 		initializeContainers();
-		initializeLivesModule();
-
 
 		explosionSplash.setVisible(false);
 
@@ -437,6 +510,9 @@ public class BTNGameScreen implements Screen{
 		gameStage.addActor(gloveCase);
 		gameStage.addActor(explosionSplash);
 
+		hudStage.addActor(soundControl);
+		hudStage.addActor(pauseControl);
+		initializeLivesModule();
 		hudStage.addActor(topBar);
 		hudStage.addActor(bottomBar);
 		hudStage.addActor(this.score);
@@ -456,6 +532,8 @@ public class BTNGameScreen implements Screen{
 		hudStage.addActor(gameOverScreen.getPencil());
 		hudStage.addActor(gameOverScreen.getReviewLabel());
 		hudStage.addActor(gameOverScreen);
+		
+		hudStage.addActor(pauseScreen);
 
 		hudStage.addActor(tutorialScreen);
 
@@ -527,6 +605,19 @@ public class BTNGameScreen implements Screen{
 		tutorialScreen.doAnimate();
 
 	}
+	
+	public void showPauseScreen(){
+
+		this.setGamePaused(true);
+		pauseScreen.setVisible(true);
+	}
+	
+	public void hidePauseScreen(){
+		
+		soundManager.playSound(SoundManager.SOUND_ID_LETS_GO);
+		pauseScreen.setVisible(false);
+		this.setGamePaused(false);
+	}
 
 	public TextureRegion getTexture(String textureNamePostPrepend) {
 
@@ -554,7 +645,7 @@ public class BTNGameScreen implements Screen{
 
 			timeElapsedSinceLastZombie += delta;
 
-			if(timeElapsedSinceLastZombie >= difficultyManager.getNewContainerSpawnRate()){
+			if(timeElapsedSinceLastZombie >= getDifficultyManager().getNewContainerSpawnRate()){
 
 				// Activate a random Nazi that has *not yet been activated*
 				doActivateUniqueContainer(null);
@@ -562,7 +653,7 @@ public class BTNGameScreen implements Screen{
 				timeElapsedSinceLastZombie = 0.0f;
 			}
 
-			difficultyManager.updateDifficulty(delta);
+			getDifficultyManager().updateDifficulty(delta);
 			gameStage.act(delta);
 		}
 
@@ -597,7 +688,7 @@ public class BTNGameScreen implements Screen{
 			}
 		}
 
-		if(numContainersActivated < difficultyManager.getMaxConcurrentContainers()){
+		if(numContainersActivated < getDifficultyManager().getMaxConcurrentContainers()){
 
 			for(int i = 0; i < DifficultyManager.MAX_CONTAINERS; i++){
 
@@ -639,20 +730,20 @@ public class BTNGameScreen implements Screen{
 	@Override
 	public void pause() {
 
-		// TODO Auto-generated method stub
+		if(!(gameOverScreen.isVisible() || tutorialScreen.isVisible())){
+			
+			showPauseScreen();
+		}
 	}
 
 	@Override
 	public void resume() {
 
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void hide() {
 
-		// TODO Auto-generated method stub
-		//		dispose();
 	}
 
 	@Override
@@ -709,7 +800,9 @@ public class BTNGameScreen implements Screen{
 			topBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, TOP_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
 			bottomBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
 			this.score.addAction(Actions.fadeOut(1.0f));
-
+			this.soundControl.addAction(Actions.moveBy(0.0f, 1000.0f));
+			this.pauseControl.addAction(Actions.moveBy(0.0f, 1000.0f));
+			
 			if(isHighScore){
 
 				gameOverScreen.setScores(score, score);
@@ -829,9 +922,16 @@ public class BTNGameScreen implements Screen{
 
 			BTNContainedActor contents = getContainers().get(i).getContents();
 
-			if(!(contents instanceof Dynamite) && contents.canCollide()){
-
-				contents.onCollide(null);
+			if(!(contents instanceof Dynamite) && contents.getActorState() == BTNContainedActor.STATE_VISIBLE){
+				
+				if(contents instanceof Bunny && contents.canCollide()){
+					
+					contents.onCollide(null);
+				}
+				else{
+					
+					contents.onCollide(null);
+				}
 			}
 		}
 
@@ -848,7 +948,7 @@ public class BTNGameScreen implements Screen{
 
 		score.setLives(score.getLives() - 1);
 		livesModule.popHeart();
-		difficultyManager.onHeartLoss();
+		getDifficultyManager().onHeartLoss();
 
 		if(score.getLives() <= 0){
 
@@ -923,5 +1023,10 @@ public class BTNGameScreen implements Screen{
 	public void onButtonClickDown() {
 
 		soundManager.playSound(SoundManager.SOUND_ID_CLICK_DOWN);
+	}
+
+	public DifficultyManager getDifficultyManager() {
+		
+		return difficultyManager;
 	}
 }

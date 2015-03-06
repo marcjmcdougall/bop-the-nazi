@@ -6,63 +6,84 @@ filter: Nearest,Nearest
 repeat: none
 alpha-25
   rotate: false
-  xy: 2, 53
+  xy: 2, 62
   size: 540, 960
   orig: 540, 960
   offset: 0, 0
   index: -1
 bottom-bar
   rotate: false
-  xy: 544, 13
+  xy: 544, 22
   size: 320, 1000
   orig: 320, 1000
   offset: 0, 0
   index: -1
 glove
   rotate: false
-  xy: 866, 13
+  xy: 866, 22
   size: 156, 1000
   orig: 156, 1000
   offset: 0, 0
   index: -1
 heart
   rotate: false
-  xy: 245, 35
+  xy: 268, 44
   size: 19, 16
   orig: 19, 16
   offset: 0, 0
   index: -1
 heart-empty-v2
   rotate: false
-  xy: 245, 17
+  xy: 268, 26
   size: 19, 16
   orig: 19, 16
   offset: 0, 0
   index: -1
 mover
   rotate: false
-  xy: 198, 10
+  xy: 198, 19
   size: 45, 41
   orig: 45, 41
   offset: 0, 0
   index: -1
+mute-off
+  rotate: false
+  xy: 245, 43
+  size: 21, 17
+  orig: 21, 17
+  offset: 0, 0
+  index: -1
+mute-on
+  rotate: false
+  xy: 245, 24
+  size: 21, 17
+  orig: 21, 17
+  offset: 0, 0
+  index: -1
 ok-button-down-state
   rotate: false
-  xy: 72, 2
+  xy: 72, 11
   size: 61, 49
   orig: 61, 49
   offset: 0, 0
   index: -1
 ok-button-up-state
   rotate: false
-  xy: 135, 2
+  xy: 135, 11
   size: 61, 49
   orig: 61, 49
   offset: 0, 0
   index: -1
+pause
+  rotate: false
+  xy: 198, 2
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: -1
 tunnel-back
   rotate: false
-  xy: 2, 4
+  xy: 2, 13
   size: 68, 47
   orig: 68, 47
   offset: 0, 0
@@ -73,109 +94,109 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-bunny
-  rotate: false
-  xy: 866, 591
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-bunny-2
-  rotate: false
-  xy: 936, 763
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-bunny-hit-frame
-  rotate: false
-  xy: 866, 444
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-bunny2-hit-frame
-  rotate: false
-  xy: 866, 297
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-dynamite-01
-  rotate: false
-  xy: 866, 150
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-dynamite-02
-  rotate: false
-  xy: 866, 3
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-dynamite-03
-  rotate: false
-  xy: 934, 591
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-dynamite-04
-  rotate: false
-  xy: 934, 444
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-dynamite-05
-  rotate: false
-  xy: 934, 297
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
 explosion-splash
   rotate: false
-  xy: 2, 42
+  xy: 324, 50
   size: 540, 960
   orig: 540, 960
   offset: 0, 0
   index: -1
 game-over-text
   rotate: false
-  xy: 866, 910
+  xy: 866, 918
   size: 147, 92
   orig: 147, 92
   offset: 0, 0
   index: -1
-heart-contained
+paused-text00
   rotate: false
-  xy: 934, 150
-  size: 66, 145
-  orig: 66, 145
+  xy: 866, 713
+  size: 144, 77
+  orig: 144, 77
   offset: 0, 0
   index: -1
-heart-minus
+paused-text01
   rotate: false
-  xy: 934, 3
-  size: 66, 145
-  orig: 66, 145
+  xy: 866, 634
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text02
+  rotate: false
+  xy: 866, 555
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text03
+  rotate: false
+  xy: 866, 476
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text04
+  rotate: false
+  xy: 866, 397
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text05
+  rotate: false
+  xy: 866, 318
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text06
+  rotate: false
+  xy: 866, 239
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text07
+  rotate: false
+  xy: 866, 160
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text08
+  rotate: false
+  xy: 866, 81
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text09
+  rotate: false
+  xy: 866, 2
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+restart-button
+  rotate: false
+  xy: 866, 855
+  size: 147, 61
+  orig: 147, 61
+  offset: 0, 0
+  index: -1
+restart-button-down-state
+  rotate: false
+  xy: 866, 792
+  size: 147, 61
+  orig: 147, 61
   offset: 0, 0
   index: -1
 top-bar
   rotate: false
-  xy: 544, 2
+  xy: 2, 10
   size: 320, 1000
   orig: 320, 1000
-  offset: 0, 0
-  index: -1
-tunnel-front
-  rotate: false
-  xy: 866, 738
-  size: 68, 170
-  orig: 68, 170
   offset: 0, 0
   index: -1
 
@@ -186,125 +207,278 @@ filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 424, 448
+  xy: 424, 452
   size: 320, 568
   orig: 320, 568
   offset: 0, 0
   index: -1
+bunny
+  rotate: false
+  xy: 746, 671
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+bunny-2
+  rotate: false
+  xy: 746, 524
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+bunny-hit-frame
+  rotate: false
+  xy: 759, 377
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+bunny2-hit-frame
+  rotate: false
+  xy: 814, 671
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-01
+  rotate: false
+  xy: 814, 524
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-02
+  rotate: false
+  xy: 848, 875
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-03
+  rotate: false
+  xy: 827, 377
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-04
+  rotate: false
+  xy: 835, 230
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+dynamite-05
+  rotate: false
+  xy: 856, 83
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
 explosion-01
   rotate: false
-  xy: 746, 481
+  xy: 652, 20
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 explosion-02
   rotate: false
-  xy: 206, 47
+  xy: 754, 20
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 explosion-03
   rotate: false
-  xy: 882, 628
+  xy: 746, 920
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 explosion-04
   rotate: false
-  xy: 399, 283
+  xy: 746, 818
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 game-over-box
   rotate: false
-  xy: 746, 730
+  xy: 331, 160
   size: 210, 286
   orig: 210, 286
   offset: 0, 0
   index: -1
+heart-contained
+  rotate: false
+  xy: 882, 728
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+heart-minus
+  rotate: false
+  xy: 916, 875
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
 heart-plus
   rotate: false
-  xy: 2, 2
+  xy: 882, 581
   size: 66, 145
   orig: 66, 145
   offset: 0, 0
   index: -1
 instructions-screen
   rotate: false
-  xy: 2, 444
+  xy: 2, 448
   size: 420, 572
   orig: 420, 572
   offset: 0, 0
   index: -1
+pause-screen-menu-background
+  rotate: false
+  xy: 2, 30
+  size: 210, 121
+  orig: 210, 121
+  offset: 0, 0
+  index: -1
+paused-text10
+  rotate: false
+  xy: 214, 74
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text11
+  rotate: false
+  xy: 360, 81
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text12
+  rotate: false
+  xy: 360, 2
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text13
+  rotate: false
+  xy: 506, 81
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text14
+  rotate: false
+  xy: 506, 2
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text15
+  rotate: false
+  xy: 543, 201
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text16
+  rotate: false
+  xy: 613, 373
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text17
+  rotate: false
+  xy: 613, 294
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text18
+  rotate: false
+  xy: 652, 122
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
+paused-text19
+  rotate: false
+  xy: 689, 215
+  size: 144, 77
+  orig: 144, 77
+  offset: 0, 0
+  index: -1
 pencil
   rotate: false
-  xy: 2, 149
+  xy: 2, 153
   size: 327, 293
   orig: 327, 293
   offset: 0, 0
   index: -1
-restart-button
+tunnel-front
   rotate: false
-  xy: 424, 385
-  size: 147, 61
-  orig: 147, 61
-  offset: 0, 0
-  index: -1
-restart-button-down-state
-  rotate: false
-  xy: 573, 385
-  size: 147, 61
-  orig: 147, 61
+  xy: 543, 280
+  size: 68, 170
+  orig: 68, 170
   offset: 0, 0
   index: -1
 zombie
   rotate: false
-  xy: 331, 297
+  xy: 895, 434
   size: 66, 145
   orig: 66, 145
   offset: 0, 0
   index: -1
 zombie-2
   rotate: false
-  xy: 746, 583
+  xy: 950, 728
   size: 66, 145
   orig: 66, 145
   offset: 0, 0
   index: -1
 zombie-bunny
   rotate: false
-  xy: 70, 2
+  xy: 950, 581
   size: 66, 145
   orig: 66, 145
   offset: 0, 0
   index: -1
 zombie-bunny-hit-frame
   rotate: false
-  xy: 331, 150
+  xy: 903, 287
   size: 66, 145
   orig: 66, 145
   offset: 0, 0
   index: -1
 zombie1-hit-frame
   rotate: false
-  xy: 814, 583
-  size: 66, 145
-  orig: 66, 145
-  offset: 0, 0
-  index: -1
-zombie2-hit-frame
-  rotate: false
-  xy: 138, 2
+  xy: 924, 140
   size: 66, 145
   orig: 66, 145
   offset: 0, 0
   index: -1
 
 game4.png
+size: 128,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+zombie2-hit-frame
+  rotate: false
+  xy: 2, 2
+  size: 66, 145
+  orig: 66, 145
+  offset: 0, 0
+  index: -1
+
+game5.png
 size: 256,64
 format: RGBA8888
 filter: Nearest,Nearest

@@ -34,6 +34,12 @@ public class DifficultyManager {
 	// The default amount of time that the game will pause for when a heart is lost.
 	private static final float DEFAULT_PAUSE_DURATION = 5.0f;
 	
+	// The default value for the time it will take a BTNContained actor to reach the top of it's arc.
+	private static final float DEFAULT_LAUNCH_RATE = 0.5f;
+	
+	// The default value for the time a BTNContainedActor stays exposed and vulnerable to hit.
+	private static final float DEFAULT_DELAY_DURATION = 1.0f;
+	
 	// The ACTUAL spawn rate of new containers.  This will vary from the default over time.
 	private float newContainerSpawnRate;
 	
@@ -67,6 +73,12 @@ public class DifficultyManager {
 
 	// Represents the time that the difficulty algorithm will pause when requested (usually a heart-loss). 
 	private float pauseDuration;
+	
+	// The ACTUAL value for the time it will take a BTNContained actor to reach the top of it's arc.
+	private float launchSpeed;
+	
+	// The ACTUAL value for the time a BTNContainedActor stays exposed and vulnerable to hit.
+	private float delayDuration;
 	
 	public DifficultyManager(){
 		
@@ -165,6 +177,8 @@ public class DifficultyManager {
 		this.difficultyDeltaAcceleration = DEFAULT_DIFFICULTY_UPDATE_RATE_ACCELERATION;
 		this.maxConcurrentContainers = DEFAULT_MAX_CONCURRENT_CONTAINERS;
 		this.pauseDuration = DEFAULT_PAUSE_DURATION;
+		this.launchSpeed = DEFAULT_LAUNCH_RATE;
+		this.delayDuration = DEFAULT_DELAY_DURATION;
 		
 		this.timeSinceLastDifficultyUpdate = 0.0f;
 		this.totalTimePlayed = 0.0f;
@@ -189,5 +203,24 @@ public class DifficultyManager {
 	public void setMaxConcurrentContainers(int maxConcurrentContainers) {
 		
 		this.maxConcurrentContainers = maxConcurrentContainers;
+	}
+
+	public float getLaunchSpeed() {
+		return launchSpeed;
+	}
+
+	private void setLaunchSpeed(float launchSpeed) {
+		
+		this.launchSpeed = launchSpeed;
+	}
+
+	public float getDelayDuration() {
+		
+		return delayDuration;
+	}
+
+	private void setDelayDuration(float delayDuration) {
+		
+		this.delayDuration = delayDuration;
 	}
 }

@@ -1,7 +1,10 @@
 package com.bopthenazi.game.android;
 
+import java.util.HashMap;
+
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.style.EasyEditSpan;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -9,12 +12,17 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.bopthenazi.game.BTNGame;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.kilobytegames.zombiebop.android.R;
 
 public class AndroidLauncher extends AndroidApplication {
 	
@@ -22,6 +30,16 @@ public class AndroidLauncher extends AndroidApplication {
 
 	  protected AdView adView;
 
+	  
+	  public enum TrackerName {
+		  
+		  APP_TRACKER, // Tracker used only in this app.
+		  GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
+		  ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
+		}
+
+	  private HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+	  
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
 		  
@@ -49,8 +67,37 @@ public class AndroidLauncher extends AndroidApplication {
 		    
 		    setContentView(layout);
 		    startAdvertising(admobView);
+		    
+		    // Enable analytics on the advertising.
+		    // Get tracker.
+		    Tracker t = getTracker(TrackerName.APP_TRACKER);
+
+		    // Enable Advertising Features.
+		    t.enableAdvertisingIdCollection(true);
+		    
+		    // Set screen name.
+		    t.setScreenName("Main Screen");
+
+		    // Send a screen view.
+		    t.send(new HitBuilders.ScreenViewBuilder().build());
+		    
+		    Gdx.app.log("Zombie Bop!", "Sending screen hit now: " + t.toString());
 	  }
 
+	  private synchronized Tracker getTracker(TrackerName trackerId) {
+		  
+		  if (!mTrackers.containsKey(trackerId)) {
+
+		    GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+		   
+		    Tracker t = analytics.newTracker(R.xml.tracker);
+		    
+		    mTrackers.put(trackerId, t);
+		  }
+		  
+		  return mTrackers.get(trackerId);
+		}
+	  
 	  private AdView createAdView() {
 	    
 			adView = new AdView(this);
@@ -88,6 +135,8 @@ public class AndroidLauncher extends AndroidApplication {
 	    
 		super.onResume();
 	    
+	    GoogleAnalytics.getInstance(this).reportActivityStart(this);
+		
 		if (adView != null) {
 	    	
 	    	adView.resume();
@@ -107,6 +156,8 @@ public class AndroidLauncher extends AndroidApplication {
 	  @Override
 	  public void onDestroy() {
 	    
+		  GoogleAnalytics.getInstance(this).reportActivityStop(this);
+		    
 		  if (adView != null){
 			  
 			  adView.destroy();

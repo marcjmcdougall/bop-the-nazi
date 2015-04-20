@@ -102,7 +102,7 @@ public class BTNStage extends Stage {
 		}
 		if(keyCode == Keys.X){
 			
-			screen.setMode(BTNGameScreen.MODE_APOCALYPSE);
+			screen.doSpecial();
 		}
 		
 		return super.keyDown(keyCode);

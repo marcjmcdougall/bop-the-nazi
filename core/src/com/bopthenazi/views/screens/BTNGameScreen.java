@@ -11,7 +11,6 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -36,7 +35,6 @@ import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNContainedActor;
 import com.bopthenazi.models.BTNStage;
-import com.bopthenazi.models.BasicButton;
 import com.bopthenazi.models.Bunny;
 import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Dynamite;
@@ -1036,5 +1034,11 @@ public class BTNGameScreen implements Screen{
 	public DifficultyManager getDifficultyManager() {
 		
 		return difficultyManager;
+	}
+
+	public void doSpecial() {
+		
+		Gdx.app.log(BTNGame.TAG, "Performing special action now!");
+		timer.doPulse();
 	}
 }

@@ -86,7 +86,7 @@ public class BTNStage extends Stage {
 		}
 		if(keyCode == Keys.G){
 			
-			screen.generate();
+			screen.doScreenShake();
 		}
 		if(keyCode == Keys.E){
 			

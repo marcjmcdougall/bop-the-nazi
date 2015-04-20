@@ -22,5 +22,6 @@ public class Dynamite extends BTNContainedActor {
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_EXPLOSION);
 		
 		gameScreen.doExplosionSplash();
+		gameScreen.doScreenShake();
 	}
 }

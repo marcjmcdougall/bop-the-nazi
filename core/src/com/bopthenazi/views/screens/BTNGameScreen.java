@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -76,6 +77,9 @@ public class BTNGameScreen implements Screen{
 	public static final int MODE_APOCALYPSE = 1;
 
 	private int mode;
+	private float screenShakeRadius;
+	private int screenShakeLastAngle;
+	private Vector3 screenShakeTranslator;
 	
 	private DifficultyManager difficultyManager;
 
@@ -133,6 +137,10 @@ public class BTNGameScreen implements Screen{
 
 		this.game = game;
 
+		this.screenShakeRadius = 0.0f;
+		this.screenShakeLastAngle = 0;
+		this.screenShakeTranslator = new Vector3();
+		
 		this.assetManager = new AssetManager();
 		this.soundManager = new SoundManager(assetManager);
 
@@ -198,6 +206,50 @@ public class BTNGameScreen implements Screen{
 		if(!isPaused()){
 
 			glove.notifyTouch(x);
+		}
+	}
+	
+	public void doScreenShake(){
+		
+		// TODO: Implementation.
+		screenShakeRadius = 20.0f;
+		screenShakeLastAngle = new Random().nextInt(361);
+	}
+	
+	private void updateScreenShake() {
+		
+		if(screenShakeRadius > 0.5f){
+			
+			screenShakeLastAngle += (150 + new Random().nextInt(61));
+			
+			if(screenShakeLastAngle >= 360){
+				
+				screenShakeLastAngle %= 360;
+			}
+			
+//			Gdx.app.log(BTNGame.TAG, "SSAngle: " + screenShakeLastAngle);
+			Gdx.app.log(BTNGame.TAG, "Radius: " + screenShakeRadius);
+			
+			screenShakeTranslator.x = (float) (Math.sin(screenShakeLastAngle * 1.0d) * screenShakeRadius);
+			screenShakeTranslator.y = (float) (Math.cos(screenShakeLastAngle * 1.0d) * screenShakeRadius);
+			screenShakeTranslator.z = 0.0f;
+			
+			gameStage.getCamera().translate(screenShakeTranslator);
+			
+			screenShakeTranslator.x *= -1.0f;
+			screenShakeTranslator.y *= -1.0f;
+			
+//			gameStage.getCamera().translate(screenShakeTranslator);
+			
+			// The problem here is that we do not return to the original location after each "shake".
+			
+			screenShakeRadius *= 0.9f;
+		}
+		else{
+			
+			// Reset the camera.
+			gameStage.getCamera().position.x = 1080.0f /2.0f;
+			gameStage.getCamera().position.y = 1920.0f /2.0f;
 		}
 	}
 
@@ -652,6 +704,8 @@ public class BTNGameScreen implements Screen{
 
 				timeElapsedSinceLastZombie = 0.0f;
 			}
+			
+			updateScreenShake();
 
 			getDifficultyManager().updateDifficulty(delta);
 			gameStage.act(delta);
@@ -759,6 +813,11 @@ public class BTNGameScreen implements Screen{
 		// TODO: Removed for now!
 //		Gdx.app.log(BTNGame.TAG, "Game Over!");
 
+		// Reset the camera
+		gameStage.getCamera().position.x = 1080.0f /2.0f;
+		gameStage.getCamera().position.y = 1920.0f /2.0f;
+		screenShakeRadius = 0.0f;
+		
 		for(Container container : getContainers()){
 
 			container.getContents().clearActions();

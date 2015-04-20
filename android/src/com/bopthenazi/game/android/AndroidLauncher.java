@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.style.EasyEditSpan;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;

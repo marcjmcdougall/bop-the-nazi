@@ -11,7 +11,6 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -37,7 +36,6 @@ import com.bopthenazi.game.BTNGame;
 import com.bopthenazi.models.BTNActor;
 import com.bopthenazi.models.BTNContainedActor;
 import com.bopthenazi.models.BTNStage;
-import com.bopthenazi.models.BasicButton;
 import com.bopthenazi.models.Bunny;
 import com.bopthenazi.models.Container;
 import com.bopthenazi.models.Dynamite;
@@ -56,6 +54,8 @@ import com.bopthenazi.utils.SaveManager;
 import com.bopthenazi.utils.SoundManager;
 
 public class BTNGameScreen implements Screen{
+	
+	private static final boolean SCREEN_SHAKE_ENABLED = true;
 
 	public static final float GAME_WIDTH = 1080.0f;
 	public static final float GAME_HEIGHT = 1920.0f;
@@ -80,6 +80,7 @@ public class BTNGameScreen implements Screen{
 	private float screenShakeRadius;
 	private int screenShakeLastAngle;
 	private Vector3 screenShakeTranslator;
+	private Vector3 screenShakeDestination;
 	
 	private DifficultyManager difficultyManager;
 
@@ -140,6 +141,7 @@ public class BTNGameScreen implements Screen{
 		this.screenShakeRadius = 0.0f;
 		this.screenShakeLastAngle = 0;
 		this.screenShakeTranslator = new Vector3();
+		this.screenShakeDestination = new Vector3();
 		
 		this.assetManager = new AssetManager();
 		this.soundManager = new SoundManager(assetManager);
@@ -218,7 +220,7 @@ public class BTNGameScreen implements Screen{
 	
 	private void updateScreenShake() {
 		
-		if(screenShakeRadius > 0.5f){
+		if(screenShakeRadius > 0.5f && SCREEN_SHAKE_ENABLED){
 			
 			screenShakeLastAngle += (150 + new Random().nextInt(61));
 			
@@ -234,12 +236,13 @@ public class BTNGameScreen implements Screen{
 			screenShakeTranslator.y = (float) (Math.cos(screenShakeLastAngle * 1.0d) * screenShakeRadius);
 			screenShakeTranslator.z = 0.0f;
 			
+			screenShakeDestination.x = gameStage.getCamera().position.x + screenShakeTranslator.x;
+			screenShakeDestination.y = gameStage.getCamera().position.y + screenShakeTranslator.y;
+			
 			gameStage.getCamera().translate(screenShakeTranslator);
 			
 			screenShakeTranslator.x *= -1.0f;
 			screenShakeTranslator.y *= -1.0f;
-			
-//			gameStage.getCamera().translate(screenShakeTranslator);
 			
 			// The problem here is that we do not return to the original location after each "shake".
 			
@@ -248,8 +251,8 @@ public class BTNGameScreen implements Screen{
 		else{
 			
 			// Reset the camera.
-			gameStage.getCamera().position.x = 1080.0f /2.0f;
-			gameStage.getCamera().position.y = 1920.0f /2.0f;
+			gameStage.getCamera().position.x = 1080.0f / 2.0f;
+			gameStage.getCamera().position.y = 1920.0f / 2.0f;
 		}
 	}
 

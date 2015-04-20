@@ -46,6 +46,7 @@ import com.bopthenazi.models.Heart;
 import com.bopthenazi.models.LivesModule;
 import com.bopthenazi.models.PauseScreenModule;
 import com.bopthenazi.models.Score;
+import com.bopthenazi.models.Timer;
 import com.bopthenazi.models.TutorialScreenModule;
 import com.bopthenazi.models.Zombie;
 import com.bopthenazi.models.ZombieBunny;
@@ -112,6 +113,7 @@ public class BTNGameScreen implements Screen{
 	private BTNActor bg;
 	private BTNActor explosionSplash;
 	private Score score;
+	private Timer timer;
 	private BTNActor topBar;
 	private BTNActor bottomBar;
 	private BTNActor gloveCase;
@@ -375,6 +377,7 @@ public class BTNGameScreen implements Screen{
 		this.score.updateScore(0);
 		this.score.setLives(Score.DEFAULT_NUMBER_LIVES);
 		this.livesModule.reset();
+		this.timer.reset();
 		this.glove.setX(GAME_WIDTH / 2.0f);
 		this.getDifficultyManager().reset();
 
@@ -489,9 +492,12 @@ public class BTNGameScreen implements Screen{
 		// This seems to cause quite a bit of lag...V
 		this.containers = new Array<Container>(DifficultyManager.MAX_CONTAINERS);
 		this.score = new Score(GAME_WIDTH / 2.0f, (GAME_HEIGHT - Score.SCORE_HEIGHT) - AD_TOP_OFFSET, this);
+		
+		this.timer = new Timer(GAME_WIDTH / 2.0f, (GAME_HEIGHT - Score.SCORE_HEIGHT) - AD_TOP_OFFSET, this);
 		//..........................................A
 
 		this.score.getColor().a = 0.0f;
+		this.timer.getColor().a = 0.0f;
 
 		this.setMode(MODE_STANDARD);
 
@@ -592,7 +598,7 @@ public class BTNGameScreen implements Screen{
 		initializeLivesModule();
 		hudStage.addActor(topBar);
 		hudStage.addActor(bottomBar);
-		hudStage.addActor(this.score);
+		hudStage.addActor(this.timer);
 
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(hudStage);
@@ -620,12 +626,12 @@ public class BTNGameScreen implements Screen{
 	public void begin(float initialDelay){
 
 		// We delay everything by one second to allow the slow Android OS to catch up.
-		score.addAction(Actions.sequence(Actions.delay(initialDelay), Actions.run(new Runnable() {
+		timer.addAction(Actions.sequence(Actions.delay(initialDelay), Actions.run(new Runnable() {
 
 			@Override
 			public void run() {
 
-				score.addAction(Actions.fadeIn(1.0f));
+				timer.addAction(Actions.fadeIn(1.0f));
 				topBar.addAction(Actions.moveTo(topBar.getX(), TOP_BAR_TOP, 1.0f, Interpolation.pow4));
 				bottomBar.addAction(Actions.moveTo(bottomBar.getX(), BOTTOM_BAR_BOTTOM, 1.0f, Interpolation.pow4));
 
@@ -732,10 +738,12 @@ public class BTNGameScreen implements Screen{
 			
 			updateScreenShake();
 
+			timer.updateTimer(delta);
+			
 			getDifficultyManager().updateDifficulty(delta);
 			gameStage.act(delta);
 		}
-
+		
 		hudStage.act(delta);
 
 		gameStage.draw();
@@ -883,7 +891,7 @@ public class BTNGameScreen implements Screen{
 
 			topBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, TOP_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
 			bottomBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
-			this.score.addAction(Actions.fadeOut(1.0f));
+			this.timer.addAction(Actions.fadeOut(1.0f));
 			this.soundControl.addAction(Actions.moveBy(0.0f, 1000.0f));
 			this.pauseControl.addAction(Actions.moveBy(0.0f, 1000.0f));
 			
@@ -1112,5 +1120,11 @@ public class BTNGameScreen implements Screen{
 	public DifficultyManager getDifficultyManager() {
 		
 		return difficultyManager;
+	}
+
+	public void doSpecial() {
+		
+		Gdx.app.log(BTNGame.TAG, "Performing special action now!");
+		timer.doPulse();
 	}
 }

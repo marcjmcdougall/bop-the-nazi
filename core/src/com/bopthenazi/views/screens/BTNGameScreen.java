@@ -224,7 +224,6 @@ public class BTNGameScreen implements Screen{
 		Gdx.app.log(BTNGame.TAG, "CurrentY: " + gameStage.getCamera().position.y + ", DestinationY: " + screenShakeDestination.y);
 		Gdx.app.log(BTNGame.TAG, "Radius: " + screenShakeRadius);
 		
-		// TODO: Implementation.
 		screenShakeRadius = 50.0f;
 		screenShakeLastAngle = new Random().nextInt(361);
 	}

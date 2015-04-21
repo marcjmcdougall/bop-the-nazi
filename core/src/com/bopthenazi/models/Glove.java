@@ -50,7 +50,7 @@ public class Glove extends BTNActor {
 	
 //	private static final float GLOVE_VELOCTY_X = 4000.0f;
 	
-	private static final float GLOVE_VELOCTY_X = 8000.0f;
+	private static final float GLOVE_VELOCTY_X = 10000.0f;
 	
 //	private static final float GLOVE_VELOCITY_Y_DOWN = 5000.0f;
 //	private static final float GLOVE_VELOCITY_Y_UP = 8000.0f;

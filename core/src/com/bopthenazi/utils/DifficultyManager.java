@@ -16,7 +16,7 @@ public class DifficultyManager {
 	private static final int DEFAULT_MAX_CONCURRENT_CONTAINERS = 4;
 	
 	// The default for the spawn rate of a new container.
-	private static final float DEFAULT_NEW_CONTAINER_SPAWN_RATE = 1.0f;
+	private static final float DEFAULT_NEW_CONTAINER_SPAWN_RATE = 0.25f;
 	
 	// The default for the rate at which the difficulty is updated.  This should be constant for a linear difficulty progression.
 	private static final float DEFAULT_DIFFICULTY_UPDATE_RATE = 2.0f;
@@ -28,17 +28,17 @@ public class DifficultyManager {
 	// The default for the amount which we decrease the difficulty.
 	private static final float DEFAULT_DIFFICULTY_DECREASE_DELTA = 0.20f;
 	
-	// The default for the rate at which the difficulty update rate accelerates.  Note that this will be 1.0 for now as the rate is contant.
+	// The default for the rate at which the difficulty update rate accelerates.  Note that this will be 1.0 for now as the rate is constant.
 	private static final float DEFAULT_DIFFICULTY_UPDATE_RATE_ACCELERATION = 1.0f;
 	
 	// The default amount of time that the game will pause for when a heart is lost.
 	private static final float DEFAULT_PAUSE_DURATION = 5.0f;
 	
 	// The default value for the time it will take a BTNContained actor to reach the top of it's arc.
-	private static final float DEFAULT_LAUNCH_RATE = 0.5f;
+	private static final float DEFAULT_LAUNCH_RATE = 0.25f;
 	
 	// The default value for the time a BTNContainedActor stays exposed and vulnerable to hit.
-	private static final float DEFAULT_DELAY_DURATION = 1.0f;
+	private static final float DEFAULT_DELAY_DURATION = 0.25f;
 	
 	// The ACTUAL spawn rate of new containers.  This will vary from the default over time.
 	private float newContainerSpawnRate;
@@ -87,33 +87,57 @@ public class DifficultyManager {
 
 	public void updateDifficulty(float delta){
 		
-		if(paused){
+//		Gdx.app.log(BTNGame.TAG, "Updating difficulty now.");
+		
+		// Update the total number of containers.
+		if(totalTimePlayed <= 5.0f){
 			
-			this.timePaused += delta;
+			maxConcurrentContainers = 2; 
 			
-			if(timePaused >= pauseDuration){
-				
-				this.paused = false;
-			}
+			Gdx.app.log(BTNGame.TAG, "Max current containers: " + maxConcurrentContainers);
+		}
+		else if(totalTimePlayed <= 10.0f){
+			
+			maxConcurrentContainers = 4;
+			
+			Gdx.app.log(BTNGame.TAG, "Max current containers: " + maxConcurrentContainers);
 		}
 		else{
 			
-			if(timeSinceLastDifficultyUpdate >= difficultyUpdateRate){
-				
-				increaseDifficulty();
-				
-				if(difficultyDecreaseDelta - DIFFICULTY_DECREASE_DELTA_MODIFIER >= 0){
-					
-					this.difficultyDecreaseDelta -= DIFFICULTY_DECREASE_DELTA_MODIFIER;
-				}
-				
-				this.timeSinceLastDifficultyUpdate = 0.0f;
-			}
-			else{
-				
-				this.timeSinceLastDifficultyUpdate += delta;
-			}
+			maxConcurrentContainers = 5;
+			
+			Gdx.app.log(BTNGame.TAG, "Max current containers: " + maxConcurrentContainers);
 		}
+		
+		delayDuration = 1.0f - (0.025f * totalTimePlayed);
+		
+//		if(paused){
+//			
+//			this.timePaused += delta;
+//			
+//			if(timePaused >= pauseDuration){
+//				
+//				this.paused = false;
+//			}
+//		}
+//		else{
+//			
+//			if(timeSinceLastDifficultyUpdate >= difficultyUpdateRate){
+//				
+//				increaseDifficulty();
+//				
+//				if(difficultyDecreaseDelta - DIFFICULTY_DECREASE_DELTA_MODIFIER >= 0){
+//					
+//					this.difficultyDecreaseDelta -= DIFFICULTY_DECREASE_DELTA_MODIFIER;
+//				}
+//				
+//				this.timeSinceLastDifficultyUpdate = 0.0f;
+//			}
+//			else{
+//				
+//				this.timeSinceLastDifficultyUpdate += delta;
+//			}
+//		}
 		
 		totalTimePlayed += delta;
 	}
@@ -142,18 +166,18 @@ public class DifficultyManager {
 	
 	public void onHeartLoss(){
 		
-		if(paused){
-		
-			// Decrease the difficulty.
-			decreaseDifficulty(true);
-			pause(DEFAULT_PAUSE_DURATION * 2.0f);
-		}
-		else{
-			
-			decreaseDifficulty(false);
-			// Pause the difficulty increase
-			pause(DEFAULT_PAUSE_DURATION);
-		}
+//		if(paused){
+//		
+//			// Decrease the difficulty.
+//			decreaseDifficulty(true);
+//			pause(DEFAULT_PAUSE_DURATION * 2.0f);
+//		}
+//		else{
+//			
+//			decreaseDifficulty(false);
+//			// Pause the difficulty increase
+//			pause(DEFAULT_PAUSE_DURATION);
+//		}
 	}
 	
 	public void reset(){
@@ -206,6 +230,7 @@ public class DifficultyManager {
 	}
 
 	public float getLaunchSpeed() {
+		
 		return launchSpeed;
 	}
 

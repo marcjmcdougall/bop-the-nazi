@@ -94,7 +94,7 @@ public abstract class BTNContainedActor extends BTNActor implements Activatable{
 			}
 		});
 		
-		DelayAction delay = new DelayAction(1.0f);
+		DelayAction delay = new DelayAction(gameScreen.getDifficultyManager().getDelayDuration());
 
 		MoveToAction moveDown = new MoveToAction();
 		moveDown.setPosition(this.getX(), this.getAnchorY());

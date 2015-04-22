@@ -16,7 +16,7 @@ public class Score extends Actor {
 	
 	public static final int DEFAULT_NUMBER_LIVES = 3;
 	
-	private int score;
+	private float score;
 	private int lives;
 	
 	private Label label;
@@ -45,9 +45,9 @@ public class Score extends Actor {
 		label.draw(batch, this.getColor().a * parentAlpha);
 	}
 	
-	public void updateScore(int newScore){
+	public void updateScore(float f){
 		
-		this.score = newScore;
+		this.score = f;
 		updateScoreText();
 	}
 
@@ -57,7 +57,7 @@ public class Score extends Actor {
 		label.setX(label.getX() - label.getWidth() / 2.0f);
 	}
 
-	public int getScore() {
+	public float getScore() {
 		
 		return score;
 	}

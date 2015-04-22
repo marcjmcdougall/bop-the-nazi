@@ -464,6 +464,11 @@ public class BTNGameScreen implements Screen{
 		
 		tempTrue = true;
 
+		if(saveManager.firstTimeVersion21()){
+			
+			saveManager.clearScore();
+		}
+		
 		if(saveManager.isFirstShot()){
 
 			tempTrue = false;
@@ -738,6 +743,7 @@ public class BTNGameScreen implements Screen{
 			updateScreenShake();
 
 			timer.updateTimer(delta);
+			score.updateScore(timer.getTimerValue());
 			
 			getDifficultyManager().updateDifficulty(delta);
 			gameStage.act(delta);
@@ -860,10 +866,10 @@ public class BTNGameScreen implements Screen{
 
 		soundManager.playSound(SoundManager.SOUND_ID_GAME_OVER);
 
-		if(score.getScore() > Integer.parseInt(saveManager.retrieveScore())){
+		if(timer.getTimerValue() < Float.parseFloat((saveManager.retrieveBestTime()))){
 
-			saveManager.saveScore(score.getScore());
-			showGameOverScreen(score.getScore(), true);
+			saveManager.saveScore(timer.getTimerValue());
+			showGameOverScreen(timer.getTimerValue(), true);
 
 			topBar.addAction(Actions.sequence(Actions.delay(1.5f), Actions.run(new Runnable() {
 
@@ -881,7 +887,7 @@ public class BTNGameScreen implements Screen{
 		}
 	}
 
-	private void showGameOverScreen(int score, boolean isHighScore) {
+	private void showGameOverScreen(float score, boolean isHighScore) {
 
 		if(!gameOverScreen.isVisible()){
 
@@ -900,7 +906,7 @@ public class BTNGameScreen implements Screen{
 			}
 			else{
 
-				gameOverScreen.setScores(score, Integer.parseInt(saveManager.retrieveScore()));
+				gameOverScreen.setScores(score, Float.parseFloat(saveManager.retrieveBestTime()));
 			}
 
 			gameOverScreen.doAnimate();
@@ -1060,10 +1066,10 @@ public class BTNGameScreen implements Screen{
 		//		containers.get(new Random().nextInt(MAX_ZOMBIE_COUNT)).setContents(new Dynamite(0.0f, 0.0f, this));
 	}
 
-	public void incrementScore() {
-
-		score.updateScore(score.getScore() + 1);
-	}
+//	public void incrementScore() {
+//
+//		score.updateScore(score.getScore() + 1);
+//	}
 
 	public void resetScore() {
 

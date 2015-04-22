@@ -19,9 +19,10 @@ public class Dynamite extends BTNContainedActor {
 		
 		super.onCollide(partner);
 		
-		gameScreen.doScreenShake();
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_EXPLOSION);
 		
 		gameScreen.doExplosionSplash();
+		
+		gameScreen.doScreenShake();
 	}
 }

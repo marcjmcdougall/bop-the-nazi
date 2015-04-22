@@ -37,9 +37,7 @@ public class Timer extends Group {
 		
 		time.setAlignment(Align.center);
 		time.setX(x - time.getTextBounds().width / 2.0f);
-		time.setY(y/* - time.getHeight() / 2.0f*/);
-		
-		time.setDebug(true);
+		time.setY(y - 75.0f/* - time.getHeight() / 2.0f*/);
 		
 		this.addActor(time);
 	}	

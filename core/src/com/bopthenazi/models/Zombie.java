@@ -39,7 +39,7 @@ public class Zombie extends BTNContainedActor {
 		
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_PUNCH);
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_ZOMBIE_DEATH);
-		gameScreen.incrementScore();
+//		gameScreen.incrementScore();
 	}
 	
 	private void initializeZombieTextures(){

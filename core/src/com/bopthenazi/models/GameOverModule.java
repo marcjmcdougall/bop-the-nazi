@@ -2,9 +2,7 @@ package com.bopthenazi.models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,15 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.bopthenazi.utils.FontFactory;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class GameOverModule extends Group {
 
 	private static final float HEIGHT_OFFSET = 200.0f;
 	
-	private static final String SCORE_PREPEND = "Score: ";
-	private static final String HIGH_SCORE_PREPEND = "High Score: ";
+	private static final String SCORE_PREPEND = "Last Time: ";
+	private static final String HIGH_SCORE_PREPEND = "Record Time: ";
 	
 	private BTNGameScreen gameScreen;
 	
@@ -41,8 +38,8 @@ public class GameOverModule extends Group {
 	
 	private float hiddenY;
 	
-	private int score;
-	private int highScore;
+	private float score;
+	private float highScore;
 	
 	private boolean showing;
 	
@@ -99,12 +96,12 @@ public class GameOverModule extends Group {
 		
 		pencil.setPosition(BTNGameScreen.GAME_WIDTH / 2.0f - (pencil.getWidth() / 2.0f) + 440.0f, 170.0f);
 		
-		scoreLabel = new Label("Score: " + score, new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-80.otf", BitmapFont.class), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+		scoreLabel = new Label("Last Time: " + score, new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-80.otf", BitmapFont.class), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		scoreLabel.setHeight(100.0f);
 		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getWidth() / 2.0f));
 		scoreLabel.setY((590.0f + (scoreLabel.getHeight() / 2.0f)) + HEIGHT_OFFSET);
 		
-		highScoreLabel = new Label("High Score: " + highScore, new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-80.otf", BitmapFont.class), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
+		highScoreLabel = new Label("Best Time: " + highScore, new LabelStyle(gameScreen.getAssetManager().get("masaaki-regular-80.otf", BitmapFont.class), new Color(0.0f, 0.0f, 0.0f, 1.0f)));
 		highScoreLabel.setHeight(100.0f);
 		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
 		highScoreLabel.setY((490.0f + (highScoreLabel.getHeight() / 2.0f)) + HEIGHT_OFFSET);
@@ -208,7 +205,7 @@ public class GameOverModule extends Group {
 		})));
 	}
 	
-	public void setScores(int score, int highScore){
+	public void setScores(float score, float highScore){
 		
 		this.score = score;
 		this.highScore = highScore;
@@ -218,11 +215,18 @@ public class GameOverModule extends Group {
 	
 	private void updateLabels(){
 		
-		scoreLabel.setText(SCORE_PREPEND + score);
-		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getWidth() / 2.0f));
+		String scoreText = "" + score;
+		String highScoreText = "" + highScore;
 		
-		highScoreLabel.setText(HIGH_SCORE_PREPEND + highScore);
-		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getWidth() / 2.0f));
+		scoreText = scoreText.substring(0, scoreText.indexOf(".") + 2);
+		
+		scoreLabel.setText(SCORE_PREPEND + scoreText);
+		scoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (scoreLabel.getTextBounds().width / 2.0f));
+		
+		highScoreText = highScoreText.substring(0, highScoreText.indexOf(".") + 2);
+		
+		highScoreLabel.setText(HIGH_SCORE_PREPEND + highScoreText);
+		highScoreLabel.setX(BTNGameScreen.GAME_WIDTH / 2.0f - (highScoreLabel.getTextBounds().width / 2.0f));
 	}
 
 	public boolean isShowing() {

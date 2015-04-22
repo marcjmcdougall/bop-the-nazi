@@ -99,6 +99,11 @@ public class Timer extends Group {
 		return output;
 	}
 	
+	public float getTimerValue(){
+		
+		return timeValue;
+	}
+	
 	private void onComplete(){
 		
 		gameScreen.doEndGame();

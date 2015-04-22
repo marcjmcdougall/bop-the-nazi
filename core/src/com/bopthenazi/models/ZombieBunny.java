@@ -24,7 +24,7 @@ public class ZombieBunny extends BTNContainedActor {
 		
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_PUNCH);
 		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_ZOMBIE_BUNNY_DEATH);
-		gameScreen.incrementScore();
+//		gameScreen.incrementScore();
 		
 		this.setTextures(new Array<TextureRegion>(new TextureRegion[]{onHitTexture}));
 	}

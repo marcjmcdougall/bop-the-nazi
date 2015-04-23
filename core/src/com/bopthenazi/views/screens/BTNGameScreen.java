@@ -846,7 +846,7 @@ public class BTNGameScreen implements Screen{
 		assetManager.dispose();
 	}
 
-	public void doEndGame() {
+	public void doEndGame(boolean playerWin) {
 
 		// TODO: Removed for now!
 //		Gdx.app.log(BTNGame.TAG, "Game Over!");
@@ -864,6 +864,33 @@ public class BTNGameScreen implements Screen{
 		// Pause the game.
 		this.setGamePaused(true);
 
+		// Clear the glove cache so that Actions cached due to rapid clicking do not get pushed to the currentAction slot.
+		getGlove().clearCache();
+		
+		topBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, TOP_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
+		bottomBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
+		this.timer.addAction(Actions.fadeOut(1.0f));
+		this.soundControl.addAction(Actions.moveBy(0.0f, 1000.0f));
+		this.pauseControl.addAction(Actions.moveBy(0.0f, 1000.0f));
+		
+		if(playerWin){
+			
+			doPlayerWin();
+		}
+		else{
+			
+			doGameOver();
+		}
+	}
+
+	private void doPlayerWin() {
+		
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void doGameOver() {
+		
 		soundManager.playSound(SoundManager.SOUND_ID_GAME_OVER);
 
 		if(timer.getTimerValue() < Float.parseFloat((saveManager.retrieveBestTime()))){
@@ -891,15 +918,6 @@ public class BTNGameScreen implements Screen{
 
 		if(!gameOverScreen.isVisible()){
 
-			// Clear the glove cache so that Actions cached due to rapid clicking do not get pushed to the currentAction slot.
-			getGlove().clearCache();
-
-			topBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, TOP_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
-			bottomBar.addAction(Actions.moveTo(GAME_WIDTH / 2.0f, BOTTOM_BAR_TOGETHER, 1.0f, Interpolation.bounceOut));
-			this.timer.addAction(Actions.fadeOut(1.0f));
-			this.soundControl.addAction(Actions.moveBy(0.0f, 1000.0f));
-			this.pauseControl.addAction(Actions.moveBy(0.0f, 1000.0f));
-			
 			if(isHighScore){
 
 				gameOverScreen.setScores(score, score);
@@ -1049,7 +1067,7 @@ public class BTNGameScreen implements Screen{
 
 		if(score.getLives() <= 0){
 
-			doEndGame();
+			doEndGame(false);
 		}
 	}
 

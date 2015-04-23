@@ -1,5 +1,6 @@
 package com.bopthenazi.models;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.bopthenazi.utils.SoundManager;
 import com.bopthenazi.views.screens.BTNGameScreen;
 
 public class Timer extends Group {
@@ -104,6 +106,7 @@ public class Timer extends Group {
 	
 	private void onComplete(){
 		
-		gameScreen.doEndGame();
+		gameScreen.getSoundManager().playSound(SoundManager.SOUND_ID_POWERUP);
+		gameScreen.doEndGame(true);
 	}
 }

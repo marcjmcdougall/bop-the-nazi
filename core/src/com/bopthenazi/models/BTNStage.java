@@ -90,7 +90,11 @@ public class BTNStage extends Stage {
 		}
 		if(keyCode == Keys.E){
 			
-			screen.doEndGame();
+			screen.doEndGame(false);
+		}
+		if(keyCode == Keys.V){
+			
+			screen.doEndGame(true);
 		}
 		if(keyCode == Keys.R){
 			
